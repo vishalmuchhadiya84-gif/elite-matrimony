@@ -485,6 +485,53 @@ async function loadProfilePhoto() {
   <div id="received-interests" style="margin-top:15px;"></div>
 </section>
   
+<section id="premium-plans" style="max-width:1000px;margin:30px auto;padding:20px;font-family:Arial,sans-serif;">
+  <h2 style="text-align:center;">💎 Elite Matrimony Premium</h2>
+  <p style="text-align:center;">તમારા માટે યોગ્ય Membership Plan પસંદ કરો.</p>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:15px;">
+    <div style="border:1px solid #ddd;border-radius:12px;padding:20px;text-align:center;">
+      <h3>1 Month</h3>
+      <h2>₹999</h2>
+      <p>1 મહિનાની Membership</p>
+      <button onclick="selectPlan('1 Month',999)">Select Plan</button>
+    </div>
+
+    <div style="border:1px solid #ddd;border-radius:12px;padding:20px;text-align:center;">
+      <h3>3 Months</h3>
+      <h2>₹2,499</h2>
+      <p>3 મહિનાની Membership</p>
+      <button onclick="selectPlan('3 Months',2499)">Select Plan</button>
+    </div>
+
+    <div style="border:1px solid #ddd;border-radius:12px;padding:20px;text-align:center;">
+      <h3>6 Months</h3>
+      <h2>₹3,999</h2>
+      <p>6 મહિનાની Membership</p>
+      <button onclick="selectPlan('6 Months',3999)">Select Plan</button>
+    </div>
+
+    <div style="border:1px solid #ddd;border-radius:12px;padding:20px;text-align:center;">
+      <h3>12 Months</h3>
+      <h2>₹5,999</h2>
+      <p>12 મહિનાની Membership</p>
+      <button onclick="selectPlan('12 Months',5999)">Select Plan</button>
+    </div>
+  </div>
+
+  <p id="selected-plan-message" style="text-align:center;margin-top:20px;"></p>
+</section>
+
+<script>
+function selectPlan(plan, price) {
+  document.getElementById("selected-plan-message").textContent =
+    plan + " પ્લાન પસંદ થયો. કિંમત: ₹" + price +
+    ". Online payment શરૂ કરવા માટે payment gateway જોડવાનું બાકી છે.";
+}
+</script>
+</body>
+</html>
+
 </body>
 </html>
 
