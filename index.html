@@ -241,6 +241,14 @@ async function searchMembers() {
 
     results.replaceChildren();
 
+const interestBtn = document.createElement("button");
+interestBtn.textContent = "❤️ Send Interest";
+interestBtn.style.cssText =
+  "padding:10px 16px;background:#e91e63;color:white;border:0;border-radius:6px;cursor:pointer;";
+
+interestBtn.onclick = () => sendInterest(profile.id, interestBtn);
+card.appendChild(interestBtn);
+    
     if (!data || data.length === 0) {
       results.textContent = "કોઈ પ્રોફાઇલ મળી નથી.";
       return;
@@ -276,6 +284,35 @@ async function searchMembers() {
     });
   } catch (err) {
     results.textContent = "Error: " + err.message;
+  }
+}
+  
+async function sendInterest(receiverId, button) {
+  button.disabled = true;
+  button.textContent = "Sending...";
+
+  try {
+    const { data: { user }, error: userError } = await db.auth.getUser();
+    if (userError) throw userError;
+    if (!user) throw new Error("પહેલાં Login કરો.");
+
+    const { error } = await db.from("member_interests").insert({
+      sender_id: user.id,
+      receiver_id: receiverId
+    });
+
+    if (error) {
+      if (error.code === "23505") {
+        throw new Error("તમે આ સભ્યને પહેલેથી Interest મોકલ્યું છે.");
+      }
+      throw error;
+    }
+
+    button.textContent = "❤️ Interest Sent";
+  } catch (err) {
+    alert(err.message);
+    button.disabled = false;
+    button.textContent = "❤️ Send Interest";
   }
 }
 </script>
