@@ -153,7 +153,39 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
   showProfile(data.user);
   showMessage('Login સફળ થયું!');
 });
+document.getElementById('saveProfileForm').addEventListener('submit', async (event) => {
+  event.preventDefault();
 
+  const { data: { user }, error: userError } = await db.auth.getUser();
+
+  if (userError || !user) {
+    showMessage('પહેલાં Login કરો.');
+    return;
+  }
+
+  const profile = {
+    id: user.id,
+    full_name: document.getElementById('pName').value.trim(),
+    birth_date: document.getElementById('pBirth').value || null,
+    gender: document.getElementById('pGender').value,
+    city: document.getElementById('pCity').value.trim(),
+    education: document.getElementById('pEducation').value.trim(),
+    occupation: document.getElementById('pOccupation').value.trim(),
+    about_me: document.getElementById('pAbout').value.trim(),
+    updated_at: new Date().toISOString()
+  };
+
+  const { error } = await db
+    .from('member_profiles')
+    .upsert(profile);
+
+  if (error) {
+    showMessage('Profile સાચવવામાં ભૂલ: ' + error.message);
+    return;
+  }
+
+  showMessage('તમારી Profile સફળતાપૂર્વક સાચવાઈ ગઈ!');
+});
 document.getElementById('logoutBtn').addEventListener('click', async () => {
   const { error } = await db.auth.signOut();
 
