@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elite Matrimony Gujarat</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#fffaf2;color:#39251f}
+header{background:#650d24;color:white;text-align:center;padding:24px 12px}
+.logo{font-size:30px;color:#f3d38a;font-weight:bold}
+header p{margin:8px}
+.hero{padding:35px 18px;text-align:center;background:linear-gradient(135deg,#fff0d0,#f7dce0)}
+h1{color:#781b35;font-size:29px}
+button{background:#781b35;color:white;border:0;border-radius:8px;padding:12px 18px;margin:6px;font-size:16px}
+section{padding:22px 16px;max-width:600px;margin:auto}
+input,select{width:100%;padding:12px;margin:7px 0;border:1px solid #d8b77c;border-radius:7px;font-size:16px}
+.card{background:white;padding:18px;border:1px solid #e5d0a5;border-radius:12px;margin:12px 0}
+.price{font-size:22px;color:#781b35;font-weight:bold}
+footer{text-align:center;padding:20px;background:#650d24;color:white}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">♛ Elite Matrimony ♡</div>
+<p>તમારા જીવનસાથીની શોધ અહીંથી શરૂ કરો</p>
+</header>
+<div class="hero">
+<h1>તમારા સપનાના જીવનસાથીને શોધો</h1>
+<p>ગુજરાત માટે મેટ્રિમોની સેવા</p>
+<button onclick="document.getElementById('register').scrollIntoView()">રજીસ્ટ્રેશન કરો</button>
+</div>
+<section id="register">
+<h2>નવું રજીસ્ટ્રેશન</h2>
+<div class="card">
+<form onsubmit="event.preventDefault();alert('આ ડેમો છે. તમારી માહિતી હજી સર્વર પર સેવ થતી નથી.');">
+<input placeholder="પૂરું નામ" required>
+<input type="number" placeholder="ઉંમર" min="18" required>
+<select required>
+<option value="">લિંગ પસંદ કરો</option>
+<option>પુરુષ</option>
+<option>સ્ત્રી</option>
+</select>
+<input placeholder="શહેર / જિલ્લો" required>
+<input type="tel" placeholder="મોબાઇલ નંબર" required>
+<button type="submit">પ્રોફાઇલ બનાવો</button>
+</form>
+</div>
+<h2>મેમ્બરશિપ પ્લાન</h2>
+<div class="card"><h3>1 મહિનો</h3><p class="price">₹999</p></div>
+<div class="card"><h3>3 મહિના</h3><p class="price">₹2,499</p></div>
+<div class="card"><h3>6 મહિના</h3><p class="price">₹3,999</p></div>
+<div class="card"><h3>12 મહિના</h3><p class="price">₹5,999</p></div>
+<p>ચુકવણીની સુવિધા અને પ્રોફાઇલ ચેટ હજી જોડવાની બાકી છે.</p>
+</section>
+<footer>© Elite Matrimony Gujarat</footer>
+</body>
+</html>
