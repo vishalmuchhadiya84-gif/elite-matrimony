@@ -180,3 +180,21 @@ db.auth.onAuthStateChange((_event, session) => {
 </script>
 </body>
 </html>
+<div class="card" id="memberProfileForm">
+  <h2>તમારી Matrimony Profile</h2>
+  <form id="saveProfileForm">
+    <input id="pName" placeholder="પૂરું નામ" required>
+    <input id="pBirth" type="date" required>
+    <select id="pGender" required>
+      <option value="">છોકરો / છોકરી પસંદ કરો</option>
+      <option value="Male">છોકરો</option>
+      <option value="Female">છોકરી</option>
+      <option value="Other">અન્ય</option>
+    </select>
+    <input id="pCity" placeholder="શહેર" required>
+    <input id="pEducation" placeholder="શિક્ષણ">
+    <input id="pOccupation" placeholder="વ્યવસાય">
+    <textarea id="pAbout" placeholder="તમારા વિશે લખો"></textarea>
+    <button type="submit">Profile સાચવો</button>
+  </form>
+</div>
