@@ -315,6 +315,94 @@ async function sendInterest(receiverId, button) {
     button.textContent = "❤️ Send Interest";
   }
 }
+  
+async function loadReceivedInterests() {
+  const box = document.getElementById("received-interests");
+  if (!box) return;
+
+  box.textContent = "Interests લોડ થઈ રહ્યાં છે...";
+
+  try {
+    const { data: { user }, error: authError } = await db.auth.getUser();
+    if (authError) throw authError;
+    if (!user) throw new Error("પહેલાં Login કરો.");
+
+    const { data: interests, error } = await db
+      .from("member_interests")
+      .select("id, sender_id, status, created_at")
+      .eq("receiver_id", user.id)
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    box.replaceChildren();
+
+    if (!interests || interests.length === 0) {
+      box.textContent = "હાલમાં કોઈ Interest મળ્યું નથી.";
+      return;
+    }
+
+    for (const item of interests) {
+      const card = document.createElement("div");
+      card.style.cssText =
+        "border:1px solid #ddd;padding:14px;margin:10px 0;border-radius:8px;";
+
+      const { data: profile, error: profileError } = await db
+        .from("member_profiles")
+        .select("full_name, city")
+        .eq("id", item.sender_id)
+        .maybeSingle();
+
+      const title = document.createElement("h3");
+      title.textContent = profileError
+        ? "સભ્યની માહિતી લોડ થઈ નથી"
+        : (profile?.full_name || "નામ ઉપલબ્ધ નથી");
+      card.appendChild(title);
+
+      if (profile?.city) {
+        const city = document.createElement("p");
+        city.textContent = "શહેર: " + profile.city;
+        card.appendChild(city);
+      }
+
+      const status = document.createElement("p");
+      status.textContent = "Status: " + item.status;
+      card.appendChild(status);
+
+      if (item.status === "pending") {
+        for (const choice of ["accepted", "rejected"]) {
+          const btn = document.createElement("button");
+          btn.textContent =
+            choice === "accepted" ? "❤️ Accept" : "❌ Reject";
+          btn.style.cssText = "padding:9px;margin:5px;cursor:pointer;";
+
+          btn.onclick = async () => {
+            btn.disabled = true;
+            const { error: updateError } = await db
+              .from("member_interests")
+              .update({ status: choice })
+              .eq("id", item.id)
+              .eq("receiver_id", user.id);
+
+            if (updateError) {
+              alert("Update Error: " + updateError.message);
+              btn.disabled = false;
+              return;
+            }
+
+            loadReceivedInterests();
+          };
+
+          card.appendChild(btn);
+        }
+      }
+
+      box.appendChild(card);
+    }
+  } catch (err) {
+    box.textContent = "Error: " + err.message;
+  }
+}
 </script>
 </body>
 </html>
