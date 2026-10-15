@@ -2,257 +2,275 @@
 <!DOCTYPE html>
 <html lang="gu">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Elite Matrimony</title>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #fff8fb;
-      color: #30232c;
-    }
-    header {
-      background: linear-gradient(120deg, #67143b, #a32c60);
-      color: white;
-      text-align: center;
-      padding: 25px 12px;
-    }
-    header h1 { margin: 0; }
-    main { max-width: 950px; margin: auto; padding: 12px; }
-    .card {
-      background: white;
-      border: 1px solid #eadde5;
-      border-radius: 12px;
-      padding: 16px;
-      margin: 14px 0;
-    }
-    h2 { color: #7b1744; font-size: 21px; }
-    input, select, textarea, button {
-      width: 100%;
-      padding: 11px;
-      margin: 5px 0;
-      border-radius: 8px;
-      border: 1px solid #d9cbd3;
-      font-size: 15px;
-    }
-    textarea { min-height: 80px; }
-    button {
-      background: #7b1744;
-      color: white;
-      border: 0;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .secondary { background: #f5e7ef; color: #7b1744; }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-      gap: 8px;
-    }
-    .plans {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 10px;
-    }
-    .plan {
-      text-align: center;
-      padding: 12px;
-      border: 1px solid #eadde5;
-      border-radius: 10px;
-    }
-    .price { font-size: 23px; font-weight: bold; color: #7b1744; }
-    .status {
-      padding: 12px;
-      border-radius: 8px;
-      background: #f5e7ef;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-    }
-    .hidden { display: none !important; }
-    .member {
-      display: flex;
-      gap: 12px;
-      border: 1px solid #eadde5;
-      padding: 12px;
-      border-radius: 10px;
-      margin: 10px 0;
-    }
-    .member img {
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-      object-fit: cover;
-    }
-    .member-info { min-width: 0; overflow-wrap: anywhere; }
-    .muted { font-size: 13px; color: #6f6470; }
-    footer { text-align: center; padding: 20px; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elite Matrimony</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#fff7fb;color:#29202a;font-family:Arial,sans-serif;line-height:1.45}
+header{background:linear-gradient(120deg,#5b174f,#a52a67);color:white;padding:22px;text-align:center}
+header h1{margin:0}
+main{max-width:980px;margin:18px auto;padding:0 12px}
+.card{background:white;border:1px solid #ead8e4;border-radius:14px;padding:16px;margin:14px 0}
+h2{font-size:20px;color:#5b174f;margin-top:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+label{display:block;font-weight:bold;margin:8px 0 4px}
+input,select,textarea{width:100%;padding:11px;border:1px solid #d7c5d1;border-radius:8px;font:inherit}
+textarea{min-height:90px}
+button{border:0;border-radius:9px;padding:11px 15px;background:#a52a67;color:white;font-weight:bold;font-size:15px;cursor:pointer;margin:5px 4px 5px 0}
+.secondary{background:#6b5b67}
+.muted{color:#6e626b;font-size:13px}
+.status{padding:10px;border-radius:8px;background:#fff0f7;margin:10px 0;white-space:pre-wrap}
+.hidden{display:none!important}
+.member{border:1px solid #ead8e4;border-radius:10px;padding:12px;margin:10px 0;overflow-wrap:anywhere}
+.member img{width:76px;height:76px;object-fit:cover;border-radius:50%;float:right}
+.pill{display:inline-block;background:#f6e4ef;color:#5b174f;padding:3px 8px;border-radius:20px;font-size:12px}
+footer{text-align:center;padding:22px;color:#756773;font-size:13px}
+</style>
 </head>
-
 <body>
 <header>
-  <h1>♥ Elite Matrimony</h1>
-  <p>તમારા જીવનસાથીની શોધ અહીંથી શરૂ કરો</p>
+<h1>Elite Matrimony</h1>
+<p>જીવનસાથીની શોધ અહીંથી શરૂ કરો</p>
 </header>
 
 <main>
-  <div id="status" class="status">વેબસાઇટ શરૂ થઈ રહી છે...</div>
+<div id="notice" class="status">વેબસાઇટ લોડ થઈ રહી છે...</div>
 
-  <section class="card" id="authCard">
-    <h2>Login / Sign Up</h2>
-    <input id="email" type="email" placeholder="Email Address">
-    <input id="password" type="password" placeholder="Password (ઓછામાં ઓછા 6 અક્ષર)">
-    <div class="grid">
-      <button id="signupBtn">Sign Up</button>
-      <button id="loginBtn" class="secondary">Login</button>
-    </div>
-    <p class="muted">નવું એકાઉન્ટ બનાવવા Sign Up પસંદ કરો.</p>
-  </section>
+<section id="authSection" class="card">
+<h2>Login / Sign Up</h2>
+<p class="muted">તમારા ઈમેલ અને પાસવર્ડથી એકાઉન્ટ બનાવો અથવા Login કરો.</p>
+<div class="grid">
+<div>
+<label for="authEmail">Email</label>
+<input id="authEmail" type="email" autocomplete="email" placeholder="તમારો ઈમેલ">
+</div>
+<div>
+<label for="authPassword">Password</label>
+<input id="authPassword" type="password" autocomplete="current-password" placeholder="ઓછામાં ઓછા 6 અક્ષર">
+</div>
+</div>
+<button id="signupBtn">Sign Up</button>
+<button id="loginBtn">Login</button>
+</section>
 
-  <section class="card hidden" id="accountCard">
-    <h2>તમારું એકાઉન્ટ</h2>
-    <p id="accountInfo"></p>
-    <button id="logoutBtn" class="secondary">Logout</button>
-  </section>
+<section id="accountSection" class="card hidden">
+<h2>તમારું એકાઉન્ટ</h2>
+<div id="accountInfo"></div>
+<button id="logoutBtn" class="secondary">Logout</button>
+</section>
 
-  <section class="card hidden" id="profileCard">
-    <h2>તમારી Profile</h2>
-    <div class="grid">
-      <input id="fullName" placeholder="પૂરું નામ">
-      <input id="birthDate" type="date" aria-label="જન્મ તારીખ">
-      <select id="gender">
-        <option value="">Gender પસંદ કરો</option>
-        <option value="Male">Male</option>
-        <option value="Female">Female</option>
-        <option value="Other">Other</option>
-      </select>
-      <input id="city" placeholder="શહેર">
-      <input id="education" placeholder="Education">
-      <input id="occupation" placeholder="Occupation / નોકરી">
-    </div>
-    <textarea id="aboutMe" placeholder="તમારા વિશે લખો"></textarea>
-    <label class="muted">Profile Photo (વૈકલ્પિક)</label>
-    <input id="photoFile" type="file" accept="image/*">
-    <button id="saveProfileBtn">Profile Save કરો</button>
-  </section>
+<section id="profileSection" class="card hidden">
+<h2>મારી Profile</h2>
+<form id="profileForm">
+<div class="grid">
+<div>
+<label for="fullName">પૂરું નામ *</label>
+<input id="fullName" required maxlength="100">
+</div>
+<div>
+<label for="birthDate">જન્મ તારીખ</label>
+<input id="birthDate" type="date">
+</div>
+<div>
+<label for="gender">Gender</label>
+<select id="gender">
+<option value="">પસંદ કરો</option>
+<option value="Male">પુરુષ</option>
+<option value="Female">સ્ત્રી</option>
+<option value="Other">અન્ય</option>
+</select>
+</div>
+<div>
+<label for="city">શહેર</label>
+<input id="city" maxlength="100">
+</div>
+<div>
+<label for="education">શિક્ષણ</label>
+<input id="education" maxlength="150">
+</div>
+<div>
+<label for="occupation">વ્યવસાય</label>
+<input id="occupation" maxlength="150">
+</div>
+<div>
+<label for="photoFile">Profile Photo</label>
+<input id="photoFile" type="file" accept="image/*">
+<div class="muted">JPG/PNG, 5 MB સુધી.</div>
+</div>
+</div>
+<label for="aboutMe">મારા વિશે</label>
+<textarea id="aboutMe" maxlength="1000"></textarea>
+<button type="submit">Profile Save કરો</button>
+</form>
+<div id="profileStatus" class="status hidden"></div>
+</section>
 
-  <section class="card hidden" id="searchCard">
-    <h2>સભ્યો શોધો</h2>
-    <div class="grid">
-      <input id="searchCity" placeholder="શહેર પ્રમાણે શોધો">
-      <select id="searchGender">
-        <option value="">બધા Gender</option>
-        <option value="Male">Male</option>
-        <option value="Female">Female</option>
-        <option value="Other">Other</option>
-      </select>
-    </div>
-    <button id="searchBtn">Search Members</button>
-    <div id="membersList"></div>
-  </section>
+<section id="searchSection" class="card hidden">
+<h2>Members Search</h2>
+<div class="grid">
+<div>
+<label for="searchCity">શહેર પ્રમાણે</label>
+<input id="searchCity" placeholder="જેમ કે Ahmedabad">
+</div>
+<div>
+<label for="searchGender">Gender</label>
+<select id="searchGender">
+<option value="">બધા</option>
+<option value="Male">પુરુષ</option>
+<option value="Female">સ્ત્રી</option>
+<option value="Other">અન્ય</option>
+</select>
+</div>
+</div>
+<button id="searchBtn">સભ્યો શોધો</button>
+<div id="membersList"></div>
+</section>
 
-  <section class="card hidden" id="interestsCard">
-    <h2>મને મળેલી Interests</h2>
-    <button id="receivedBtn" class="secondary">Received Interests જુઓ</button>
-    <div id="receivedList"></div>
-  </section>
+<section id="interestsSection" class="card hidden">
+<h2>મને મળેલા Interests</h2>
+<button id="receivedBtn">Refresh કરો</button>
+<div id="receivedList"></div>
+</section>
 
-  <section class="card hidden" id="premiumCard">
-    <h2>Premium Membership</h2>
-    <div class="plans">
-      <div class="plan">
-        <h3>1 Month</h3>
-        <div class="price">₹999</div>
-        <button data-plan="month_1">પસંદ કરો</button>
-      </div>
-      <div class="plan">
-        <h3>3 Months</h3>
-        <div class="price">₹2,499</div>
-        <button data-plan="month_3">પસંદ કરો</button>
-      </div>
-      <div class="plan">
-        <h3>6 Months</h3>
-        <div class="price">₹3,999</div>
-        <button data-plan="month_6">પસંદ કરો</button>
-      </div>
-      <div class="plan">
-        <h3>12 Months</h3>
-        <div class="price">₹5,999</div>
-        <button data-plan="month_12">પસંદ કરો</button>
-      </div>
-    </div>
-    <p class="muted">
-      નોંધ: ચુકવણી સફળ દેખાય એટલે Premium આપમેળે સક્રિય થતું નથી.
-      તેના માટે Server-side Payment Verification અને Webhook જરૂરી છે.
-    </p>
-  </section>
+<section id="plansSection" class="card hidden">
+<h2>Premium Membership</h2>
+<p class="muted">ચુકવણી કરતા પહેલાં યોજના અને રકમ ચકાસો.</p>
+<div class="grid">
+<div class="member">
+<h3>1 મહિનો</h3><p>₹999</p>
+<button data-plan="month_1">પસંદ કરો</button>
+</div>
+<div class="member">
+<h3>3 મહિના</h3><p>₹2,499</p>
+<button data-plan="month_3">પસંદ કરો</button>
+</div>
+<div class="member">
+<h3>6 મહિના</h3><p>₹3,999</p>
+<button data-plan="month_6">પસંદ કરો</button>
+</div>
+<div class="member">
+<h3>12 મહિના</h3><p>₹5,999</p>
+<button data-plan="month_12">પસંદ કરો</button>
+</div>
+</div>
+<div class="muted">નોંધ: Premium સક્રિય કરવા માટે સર્વર પર Razorpay payment verification અને webhook જરૂરી છે.</div>
+</section>
+
+<section id="adminSection" class="card hidden">
+<h2>Admin Dashboard</h2>
+<p class="muted">Admin Dashboard માટે admin_users ટેબલમાં તમારો સાચો User ID હોવો જરૂરી છે. Database ની RLS policies પણ યોગ્ય હોવી જોઈએ.</p>
+<button id="adminRefreshBtn">સભ્યોની યાદી Refresh કરો</button>
+<div id="adminStatus" class="status hidden"></div>
+<div id="adminMembers"></div>
+</section>
 </main>
 
-<footer>© <span id="year"></span> Elite Matrimony</footer>
+<footer>Elite Matrimony</footer>
 
 <script>
 (() => {
-  const SUPABASE_URL =
-    "https://zwgdqsskwskgthytdahl.supabase.co";
-
-  // આ માત્ર Publishable Key છે. Secret Key અહીં ન મૂકશો.
-  const SUPABASE_KEY =
-    "sb_publishable_4z4DovXpyPVCZkqXxfLpMw_tCQtiWAp";
-
-  const db = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-  );
+  const SUPABASE_URL = "https://zwgdqsskwskgthytdahl.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_4z4DovXpyPVCZkqXxfLpMw_tCQtiWAp";
+  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
   const $ = id => document.getElementById(id);
-  let user = null;
-  let photoUrl = null;
+  let currentUser = null;
+  let isAdmin = false;
 
-  $("year").textContent = new Date().getFullYear();
-
-  function message(text, error = false) {
-    $("status").textContent = text;
-    $("status").style.background = error ? "#ffe9e9" : "#f5e7ef";
+  function note(message, target = "notice") {
+    const el = $(target);
+    if (el) {
+      el.textContent = message;
+      el.classList.remove("hidden");
+    }
   }
 
-  function showAccount(account) {
-    user = account || null;
+  function hide(id) { $(id).classList.add("hidden"); }
+  function show(id) { $(id).classList.remove("hidden"); }
 
-    $("authCard").classList.toggle("hidden", !!user);
+  function safe(value) {
+    return String(value ?? "").replace(/[&<>"']/g, c => ({
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#39;"
+    }[c]));
+  }
 
-    [
-      "accountCard",
-      "profileCard",
-      "searchCard",
-      "interestsCard",
-      "premiumCard"
-    ].forEach(id => {
-      $(id).classList.toggle("hidden", !user);
-    });
+  async function checkAdmin(user) {
+    if (!user) return false;
 
-    if (user) {
-      $("accountInfo").textContent =
-        (user.email || "") + " | Login થયેલું છે";
+    const { data, error } = await db
+      .from("admin_users")
+      .select("user_id")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (error) {
+      console.warn("Admin check failed:", error.message);
+      return false;
+    }
+
+    return !!data;
+  }
+
+  async function refreshSession(session) {
+    currentUser = session?.user || null;
+    isAdmin = false;
+
+    if (!currentUser) {
+      show("authSection");
+      [
+        "accountSection",
+        "profileSection",
+        "searchSection",
+        "interestsSection",
+        "plansSection",
+        "adminSection"
+      ].forEach(hide);
+
+      note("Login કરો અથવા નવું એકાઉન્ટ બનાવો.");
+      return;
+    }
+
+    hide("authSection");
+    show("accountSection");
+    show("profileSection");
+    show("searchSection");
+    show("interestsSection");
+    show("plansSection");
+
+    $("accountInfo").textContent = "Login: " + (currentUser.email || "");
+    note("Login સફળ થયું.");
+
+    await loadProfile();
+
+    isAdmin = await checkAdmin(currentUser);
+
+    if (isAdmin) {
+      show("adminSection");
+      note("Admin Login સફળ થયું. Admin Dashboard ઉપલબ્ધ છે.");
+      await loadAdminMembers();
+    } else {
+      hide("adminSection");
     }
   }
 
   async function loadProfile() {
-    if (!user) return;
+    if (!currentUser) return;
 
     const { data, error } = await db
       .from("member_profiles")
-      .select("*")
-      .eq("id", user.id)
+      .select("full_name,birth_date,gender,city,education,occupation,about_me")
+      .eq("id", currentUser.id)
       .maybeSingle();
 
     if (error) {
-      message("Profile લોડ થઈ નથી: " + error.message, true);
+      note("Profile load error: " + error.message, "profileStatus");
       return;
     }
 
@@ -265,141 +283,136 @@
     $("education").value = data.education || "";
     $("occupation").value = data.occupation || "";
     $("aboutMe").value = data.about_me || "";
-    photoUrl = data.photo_url || null;
   }
 
-  $("signupBtn").onclick = async () => {
-    const email = $("email").value.trim();
-    const password = $("password").value;
+  $("signupBtn").addEventListener("click", async () => {
+    const email = $("authEmail").value.trim();
+    const password = $("authPassword").value;
 
     if (!email || password.length < 6) {
-      return message("Email અને ઓછામાં ઓછા 6 અક્ષરનો Password નાખો.", true);
+      return note("યોગ્ય ઈમેલ અને ઓછામાં ઓછા 6 અક્ષરનો પાસવર્ડ લખો.");
     }
 
-    const { data, error } = await db.auth.signUp({
-      email,
-      password
-    });
+    const { error } = await db.auth.signUp({ email, password });
 
-    if (error) return message(error.message, true);
+    if (error) return note("Sign Up Error: " + error.message);
 
-    if (data.session) {
-      showAccount(data.user);
-      await loadProfile();
-      message("Sign Up સફળ થયું.");
-    } else {
-      message("Sign Up થયું. Email confirmation માંગે તો Email ખોલીને ખાતું Confirm કરો, પછી Login કરો.");
-    }
-  };
+    note("Sign Up વિનંતી મોકલાઈ. Email confirmation ચાલુ હોય તો ઈમેલમાં આવેલી લિંકથી ખાતું confirm કરો, પછી Login કરો.");
+  });
 
-  $("loginBtn").onclick = async () => {
-    const email = $("email").value.trim();
-    const password = $("password").value;
-
-    if (!email || !password) {
-      return message("Email અને Password નાખો.", true);
-    }
+  $("loginBtn").addEventListener("click", async () => {
+    const email = $("authEmail").value.trim();
+    const password = $("authPassword").value;
 
     const { data, error } = await db.auth.signInWithPassword({
       email,
       password
     });
 
-    if (error) return message(error.message, true);
+    if (error) return note("Login Error: " + error.message);
 
-    showAccount(data.user);
-    await loadProfile();
-    message("Login સફળ થયું.");
-  };
+    await refreshSession(data.session);
+  });
 
-  $("logoutBtn").onclick = async () => {
+  $("logoutBtn").addEventListener("click", async () => {
     const { error } = await db.auth.signOut();
 
-    if (error) return message(error.message, true);
+    if (error) return note("Logout Error: " + error.message);
 
-    showAccount(null);
-    message("Logout થઈ ગયું.");
-  };
+    await refreshSession(null);
+  });
 
-  $("saveProfileBtn").onclick = async () => {
-    if (!user) return message("પહેલાં Login કરો.", true);
+  $("profileForm").addEventListener("submit", async event => {
+    event.preventDefault();
 
-    let finalPhotoUrl = photoUrl;
-    const file = $("photoFile").files[0];
-
-    if (file) {
-      if (!file.type.startsWith("image/")) {
-        return message("Image ફાઇલ પસંદ કરો.", true);
-      }
-
-      if (file.size > 5 * 1024 * 1024) {
-        return message("ફોટો 5 MBથી નાનો રાખો.", true);
-      }
-
-      const extension =
-        (file.name.split(".").pop() || "jpg")
-          .toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
-
-      const filePath =
-        user.id + "/" + Date.now() + "." + extension;
-
-      const { error: uploadError } = await db.storage
-        .from("profile-photos")
-        .upload(filePath, file, {
-          upsert: true,
-          contentType: file.type
-        });
-
-      if (uploadError) {
-        return message("Photo upload error: " + uploadError.message, true);
-      }
-
-      const { data: photoData, error: urlError } = await db.storage
-        .from("profile-photos")
-        .createSignedUrl(filePath, 60 * 60 * 24 * 7);
-
-      if (urlError) return message(urlError.message, true);
-
-      finalPhotoUrl = photoData.signedUrl;
+    if (!currentUser) {
+      return note("પહેલાં Login કરો.", "profileStatus");
     }
 
     const profile = {
-      id: user.id,
+      id: currentUser.id,
       full_name: $("fullName").value.trim(),
       birth_date: $("birthDate").value || null,
       gender: $("gender").value || null,
-      city: $("city").value.trim(),
-      education: $("education").value.trim(),
-      occupation: $("occupation").value.trim(),
-      about_me: $("aboutMe").value.trim(),
-      photo_url: finalPhotoUrl,
+      city: $("city").value.trim() || null,
+      education: $("education").value.trim() || null,
+      occupation: $("occupation").value.trim() || null,
+      about_me: $("aboutMe").value.trim() || null,
       updated_at: new Date().toISOString()
     };
+
+    if (!profile.full_name) {
+      return note("પૂરું નામ લખો.", "profileStatus");
+    }
 
     const { error } = await db
       .from("member_profiles")
       .upsert(profile, { onConflict: "id" });
 
-    if (error) return message("Profile Save error: " + error.message, true);
+    if (error) {
+      return note("Profile Save Error: " + error.message, "profileStatus");
+    }
 
-    photoUrl = finalPhotoUrl;
-    message("તમારી Profile Save થઈ ગઈ.");
-  };
+    const file = $("photoFile").files[0];
 
-  async function searchMembers() {
-    if (!user) return;
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        return note("Photo 5 MB કરતાં નાનો રાખો. Profile ની બાકીની માહિતી Save થઈ ગઈ છે.", "profileStatus");
+      }
 
-    $("membersList").textContent = "શોધી રહ્યા છીએ...";
+      const ext = (file.name.split(".").pop() || "jpg")
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, "");
+
+      const path = currentUser.id + "/profile-" + Date.now() + "." + ext;
+
+      const upload = await db.storage
+        .from("profile-photos")
+        .upload(path, file, {
+          upsert: true,
+          contentType: file.type
+        });
+
+      if (upload.error) {
+        return note("Profile Save થઈ ગઈ, પરંતુ Photo Upload Error: " + upload.error.message, "profileStatus");
+      }
+
+      const { data: signed, error: signError } = await db.storage
+        .from("profile-photos")
+        .createSignedUrl(path, 60 * 60 * 24 * 7);
+
+      if (signError) {
+        return note("Profile Save થઈ ગઈ, પરંતુ Photo URL Error: " + signError.message, "profileStatus");
+      }
+
+      const photoUpdate = await db
+        .from("member_profiles")
+        .update({
+          photo_url: signed.signedUrl,
+          updated_at: new Date().toISOString()
+        })
+        .eq("id", currentUser.id);
+
+      if (photoUpdate.error) {
+        return note("Profile Save થઈ ગઈ, પરંતુ photo_url Error: " + photoUpdate.error.message, "profileStatus");
+      }
+    }
+
+    note("તમારી Profile Save થઈ ગઈ.", "profileStatus");
+  });
+
+  async function loadSearch() {
+    if (!currentUser) return;
+
+    const city = $("searchCity").value.trim();
+    const gender = $("searchGender").value;
 
     let query = db
       .from("member_profiles")
       .select("id,full_name,birth_date,gender,city,education,occupation,about_me,photo_url")
-      .neq("id", user.id)
+      .neq("id", currentUser.id)
       .order("updated_at", { ascending: false })
       .limit(50);
-
-    const city = $("searchCity").value.trim();
-    const gender = $("searchGender").value;
 
     if (city) query = query.ilike("city", "%" + city + "%");
     if (gender) query = query.eq("gender", gender);
@@ -407,227 +420,198 @@
     const { data, error } = await query;
 
     if (error) {
-      $("membersList").textContent = "Search error: " + error.message;
+      return note("Members Search Error: " + error.message, "membersList");
+    }
+
+    if (!data?.length) {
+      $("membersList").textContent = "હાલ કોઈ પ્રોફાઇલ મળી નથી.";
       return;
     }
 
-    $("membersList").replaceChildren();
+    $("membersList").innerHTML = data.map(m => `
+      <div class="member">
+        ${m.photo_url ? `<img src="${safe(m.photo_url)}" alt="Profile photo">` : ""}
+        <h3>${safe(m.full_name || "નામ આપ્યું નથી")}</h3>
+        <div class="muted">${safe([m.city,m.gender,m.education,m.occupation].filter(Boolean).join(" • "))}</div>
+        <p>${safe(m.about_me || "")}</p>
+        <button data-interest="${safe(m.id)}">Send Interest</button>
+      </div>
+    `).join("");
 
-    if (!data || !data.length) {
-      $("membersList").textContent = "કોઈ સભ્ય મળ્યો નથી.";
-      return;
-    }
-
-    data.forEach(member => {
-      const card = document.createElement("div");
-      card.className = "member";
-
-      if (member.photo_url) {
-        const img = document.createElement("img");
-        img.src = member.photo_url;
-        img.alt = "Profile photo";
-        img.onerror = () => img.remove();
-        card.appendChild(img);
-      }
-
-      const info = document.createElement("div");
-      info.className = "member-info";
-
-      const name = document.createElement("h3");
-      name.textContent = member.full_name || "નામ આપ્યું નથી";
-
-      const details = document.createElement("p");
-      details.textContent = [
-        member.city,
-        member.gender,
-        member.education,
-        member.occupation
-      ].filter(Boolean).join(" • ");
-
-      const about = document.createElement("p");
-      about.textContent = member.about_me || "";
-
-      const interestButton = document.createElement("button");
-      interestButton.textContent = "Send Interest";
-      interestButton.onclick = () => sendInterest(member.id, interestButton);
-
-      info.append(name, details, about, interestButton);
-      card.appendChild(info);
-      $("membersList").appendChild(card);
-    });
+    $("membersList")
+      .querySelectorAll("[data-interest]")
+      .forEach(btn => {
+        btn.addEventListener("click", () => sendInterest(btn.dataset.interest));
+      });
   }
 
-  async function sendInterest(receiverId, button) {
-    button.disabled = true;
+  $("searchBtn").addEventListener("click", loadSearch);
+
+  async function sendInterest(receiverId) {
+    if (!currentUser) return;
 
     const { error } = await db
       .from("member_interests")
       .insert({
-        sender_id: user.id,
+        sender_id: currentUser.id,
         receiver_id: receiverId
       });
 
     if (error) {
-      message("Interest મોકલાઈ નથી: " + error.message, true);
-    } else {
-      message("Interest મોકલાઈ ગઈ.");
+      return note("Send Interest Error: " + error.message, "membersList");
     }
 
-    button.disabled = false;
+    note("Interest મોકલાઈ.", "membersList");
   }
 
-  $("searchBtn").onclick = searchMembers;
-
-  $("receivedBtn").onclick = async () => {
-    if (!user) return;
-
-    $("receivedList").textContent = "લોડ થઈ રહ્યું છે...";
+  async function loadReceived() {
+    if (!currentUser) return;
 
     const { data, error } = await db
       .from("member_interests")
       .select("id,sender_id,created_at")
-      .eq("receiver_id", user.id)
+      .eq("receiver_id", currentUser.id)
       .order("created_at", { ascending: false })
       .limit(100);
 
     if (error) {
-      $("receivedList").textContent = error.message;
+      return note("Received Interests Error: " + error.message, "receivedList");
+    }
+
+    if (!data?.length) {
+      $("receivedList").textContent = "હજુ કોઈ Interest મળ્યો નથી.";
       return;
     }
 
-    if (!data || !data.length) {
-      $("receivedList").textContent = "હજુ કોઈ Interest મળી નથી.";
-      return;
-    }
+    const ids = [...new Set(data.map(x => x.sender_id))];
 
-    const ids = [...new Set(data.map(item => item.sender_id))];
-
-    const { data: profiles, error: profileError } = await db
+    const profiles = await db
       .from("member_profiles")
       .select("id,full_name,city,occupation")
       .in("id", ids);
 
-    if (profileError) {
-      $("receivedList").textContent = profileError.message;
-      return;
-    }
-
-    const profileMap = Object.fromEntries(
-      (profiles || []).map(profile => [profile.id, profile])
+    const profileMap = new Map(
+      (profiles.data || []).map(p => [p.id, p])
     );
 
-    $("receivedList").replaceChildren();
+    $("receivedList").innerHTML = data.map(item => {
+      const profile = profileMap.get(item.sender_id) || {};
 
-    data.forEach(item => {
-      const profile = profileMap[item.sender_id] || {};
-      const div = document.createElement("div");
-      div.className = "status";
-      div.style.margin = "8px 0";
-      div.textContent = [
-        profile.full_name || "સભ્ય",
-        profile.city,
-        profile.occupation
-      ].filter(Boolean).join(" • ");
-      $("receivedList").appendChild(div);
-    });
-  };
+      return `
+        <div class="member">
+          <strong>${safe(profile.full_name || "સભ્ય")}</strong>
+          <div class="muted">${safe([profile.city,profile.occupation].filter(Boolean).join(" • "))}</div>
+          <span class="pill">Interest received</span>
+        </div>
+      `;
+    }).join("");
+  }
 
-  const planNames = {
-    month_1: "1 Month",
-    month_3: "3 Months",
-    month_6: "6 Months",
-    month_12: "12 Months"
-  };
+  $("receivedBtn").addEventListener("click", loadReceived);
 
-  document.querySelectorAll("[data-plan]").forEach(button => {
-    button.onclick = async () => {
-      if (!user) return message("પહેલાં Login કરો.", true);
+  async function startPayment(plan) {
+    if (!currentUser) return note("ચુકવણી પહેલાં Login કરો.");
 
-      const plan = button.dataset.plan;
-      button.disabled = true;
+    const { data: sessionData } = await db.auth.getSession();
+    const token = sessionData?.session?.access_token;
 
-      try {
-        const { data: sessionData } = await db.auth.getSession();
-        const token = sessionData.session?.access_token;
+    if (!token) return note("Session મળ્યું નથી. ફરી Login કરો.");
 
-        if (!token) throw new Error("Login session મળી નથી. ફરી Login કરો.");
-
-        const response = await fetch(
-          SUPABASE_URL + "/functions/v1/bright-api",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": "Bearer " + token,
-              "apikey": SUPABASE_KEY
-            },
-            body: JSON.stringify({ plan })
-          }
-        );
-
-        const order = await response.json();
-
-        if (!response.ok) {
-          throw new Error(order.error || "Razorpay order બની શક્યો નથી.");
+    try {
+      const response = await fetch(
+        SUPABASE_URL + "/functions/v1/bright-api",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token,
+            "apikey": SUPABASE_KEY
+          },
+          body: JSON.stringify({ plan })
         }
+      );
 
-        const checkout = new Razorpay({
-          key: order.key_id,
-          amount: order.amount,
-          currency: order.currency,
-          order_id: order.order_id,
-          name: "Elite Matrimony",
-          description: planNames[plan] + " Premium Membership",
-          prefill: { email: user.email || "" },
-          theme: { color: "#7b1744" },
+      const order = await response.json();
 
-          handler: function () {
-            message(
-              "Payment response મળ્યો છે. Server-side verification અને webhook જોડ્યા પછી જ Premium સક્રિય કરવું."
-            );
-          }
-        });
-
-        checkout.on("payment.failed", function () {
-          message("Payment પૂર્ણ થઈ નથી. Razorpayની વિગતો તપાસો.", true);
-        });
-
-        checkout.open();
-      } catch (error) {
-        message(error.message || "Payment error", true);
-      } finally {
-        button.disabled = false;
+      if (!response.ok) {
+        throw new Error(order.error || "Order બનાવવામાં ભૂલ આવી.");
       }
-    };
-  });
 
-  db.auth.onAuthStateChange((_event, session) => {
-    showAccount(session?.user || null);
+      if (!order.order_id || !order.key_id) {
+        throw new Error("Server તરફથી order_id અથવા key_id મળ્યું નથી.");
+      }
 
-    if (session?.user) {
-      setTimeout(() => loadProfile(), 0);
-    }
-  });
+      const options = {
+        key: order.key_id,
+        amount: order.amount,
+        currency: order.currency || "INR",
+        name: "Elite Matrimony",
+        description: "Premium Membership",
+        order_id: order.order_id,
+        prefill: { email: currentUser.email || "" },
+        handler: function () {
+          note("Payment response મળ્યો છે. Premium સક્રિય કરતાં પહેલાં server-side payment verification અને webhook જરૂરી છે.");
+        },
+        modal: {
+          ondismiss: function () {
+            note("ચુકવણી વિન્ડો બંધ થઈ.");
+          }
+        }
+      };
 
-  async function start() {
-    const { data, error } = await db.auth.getSession();
+      new Razorpay(options).open();
 
-    if (error) {
-      message(error.message, true);
-      return;
-    }
-
-    showAccount(data.session?.user || null);
-
-    if (data.session?.user) {
-      await loadProfile();
-      message("Login ચાલુ છે. તમારી Profile તપાસો.");
-    } else {
-      message("Elite Matrimonyમાં આપનું સ્વાગત છે. Login અથવા Sign Up કરો.");
+    } catch (e) {
+      note("Payment Error: " + e.message);
     }
   }
 
-  start();
+  document.querySelectorAll("[data-plan]").forEach(btn => {
+    btn.addEventListener("click", () => startPayment(btn.dataset.plan));
+  });
+
+  async function loadAdminMembers() {
+    if (!currentUser || !isAdmin) {
+      return note("આ એકાઉન્ટને Admin પરવાનગી નથી.", "adminStatus");
+    }
+
+    const status = $("adminStatus");
+    status.classList.remove("hidden");
+    status.textContent = "સભ્યોની યાદી લોડ થઈ રહી છે...";
+
+    const { data, error } = await db
+      .from("member_profiles")
+      .select("id,full_name,birth_date,gender,city,education,occupation,about_me,updated_at")
+      .order("updated_at", { ascending: false })
+      .limit(200);
+
+    if (error) {
+      status.textContent = "Admin સભ્યો લોડ કરવામાં ભૂલ: " + error.message;
+      $("adminMembers").innerHTML = "";
+      return;
+    }
+
+    status.textContent = "કુલ બતાવેલા સભ્યો: " + (data?.length || 0);
+
+    $("adminMembers").innerHTML = (data || []).map(m => `
+      <div class="member">
+        <h3>${safe(m.full_name || "નામ આપ્યું નથી")}</h3>
+        <div class="muted">${safe([m.city,m.gender,m.education,m.occupation].filter(Boolean).join(" • "))}</div>
+        <p>${safe(m.about_me || "")}</p>
+        <div class="muted">User ID: ${safe(m.id)}</div>
+      </div>
+    `).join("") || "કોઈ સભ્ય મળ્યો નથી.";
+  }
+
+  $("adminRefreshBtn").addEventListener("click", loadAdminMembers);
+
+  db.auth.onAuthStateChange((_event, session) => {
+    setTimeout(() => refreshSession(session), 0);
+  });
+
+  db.auth.getSession().then(({ data }) => {
+    refreshSession(data.session);
+  });
 })();
 </script>
 </body>
