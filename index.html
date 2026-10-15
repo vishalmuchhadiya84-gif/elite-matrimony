@@ -1,48 +1,76 @@
+
 <!DOCTYPE html>
 <html lang="gu">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Elite Matrimony</title>
   <style>
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #fff7f8;
+      background: #fff6f7;
       color: #333;
-      text-align: center;
     }
     header {
-      background: #8b1538;
+      background: #861b3b;
       color: white;
-      padding: 25px 10px;
+      text-align: center;
+      padding: 28px 12px;
     }
-    h1 { margin: 0; }
-    .container { padding: 20px; }
+    header h1 { margin: 0; font-size: 30px; }
+    header p { margin-bottom: 0; }
+    main {
+      width: 92%;
+      max-width: 480px;
+      margin: 22px auto;
+    }
     .card {
       background: white;
-      margin: 15px auto;
       padding: 20px;
-      max-width: 350px;
-      border-radius: 12px;
-      box-shadow: 0 2px 10px #ddd;
+      margin-bottom: 18px;
+      border-radius: 14px;
+      box-shadow: 0 3px 14px #ead9dd;
     }
-    input, button {
-      box-sizing: border-box;
+    h2 { color: #861b3b; margin-top: 0; }
+    input, select, button {
       width: 100%;
-      padding: 12px;
-      margin: 8px 0;
-      border-radius: 6px;
+      padding: 13px;
+      margin: 7px 0;
+      border-radius: 7px;
       font-size: 16px;
     }
-    input { border: 1px solid #ccc; }
+    input, select { border: 1px solid #ccc; }
     button {
-      background: #8b1538;
-      color: white;
       border: none;
+      background: #861b3b;
+      color: white;
       cursor: pointer;
+      font-weight: bold;
     }
-    .price { color: #8b1538; font-size: 24px; font-weight: bold; }
+    button.secondary { background: #555; }
+    .plan {
+      border: 1px solid #ead1d9;
+      padding: 14px;
+      border-radius: 9px;
+      margin: 10px 0;
+      text-align: center;
+    }
+    .price {
+      color: #861b3b;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    #message {
+      overflow-wrap: anywhere;
+      line-height: 1.5;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+    }
   </style>
 </head>
 <body>
@@ -51,39 +79,60 @@
     <p>તમારા જીવનસાથીની શોધ અહીંથી શરૂ કરો</p>
   </header>
 
-  <div class="container">
-    <div class="card">
-      <h2>નવું એકાઉન્ટ બનાવો</h2>
-      <input id="name" placeholder="તમારું નામ">
-      <input id="email" type="email" placeholder="ઈમેઇલ">
-      <input id="password" type="password" placeholder="પાસવર્ડ">
-      <button onclick="register()">Register</button>
-      <button onclick="login()">Login</button>
-      <p id="message"></p>
-    </div>
+  <main>
+    <section class="card">
+      <h2>તમારું એકાઉન્ટ</h2>
 
-    <h2>Premium Membership Plans</h2>
+      <label for="name">તમારું નામ</label>
+      <input id="name" type="text" placeholder="પૂરું નામ">
 
-    <div class="card">
-      <h3>1 Month Plan</h3>
-      <p class="price">₹999</p>
-    </div>
+      <label for="email">ઈમેઇલ</label>
+      <input id="email" type="email"
+        placeholder="તમારું ઈમેઇલ">
 
-    <div class="card">
-      <h3>3 Months Plan</h3>
-      <p class="price">₹2,499</p>
-    </div>
+      <label for="password">પાસવર્ડ</label>
+      <input id="password" type="password"
+        placeholder="ઓછામાં ઓછા 6 અક્ષર">
 
-    <div class="card">
-      <h3>6 Months Plan</h3>
-      <p class="price">₹3,999</p>
-    </div>
+      <button id="registerBtn">Register</button>
+      <button id="loginBtn" class="secondary">Login</button>
+      <button id="logoutBtn" class="secondary" hidden>
+        Logout
+      </button>
 
-    <div class="card">
-      <h3>12 Months Plan</h3>
-      <p class="price">₹5,999</p>
-    </div>
-  </div>
+      <p id="message" role="status" aria-live="polite">
+        આગળ વધવા માટે Register અથવા Login કરો.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>Premium Membership</h2>
+
+      <div class="plan">
+        <h3>1 Month</h3>
+        <div class="price">₹999</div>
+      </div>
+
+      <div class="plan">
+        <h3>3 Months</h3>
+        <div class="price">₹2,499</div>
+      </div>
+
+      <div class="plan">
+        <h3>6 Months</h3>
+        <div class="price">₹3,999</div>
+      </div>
+
+      <div class="plan">
+        <h3>12 Months</h3>
+        <div class="price">₹5,999</div>
+      </div>
+
+      <p>સભ્યપદની ચુકવણીની સુવિધા ટૂંક સમયમાં ઉપલબ્ધ થશે.</p>
+    </section>
+  </main>
+
+  <footer>© Elite Matrimony</footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
@@ -91,44 +140,125 @@
       "https://zwgdqsskwskgthytdahl.supabase.co";
 
     const SUPABASE_KEY =
-      "તમારી_PUBLIC_KEY_અહીં_પેસ્ટ_કરો";
+      "sb_publishable_4z4DovXpyPVCZkqXxfLpMw_tCQtiWAp";
 
-    const db = window.supabase.createClient(
-      SUPABASE_URL, SUPABASE_KEY
-    );
+    const message = document.getElementById("message");
+    const registerBtn = document.getElementById("registerBtn");
+    const loginBtn = document.getElementById("loginBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
 
-    async function register() {
+    let db = null;
+
+    function showMessage(text) {
+      message.textContent = text;
+    }
+
+    function updateSessionUI(session) {
+      registerBtn.hidden = !!session;
+      loginBtn.hidden = !!session;
+      logoutBtn.hidden = !session;
+    }
+
+    async function startApp() {
+      try {
+        if (!window.supabase) {
+          throw new Error("Internet connection required. Reload the page.");
+        }
+
+        db = window.supabase.createClient(
+          SUPABASE_URL,
+          SUPABASE_KEY
+        );
+
+        const { data, error } = await db.auth.getSession();
+        if (error) throw error;
+
+        updateSessionUI(data.session);
+
+        db.auth.onAuthStateChange((_event, session) => {
+          updateSessionUI(session);
+        });
+      } catch (error) {
+        showMessage("Setup error: " + error.message);
+      }
+    }
+
+    registerBtn.addEventListener("click", async () => {
+      if (!db) return showMessage("Please reload the page.");
+
       const name = document.getElementById("name").value.trim();
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
 
       if (!name || !email || password.length < 6) {
-        document.getElementById("message").textContent =
-          "નામ, સાચું ઈમેઇલ અને ઓછામાં ઓછા 6 અક્ષરનો પાસવર્ડ નાખો.";
-        return;
+        return showMessage(
+          "નામ, સાચું ઈમેઇલ અને ઓછામાં ઓછા 6 અક્ષરનો પાસવર્ડ નાખો."
+        );
       }
 
-      const { error } = await db.auth.signUp({
-        email,
-        password,
-        options: { data: { full_name: name } }
-      });
+      registerBtn.disabled = true;
+      try {
+        const { data, error } = await db.auth.signUp({
+          email: email,
+          password: password,
+          options: {
+            data: { full_name: name }
+          }
+        });
 
-      document.getElementById("message").textContent =
-        error ? error.message : "રજિસ્ટ્રેશન થયું. ઈમેઇલ ચેક કરો.";
-    }
+        if (error) throw error;
 
-    async function login() {
+        if (data.session) {
+          showMessage("રજિસ્ટ્રેશન સફળ થયું!");
+        } else {
+          showMessage(
+            "રજિસ્ટ્રેશનની વિનંતી થઈ. તમારા ઈમેઇલમાં મળેલી લિંકથી ખાતું ચકાસો."
+          );
+        }
+      } catch (error) {
+        showMessage("Registration error: " + error.message);
+      } finally {
+        registerBtn.disabled = false;
+      }
+    });
+
+    loginBtn.addEventListener("click", async () => {
+      if (!db) return showMessage("Please reload the page.");
+
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
 
-      const { error } = await db.auth.signInWithPassword({
-        email, password
-      });
+      if (!email || !password) {
+        return showMessage("ઈમેઇલ અને પાસવર્ડ નાખો.");
+      }
 
-      document.getElementById("message").textContent =
-        error ? error.message : "લૉગિન સફળ થયું!";
-    }
+      loginBtn.disabled = true;
+      try {
+        const { error } = await db.auth.signInWithPassword({
+          email: email,
+          password: password
+        });
+
+        if (error) throw error;
+        showMessage("લૉગિન સફળ થયું!");
+      } catch (error) {
+        showMessage("Login error: " + error.message);
+      } finally {
+        loginBtn.disabled = false;
+      }
+    });
+
+    logoutBtn.addEventListener("click", async () => {
+      try {
+        const { error } = await db.auth.signOut();
+        if (error) throw error;
+        showMessage("તમે Logout થઈ ગયા છો.");
+      } catch (error) {
+        showMessage("Logout error: " + error.message);
+      }
+    });
+
+    startApp();
   </script>
 </body>
 </html>
