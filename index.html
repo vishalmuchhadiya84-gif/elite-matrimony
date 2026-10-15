@@ -559,7 +559,57 @@ footer{text-align:center;padding:22px;color:#756773;font-size:13px}
         }
       };
 
-      new Razorpay(options).open();
+      
+const rzp = new Razorpay({
+  ...options,
+  handler: async function (paymentResponse) {
+    try {
+      note("Payment verification checking...");
+
+      const { data: sessionData } = await db.auth.getSession();
+      const accessToken = sessionData?.session?.access_token;
+
+      if (!accessToken) {
+        note("Please login again.");
+        return;
+      }
+
+      const result = await fetch(
+        "https://zwgdqsskwskgthytdahl.supabase.co/functions/v1/bright-api",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${accessToken}`,
+            "apikey": "sb_publishable_4z4DovXpyPVCZkqXxfLpMw_tCQtiWAp"
+          },
+          body: JSON.stringify({
+            action: "verify_payment",
+            order_id: paymentResponse.razorpay_order_id,
+            payment_id: paymentResponse.razorpay_payment_id,
+            signature: paymentResponse.razorpay_signature
+          })
+        }
+      );
+
+      const data = await result.json();
+
+      if (!result.ok || !data.verified || !data.activated) {
+        note("Payment verification pending. Please contact support.");
+        return;
+      }
+
+      note("Payment successful! Premium activated.");
+      location.reload();
+
+    } catch (e) {
+      note("Verification Error: " + e.message);
+    }
+  }
+});
+
+rzp.open();
+      
 
     } catch (e) {
       note("Payment Error: " + e.message);
