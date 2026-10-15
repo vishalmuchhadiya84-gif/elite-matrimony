@@ -206,6 +206,82 @@ db.auth.onAuthStateChange((_event,session)=>{
   await showUser(data.session?.user||null);
 })();
 </script>
+  
+<section id="member-search" style="max-width:900px;margin:25px auto;padding:20px;font-family:Arial,sans-serif;">
+  <h2>🔎 Find Your Life Partner</h2>
+  <input id="search-city" placeholder="શહેર લખો" style="padding:10px;width:45%;margin:4px;">
+  <select id="search-gender" style="padding:10px;margin:4px;">
+    <option value="">બધા Gender</option>
+    <option value="Female">Bride (Female)</option>
+    <option value="Male">Groom (Male)</option>
+  </select>
+  <button onclick="searchMembers()" style="padding:10px;">Search</button>
+  <div id="member-results" style="margin-top:20px;"></div>
+</section>
+
+<script>
+async function searchMembers() {
+  const results = document.getElementById("member-results");
+  const city = document.getElementById("search-city").value.trim();
+  const gender = document.getElementById("search-gender").value;
+
+  results.textContent = "પ્રોફાઇલ શોધાઈ રહી છે...";
+
+  try {
+    let query = db
+      .from("member_profiles")
+      .select("id, full_name, birth_date, gender, city, education, occupation, about_me")
+      .limit(50);
+
+    if (city) query = query.ilike("city", "%" + city + "%");
+    if (gender) query = query.eq("gender", gender);
+
+    const { data, error } = await query;
+    if (error) throw error;
+
+    results.replaceChildren();
+
+    if (!data || data.length === 0) {
+      results.textContent = "કોઈ પ્રોફાઇલ મળી નથી.";
+      return;
+    }
+
+    data.forEach(profile => {
+      const card = document.createElement("article");
+      card.style.cssText =
+        "border:1px solid #ddd;border-radius:10px;padding:15px;margin:12px 0;";
+
+      const heading = document.createElement("h3");
+      heading.textContent = profile.full_name || "નામ આપ્યું નથી";
+      card.appendChild(heading);
+
+      const details = [
+        ["શહેર", profile.city],
+        ["Gender", profile.gender],
+        ["જન્મતારીખ", profile.birth_date],
+        ["શિક્ષણ", profile.education],
+        ["વ્યવસાય", profile.occupation],
+        ["માહિતી", profile.about_me]
+      ];
+
+      details.forEach(([label, value]) => {
+        if (value) {
+          const p = document.createElement("p");
+          p.textContent = label + ": " + value;
+          card.appendChild(p);
+        }
+      });
+
+      results.appendChild(card);
+    });
+  } catch (err) {
+    results.textContent = "Error: " + err.message;
+  }
+}
+</script>
+</body>
+</html>
+
 </body>
   </html>
   
