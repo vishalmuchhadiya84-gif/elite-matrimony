@@ -6,228 +6,206 @@
 <title>Elite Matrimony</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-body{font-family:Arial,sans-serif;background:#fff7f8;margin:0;color:#333}
-header{background:#8b174b;color:white;text-align:center;padding:22px}
-main{max-width:520px;margin:20px auto;padding:15px}
-.card{background:white;padding:20px;margin-bottom:18px;border-radius:12px;box-shadow:0 2px 10px #ddd}
-h2{color:#8b174b;font-size:21px}
-input{box-sizing:border-box;width:100%;padding:12px;margin:7px 0;border:1px solid #ccc;border-radius:7px}
-button{background:#8b174b;color:white;padding:12px;border:0;border-radius:7px;width:100%;margin-top:8px;font-size:16px}
-.plan{border:1px solid #e5b5c9;border-radius:9px;padding:13px;margin:10px 0}
-.price{font-size:23px;font-weight:bold;color:#8b174b}
-#message{white-space:pre-wrap;overflow-wrap:anywhere}
-.hidden{display:none}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#fff5fa;color:#333}
+header{background:#801b52;color:white;text-align:center;padding:25px 12px}
+main{max-width:650px;margin:auto;padding:15px}
+.card{background:white;padding:18px;margin:16px 0;border-radius:12px;box-shadow:0 2px 10px #ddd}
+h2{color:#801b52}
+input,select,textarea,button{width:100%;padding:12px;margin:7px 0;font-size:16px;border-radius:7px}
+input,select,textarea{border:1px solid #ccc}
+button{background:#801b52;color:white;border:0;cursor:pointer}
+.plan{border:1px solid #e4bfd2;padding:12px;margin:10px 0;border-radius:8px}
+.price{font-size:23px;font-weight:bold}
+#memberArea{display:none}
+#message{overflow-wrap:anywhere}
+footer{text-align:center;padding:20px}
 </style>
 </head>
 <body>
+
 <header>
-<h1>Elite Matrimony</h1>
-<p>તમારા જીવનસાથીની નવી શરૂઆત</p>
+<h1>💖 Elite Matrimony</h1>
+<p>તમારા જીવનસાથીની શોધ અહીંથી શરૂ કરો</p>
 </header>
 
 <main>
-<div class="card">
-<h2>નવું Registration</h2>
-<form id="registerForm">
-<input id="regName" placeholder="તમારું પૂરું નામ" required>
-<input id="regEmail" type="email" placeholder="ઈમેઇલ" required>
-<input id="regPassword" type="password" placeholder="પાસવર્ડ (ઓછામાં ઓછા 6 અક્ષર)" minlength="6" required>
-<button type="submit">Register કરો</button>
+<div class="card" id="authArea">
+<h2>Registration / Login</h2>
+<form id="signupForm">
+<input id="email" type="email" placeholder="Email" required>
+<input id="password" type="password" placeholder="Password (ઓછામાં ઓછા 6 અક્ષર)" minlength="6" required>
+<button type="submit">Registration કરો</button>
+</form>
+<button type="button" id="loginBtn">Login કરો</button>
+</div>
+
+<div class="card" id="memberArea">
+<h2>તમારું એકાઉન્ટ</h2>
+<p id="accountEmail"></p>
+<button type="button" id="logoutBtn">Logout</button>
+
+<hr>
+<h2>તમારી Matrimony Profile</h2>
+<form id="profileForm">
+<input id="pName" placeholder="પૂરું નામ" required>
+<label for="pBirth">જન્મ તારીખ</label>
+<input id="pBirth" type="date" required>
+<select id="pGender" required>
+<option value="">છોકરો / છોકરી પસંદ કરો</option>
+<option value="Male">છોકરો</option>
+<option value="Female">છોકરી</option>
+</select>
+<input id="pCity" placeholder="શહેર" required>
+<input id="pEducation" placeholder="શિક્ષણ">
+<input id="pOccupation" placeholder="વ્યવસાય">
+<textarea id="pAbout" placeholder="તમારા વિશે લખો"></textarea>
+<button type="submit" id="saveBtn">Profile સાચવો</button>
 </form>
 </div>
 
 <div class="card">
-<h2>Login</h2>
-<form id="loginForm">
-<input id="loginEmail" type="email" placeholder="ઈમેઇલ" required>
-<input id="loginPassword" type="password" placeholder="પાસવર્ડ" required>
-<button type="submit">Login કરો</button>
-</form>
-</div>
-
-<div id="profile" class="card hidden">
-<h2>તમારું Account</h2>
-<p id="profileName"></p>
-<p id="profileEmail"></p>
-<button id="logoutBtn">Logout</button>
+<h2>Premium Membership Plans</h2>
+<div class="plan"><b>1 મહિનો</b><p class="price">₹999</p></div>
+<div class="plan"><b>3 મહિના</b><p class="price">₹2,499</p></div>
+<div class="plan"><b>6 મહિના</b><p class="price">₹3,999</p></div>
+<div class="plan"><b>12 મહિના</b><p class="price">₹5,999</p></div>
+<p>Premium માટે ઓનલાઇન ચુકવણીની સુવિધા હજી જોડવાની બાકી છે.</p>
 </div>
 
 <div class="card">
-<h2>Premium Plans</h2>
-<div class="plan">
-<strong>1 મહિનો</strong>
-<p class="price">₹999</p>
-</div>
-<div class="plan">
-<strong>3 મહિના</strong>
-<p class="price">₹2,499</p>
-</div>
-<div class="plan">
-<strong>6 મહિના</strong>
-<p class="price">₹3,999</p>
-</div>
-<div class="plan">
-<strong>12 મહિના</strong>
-<p class="price">₹5,999</p>
-</div>
-<p>Premium ચુકવણીની સુવિધા હજી જોડવાની બાકી છે.</p>
-</div>
-
-<div class="card">
-<p id="message" role="status">રજિસ્ટ્રેશન અથવા Login કરો.</p>
+<p id="message" role="status" aria-live="polite">Registration અથવા Login કરો.</p>
 </div>
 </main>
+
+<footer>© Elite Matrimony</footer>
 
 <script>
 const SUPABASE_URL = 'https://zwgdqsskwskgthytdahl.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_4z4DovXpyPVCZkqXxfLpMw_tCQtiWAp';
-
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-const message = document.getElementById('message');
 
-function showMessage(text) {
-  message.textContent = text;
+const $ = id => document.getElementById(id);
+
+function msg(text){ $('message').textContent = text; }
+
+async function showUser(user){
+  $('authArea').style.display = user ? 'none' : 'block';
+  $('memberArea').style.display = user ? 'block' : 'none';
+
+  if(!user) return;
+
+  $('accountEmail').textContent = 'Email: ' + (user.email || '');
+
+  const {data,error} = await db.from('member_profiles')
+    .select('*').eq('id',user.id).maybeSingle();
+
+  if(error){msg('Profile લોડ ભૂલ: '+error.message);return;}
+  if(!data) return;
+
+  $('pName').value=data.full_name||'';
+  $('pBirth').value=data.birth_date||'';
+  $('pGender').value=data.gender||'';
+  $('pCity').value=data.city||'';
+  $('pEducation').value=data.education||'';
+  $('pOccupation').value=data.occupation||'';
+  $('pAbout').value=data.about_me||'';
 }
 
-function showProfile(user) {
-  const panel = document.getElementById('profile');
+async function register(action){
+  const email=$('email').value.trim();
+  const password=$('password').value;
+  if(!email||!password){msg('Email અને Password ભરો.');return;}
 
-  if (!user) {
-    panel.classList.add('hidden');
-    return;
-  }
+  try{
+    let result;
+    if(action==='signup'){
+      result=await db.auth.signUp({email,password});
+    }else{
+      result=await db.auth.signInWithPassword({email,password});
+    }
 
-  panel.classList.remove('hidden');
-  document.getElementById('profileName').textContent =
-    'નામ: ' + (user.user_metadata?.full_name || 'સભ્ય');
-  document.getElementById('profileEmail').textContent =
-    'ઈમેઇલ: ' + user.email;
+    if(result.error){msg('ભૂલ: '+result.error.message);return;}
+
+    if(action==='signup'&&!result.data.session){
+      msg('Registration થયું. Email confirmation જરૂરી હોય તો Email ચેક કરો.');
+      return;
+    }
+
+    if(result.data.user){
+      await showUser(result.data.user);
+      msg(action==='signup'?'Registration સફળ થયું. Profile ભરો.':'Login સફળ થયું. Profile ભરો.');
+    }
+  }catch(e){msg('ભૂલ: '+e.message);}
 }
 
-document.getElementById('registerForm').addEventListener('submit', async (event) => {
-  event.preventDefault();
+$('signupForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  await register('signup');
+});
 
-  const name = document.getElementById('regName').value.trim();
-  const email = document.getElementById('regEmail').value.trim();
-  const password = document.getElementById('regPassword').value;
+$('loginBtn').addEventListener('click',async()=>{
+  await register('login');
+});
 
-  showMessage('રજિસ્ટ્રેશન થઈ રહ્યું છે...');
+$('profileForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  $('saveBtn').disabled=true;
 
-  const { data, error } = await db.auth.signUp({
-    email,
-    password,
-    options: { data: { full_name: name } }
-  });
+  try{
+    const {data:{user},error:userError}=await db.auth.getUser();
 
-  if (error) {
-    showMessage('Registration error: ' + error.message);
-    return;
-  }
+    if(userError||!user){
+      msg('પહેલાં Login કરો.');
+      return;
+    }
 
-  if (data.session && data.user) {
-    showProfile(data.user);
-    showMessage('રજિસ્ટ્રેશન સફળ થયું!');
-  } else {
-    showMessage('રજિસ્ટ્રેશન વિનંતી થઈ. ઈમેઇલ ચકાસવાની જરૂર હોય તો મળેલી લિંકથી ખાતું ચકાસો.');
+    const profile={
+      id:user.id,
+      full_name:$('pName').value.trim(),
+      birth_date:$('pBirth').value,
+      gender:$('pGender').value,
+      city:$('pCity').value.trim(),
+      education:$('pEducation').value.trim(),
+      occupation:$('pOccupation').value.trim(),
+      about_me:$('pAbout').value.trim(),
+      updated_at:new Date().toISOString()
+    };
+
+    const {error}=await db.from('member_profiles')
+      .upsert(profile,{onConflict:'id'});
+
+    if(error){
+      msg('Profile સાચવવામાં ભૂલ: '+error.message);
+      return;
+    }
+
+    msg('તમારી Profile સફળતાપૂર્વક સાચવાઈ ગઈ!');
+  }catch(e){
+    msg('ભૂલ: '+e.message);
+  }finally{
+    $('saveBtn').disabled=false;
   }
 });
 
-document.getElementById('loginForm').addEventListener('submit', async (event) => {
-  event.preventDefault();
-
-  const email = document.getElementById('loginEmail').value.trim();
-  const password = document.getElementById('loginPassword').value;
-
-  showMessage('Login થઈ રહ્યું છે...');
-
-  const { data, error } = await db.auth.signInWithPassword({
-    email,
-    password
-  });
-
-  if (error) {
-    showMessage('Login error: ' + error.message);
-    return;
-  }
-
-  showProfile(data.user);
-  showMessage('Login સફળ થયું!');
-});
-document.getElementById('saveProfileForm').addEventListener('submit', async (event) => {
-  event.preventDefault();
-
-  const { data: { user }, error: userError } = await db.auth.getUser();
-
-  if (userError || !user) {
-    showMessage('પહેલાં Login કરો.');
-    return;
-  }
-
-  const profile = {
-    id: user.id,
-    full_name: document.getElementById('pName').value.trim(),
-    birth_date: document.getElementById('pBirth').value || null,
-    gender: document.getElementById('pGender').value,
-    city: document.getElementById('pCity').value.trim(),
-    education: document.getElementById('pEducation').value.trim(),
-    occupation: document.getElementById('pOccupation').value.trim(),
-    about_me: document.getElementById('pAbout').value.trim(),
-    updated_at: new Date().toISOString()
-  };
-
-  const { error } = await db
-    .from('member_profiles')
-    .upsert(profile);
-
-  if (error) {
-    showMessage('Profile સાચવવામાં ભૂલ: ' + error.message);
-    return;
-  }
-
-  showMessage('તમારી Profile સફળતાપૂર્વક સાચવાઈ ગઈ!');
-});
-document.getElementById('logoutBtn').addEventListener('click', async () => {
-  const { error } = await db.auth.signOut();
-
-  if (error) {
-    showMessage('Logout error: ' + error.message);
-    return;
-  }
-
-  showProfile(null);
-  showMessage('Logout થઈ ગયું.');
+$('logoutBtn').addEventListener('click',async()=>{
+  const {error}=await db.auth.signOut();
+  if(error){msg('Logout ભૂલ: '+error.message);return;}
+  $('profileForm').reset();
+  await showUser(null);
+  msg('તમે Logout થયા છો.');
 });
 
-db.auth.getSession().then(({ data, error }) => {
-  if (error) {
-    showMessage('Session error: ' + error.message);
-    return;
-  }
-  showProfile(data.session?.user || null);
+db.auth.onAuthStateChange((_event,session)=>{
+  showUser(session?.user||null);
 });
 
-db.auth.onAuthStateChange((_event, session) => {
-  showProfile(session?.user || null);
-});
-  <div class="card" id="memberProfileForm">
-  <h2>તમારી Matrimony Profile</h2>
-  <form id="saveProfileForm">
-   \u003Cbutton type=\"submit\">Profile સાચવો\u003C/button> <input id="pName" placeholder="પૂરું નામ" required>
-    <input id="pBirth" type="date" required>
-    <select id="pGender" required>
-      <option value="">છોકરો / છોકરી પસંદ કરો</option>
-      <option value="Male">છોકરો</option>
-      <option value="Female">છોકરી</option>
-      <option value="Other">અન્ય</option>
-    </select>
-    <input id="pCity" placeholder="શહેર" required>
-    <input id="pEducation" placeholder="શિક્ષણ">
-    <input id="pOccupation" placeholder="વ્યવસાય">
-    <textarea id="pAbout" placeholder="તમારા વિશે લખો"></textarea>
-    <button type="submit">Profile સાચવો</button>
-  </form>
-  </div>
+(async()=>{
+  const {data,error}=await db.auth.getSession();
+  if(error){msg('ભૂલ: '+error.message);return;}
+  await showUser(data.session?.user||null);
+})();
 </script>
-  
 </body>
-</html>
+  </html>
+  
