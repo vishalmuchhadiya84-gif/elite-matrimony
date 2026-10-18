@@ -535,7 +535,7 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
             "Authorization": "Bearer " + token,
             "apikey": SUPABASE_KEY
           },
-          body: JSON.stringify({ plan })
+          body: JSON.stringify({ action: "create_order", plan })
         }
       );
 
