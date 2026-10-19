@@ -558,7 +558,44 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
         order_id: order.order_id,
         prefill: { email: currentUser.email || "" },
 
-        handler: function () {
+        handler: async function (paymentResponse) {
+  try {
+    const { data: sessionData } = await db.auth.getSession();
+    const token = sessionData?.session?.access_token;
+
+    if (!token) {
+      return note("ફરી Login કરો.");
+    }
+
+    const response = await fetch(
+      SUPABASE_URL + "/functions/v1/bright-api",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + token,
+          "apikey": SUPABASE_KEY
+        },
+        body: JSON.stringify({
+          action: "verify_payment",
+          razorpay_order_id: paymentResponse.razorpay_order_id,
+          razorpay_payment_id: paymentResponse.razorpay_payment_id,
+          razorpay_signature: paymentResponse.razorpay_signature
+        })
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.error || "Payment verification failed.");
+    }
+
+    note("ચુકવણી સફળ! Premium Membership સક્રિય થઈ ગયું છે.");
+  } catch (e) {
+    note("Payment verification error: " + e.message);
+  }
+},() {
           note("Payment response મળ્યો છે. Premium સક્રિય કરતાં પહેલાં server-side payment verification અને webhook જરૂરી છે.");
         },
 
