@@ -7,15 +7,15 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <style>
-:root{--navy:#5b174f;--pink:#a52a67;--bg:#fff7fb;--line:#ead8e4;--text:#29202a}
+:root{--navy:#5b174f;--pink:#a52a67;--bg:#fff7fb;--line:#ead8e4;--text:#29202a;--gold:#d5ad62}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif;line-height:1.45}
-header{background:linear-gradient(120deg,var(--navy),var(--pink));color:white;padding:20px 16px;text-align:center}
-header h1{margin:0;font-size:27px}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif;line-height:1.5}
+header{background:linear-gradient(120deg,var(--navy),var(--pink));color:white;padding:24px 16px;text-align:center}
+header h1{margin:0;font-size:29px}
 header p{margin:6px 0 0}
 main{max-width:980px;margin:18px auto;padding:0 12px}
 .card{background:white;border:1px solid var(--line);border-radius:14px;padding:16px;margin:14px 0;box-shadow:0 3px 12px #5b174f0c}
-h2{font-size:20px;margin:0 0 12px;color:var(--navy)}
+h2{font-size:21px;margin:0 0 12px;color:var(--navy)}
 h3{margin:0 0 8px}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
 label{display:block;font-size:14px;font-weight:bold;margin:8px 0 4px}
@@ -25,19 +25,23 @@ button{border:0;border-radius:9px;padding:11px 15px;background:var(--pink);color
 button.secondary{background:#6b5b67}
 button:disabled{opacity:.5;cursor:not-allowed}
 .muted{color:#6e626b;font-size:13px}
-.status{padding:10px;border-radius:8px;background:#fff0f7;margin:10px 0;white-space:pre-wrap}
+.status{padding:10px;border-radius:8px;background:#fff0f7;margin:10px 0;white-space:pre-wrap;overflow-wrap:anywhere}
 .hidden{display:none!important}
-.member{border:1px solid var(--line);border-radius:10px;padding:12px;margin:10px 0}
-.member img{width:76px;height:76px;object-fit:cover;border-radius:50%;background:#f1e4ed;float:right}
+.member{border:1px solid var(--line);border-radius:10px;padding:14px;margin:10px 0;overflow:hidden}
+.member img{width:76px;height:76px;object-fit:cover;border-radius:50%;float:right}
 .pill{display:inline-block;background:#f6e4ef;color:var(--navy);padding:3px 8px;border-radius:20px;font-size:12px}
+.plan{border:1px solid var(--line);border-radius:12px;padding:16px;text-align:center}
+.plan h3{color:var(--navy)}
+.old-price{text-decoration:line-through;color:#897d86}
+.price{font-size:25px;font-weight:bold;color:var(--pink);margin:6px 0}
+.gold{color:#997127;font-weight:bold}
 footer{text-align:center;padding:22px;color:#756773;font-size:13px}
-hr{border:0;border-top:1px solid var(--line);margin:14px 0}
 </style>
 </head>
 <body>
 <header>
 <h1>Elite Matrimony</h1>
-<p>જીવનસાથીની શોધ અહીંથી શરૂ કરો</p>
+<p>ગુજરાતમાં તમારા જીવનસાથીની શોધ અહીંથી શરૂ કરો</p>
 </header>
 
 <main>
@@ -70,40 +74,19 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
 <h2>મારી Profile</h2>
 <form id="profileForm">
 <div class="grid">
-<div>
-<label for="fullName">પૂરું નામ *</label>
-<input id="fullName" required maxlength="100">
-</div>
-<div>
-<label for="birthDate">જન્મ તારીખ</label>
-<input id="birthDate" type="date">
-</div>
-<div>
-<label for="gender">Gender</label>
+<div><label for="fullName">પૂરું નામ *</label><input id="fullName" required maxlength="100"></div>
+<div><label for="birthDate">જન્મ તારીખ</label><input id="birthDate" type="date"></div>
+<div><label for="gender">Gender</label>
 <select id="gender">
 <option value="">પસંદ કરો</option>
 <option value="Male">પુરુષ</option>
 <option value="Female">સ્ત્રી</option>
 <option value="Other">અન્ય</option>
-</select>
-</div>
-<div>
-<label for="city">શહેર</label>
-<input id="city" maxlength="100">
-</div>
-<div>
-<label for="education">શિક્ષણ</label>
-<input id="education" maxlength="150">
-</div>
-<div>
-<label for="occupation">વ્યવસાય</label>
-<input id="occupation" maxlength="150">
-</div>
-<div>
-<label for="photoFile">Profile Photo</label>
-<input id="photoFile" type="file" accept="image/*">
-<div class="muted">JPG/PNG, 5 MB સુધી.</div>
-</div>
+</select></div>
+<div><label for="city">શહેર</label><input id="city" maxlength="100"></div>
+<div><label for="education">શિક્ષણ</label><input id="education" maxlength="150"></div>
+<div><label for="occupation">વ્યવસાય</label><input id="occupation" maxlength="150"></div>
+<div><label for="photoFile">Profile Photo</label><input id="photoFile" type="file" accept="image/*"><div class="muted">JPG/PNG, 5 MB સુધી.</div></div>
 </div>
 <label for="aboutMe">મારા વિશે</label>
 <textarea id="aboutMe" maxlength="1000"></textarea>
@@ -112,22 +95,23 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
 <div id="profileStatus" class="status hidden"></div>
 </section>
 
+<section id="membershipSection" class="card hidden">
+<h2>મારી Premium Membership</h2>
+<div id="membershipStatus" class="status">Membership માહિતી લોડ થઈ રહી છે...</div>
+<button id="refreshMembershipBtn" class="secondary">Membership Refresh કરો</button>
+</section>
+
 <section id="searchSection" class="card hidden">
 <h2>Members Search</h2>
 <div class="grid">
-<div>
-<label for="searchCity">શહેર પ્રમાણે</label>
-<input id="searchCity" placeholder="જેમ કે Ahmedabad">
-</div>
-<div>
-<label for="searchGender">Gender</label>
+<div><label for="searchCity">શહેર પ્રમાણે</label><input id="searchCity" placeholder="જેમ કે Ahmedabad"></div>
+<div><label for="searchGender">Gender</label>
 <select id="searchGender">
 <option value="">બધા</option>
 <option value="Male">પુરુષ</option>
 <option value="Female">સ્ત્રી</option>
 <option value="Other">અન્ય</option>
-</select>
-</div>
+</select></div>
 </div>
 <button id="searchBtn">સભ્યો શોધો</button>
 <div id="membersList"></div>
@@ -140,541 +124,425 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
 </section>
 
 <section id="plansSection" class="card hidden">
-<h2>Premium Membership</h2>
-<p class="muted">ચુકવણી કરતા પહેલાં યોજના અને રકમ ચકાસો.</p>
+<h2>Premium Membership Plans</h2>
+<p>તમારી જરૂરિયાત પ્રમાણે Premium યોજના પસંદ કરો.</p>
 <div class="grid">
-<div class="member">
+<div class="plan">
 <h3>1 મહિનો</h3>
-<p>₹999</p>
-<button data-plan="month_1">પસંદ કરો</button>
+<div class="old-price">₹999</div>
+<div class="price">₹499</div>
+<p class="gold">80% ડિસ્કાઉન્ટ ઓફર</p>
+<p class="muted">GST 18% અલગથી</p>
+<button data-plan="month_1">પ્લાન પસંદ કરો</button>
 </div>
-<div class="member">
+<div class="plan">
 <h3>3 મહિના</h3>
-<p>₹2,499</p>
-<button data-plan="month_3">પસંદ કરો</button>
+<div class="old-price">₹2,499</div>
+<div class="price">₹1,249</div>
+<p class="gold">80% ડિસ્કાઉન્ટ ઓફર</p>
+<p class="muted">GST 18% અલગથી</p>
+<button data-plan="month_3">પ્લાન પસંદ કરો</button>
 </div>
-<div class="member">
+<div class="plan">
 <h3>6 મહિના</h3>
-<p>₹3,999</p>
-<button data-plan="month_6">પસંદ કરો</button>
+<div class="old-price">₹3,999</div>
+<div class="price">₹1,999</div>
+<p class="gold">80% ડિસ્કાઉન્ટ ઓફર</p>
+<p class="muted">GST 18% અલગથી</p>
+<button data-plan="month_6">પ્લાન પસંદ કરો</button>
 </div>
-<div class="member">
+<div class="plan">
 <h3>12 મહિના</h3>
-<p>₹5,999</p>
-<button data-plan="month_12">પસંદ કરો</button>
+<div class="old-price">₹5,999</div>
+<div class="price">₹2,999</div>
+<p class="gold">80% ડિસ્કાઉન્ટ ઓફર</p>
+<p class="muted">GST 18% અલગથી</p>
+<button data-plan="month_12">પ્લાન પસંદ કરો</button>
 </div>
 </div>
-<div class="muted">
-નોંધ: ચુકવણી પછી Premium સક્રિય કરવા માટે સર્વર પર Razorpay payment verification અને webhook યોગ્ય રીતે સેટ હોવા જરૂરી છે.
-</div>
+<div class="muted">ચુકવણી Razorpay દ્વારા થાય છે. Premium સક્રિય થવા માટે સર્વર પર payment verification સફળ થવું જરૂરી છે.</div>
 </section>
 
 <section id="adminSection" class="card hidden">
 <h2>Admin Dashboard</h2>
-<p class="muted">આ વિભાગમાં માત્ર admin_users ટેબલમાં નોંધાયેલા login વપરાશકર્તાને પ્રવેશ મળે છે. Database ની RLS policies પણ યોગ્ય હોવી જરૂરી છે.</p>
+<p class="muted">આ વિભાગમાં માત્ર admin_users ટેબલમાં નોંધાયેલા login વપરાશકર્તાને પ્રવેશ મળે છે.</p>
 <button id="adminRefreshBtn">સભ્યોની યાદી Refresh કરો</button>
 <div id="adminStatus" class="status hidden"></div>
 <div id="adminMembers"></div>
 </section>
 </main>
 
-<footer>Elite Matrimony</footer>
+<footer>© Elite Matrimony</footer>
 
 <script>
 (() => {
-  const SUPABASE_URL = "https://zwgdqsskwskgthytdahl.supabase.co";
+"use strict";
 
-  // અહીં તમારી સાચી Supabase Publishable Key મૂકો.
-  const SUPABASE_KEY = "sb_publishable_4z4DovXpyPVCZkqXxfLpMw_tCQtiWAp";
-
+const SUPABASE_URL = "https://zwgdqsskwskgthytdahl.supabase.co";
+const SUPABASE_KEY = "sb_publishable_4z4DovXpyPVCZkqXxfLpMw_tCQtiWAp";
 const $ = id => document.getElementById(id);
 
-if (!window.supabase ||
-    typeof window.supabase.createClient !== "function") {
-  $("notice").textContent =
-    "Supabase લોડ થયું નથી. Internet તપાસીને પેજ Refresh કરો.";
+if (!window.supabase || !window.supabase.createClient) {
+  $("notice").textContent = "Supabase લોડ થયું નથી. Internet તપાસીને Refresh કરો.";
   return;
 }
 
-let db;
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let currentUser = null;
+let isAdmin = false;
+let membershipRequest = 0;
 
-try {
-  db = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
+function note(message, target = "notice") {
+  const el = $(target);
+  if (!el) return;
+  el.textContent = message;
+  el.classList.remove("hidden");
+}
+function show(id) { $(id).classList.remove("hidden"); }
+function hide(id) { $(id).classList.add("hidden"); }
+
+function safe(value) {
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+}
+
+function formatDate(value) {
+  if (!value) return "—";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return safe(value);
+  return date.toLocaleDateString("gu-IN");
+}
+
+async function checkAdmin(user) {
+  if (!user) return false;
+  const {data,error} = await db.from("admin_users")
+    .select("user_id").eq("user_id",user.id).maybeSingle();
+  if (error) {
+    console.warn("Admin check:",error.message);
+    return false;
+  }
+  return !!data;
+}
+
+async function refreshSession(session) {
+  currentUser = session?.user || null;
+  isAdmin = false;
+
+  if (!currentUser) {
+    ["accountSection","profileSection","membershipSection","searchSection",
+     "interestsSection","plansSection","adminSection"].forEach(hide);
+    show("authSection");
+    note("Login કરો અથવા નવું એકાઉન્ટ બનાવો.");
+    return;
+  }
+
+  hide("authSection");
+  ["accountSection","profileSection","membershipSection","searchSection",
+   "interestsSection","plansSection"].forEach(show);
+  $("accountInfo").textContent = "Login: " + (currentUser.email || "");
+  note("Login સફળ થયું.");
+
+  await Promise.all([loadProfile(),loadMembership(),loadReceived()]);
+  isAdmin = await checkAdmin(currentUser);
+
+  if (isAdmin) {
+    show("adminSection");
+    await loadAdminMembers();
+  } else {
+    hide("adminSection");
+  }
+}
+
+async function loadProfile() {
+  if (!currentUser) return;
+  const {data,error} = await db.from("member_profiles")
+    .select("full_name,birth_date,gender,city,education,occupation,about_me,photo_url")
+    .eq("id",currentUser.id).maybeSingle();
+
+  if (error) {
+    note("Profile load error: " + error.message,"profileStatus");
+    return;
+  }
+  if (!data) return;
+
+  $("fullName").value = data.full_name || "";
+  $("birthDate").value = data.birth_date || "";
+  $("gender").value = data.gender || "";
+  $("city").value = data.city || "";
+  $("education").value = data.education || "";
+  $("occupation").value = data.occupation || "";
+  $("aboutMe").value = data.about_me || "";
+}
+
+async function loadMembership() {
+  if (!currentUser) return;
+  const requestId = ++membershipRequest;
+  const box = $("membershipStatus");
+  box.textContent = "Membership માહિતી લોડ થઈ રહી છે...";
+
+  const {data,error} = await db.from("membership_subscriptions")
+    .select("plan,status,starts_at,expires_at")
+    .eq("user_id",currentUser.id)
+    .order("created_at",{ascending:false})
+    .limit(20);
+
+  if (requestId !== membershipRequest) return;
+
+  if (error) {
+    box.textContent = "Membership માહિતી મળી નથી. Database તપાસો: " + error.message;
+    return;
+  }
+
+  const now = Date.now();
+  const active = (data || []).find(row =>
+    String(row.status || "").toLowerCase() === "active" &&
+    (!row.expires_at || new Date(row.expires_at).getTime() > now)
   );
-} catch (error) {
-  $("notice").textContent =
-    "Supabase Error: " + error.message;
-  return;
+
+  if (!active) {
+    box.textContent = "હાલ કોઈ Active Premium Membership નથી. Premium Plan પસંદ કરવા નીચેના Plans વિભાગમાં જાઓ.";
+    return;
+  }
+
+  const names = {
+    month_1:"1 મહિનો",
+    month_3:"3 મહિના",
+    month_6:"6 મહિના",
+    month_12:"12 મહિના"
+  };
+
+  box.textContent =
+    "સ્થિતિ: Active Premium Membership\n" +
+    "પ્લાન: " + (names[active.plan] || active.plan || "Premium") + "\n" +
+    "શરૂઆત: " + formatDate(active.starts_at) + "\n" +
+    "સમાપ્તિ: " + formatDate(active.expires_at);
 }
-  let currentUser = null;
-  let isAdmin = false;
 
-  function note(message, target = "notice") {
-    const el = $(target);
-    if (el) {
-      el.textContent = message;
-      el.classList.remove("hidden");
-    }
+$("refreshMembershipBtn").addEventListener("click",loadMembership);
+
+$("signupBtn").addEventListener("click",async () => {
+  const email = $("authEmail").value.trim();
+  const password = $("authPassword").value;
+  if (!email || password.length < 6) {
+    note("યોગ્ય ઈમેલ અને ઓછામાં ઓછા 6 અક્ષરનો પાસવર્ડ લખો.");
+    return;
+  }
+  const {error} = await db.auth.signUp({email,password});
+  if (error) return note("Sign Up Error: " + error.message);
+  note("Sign Up વિનંતી મોકલાઈ. Email confirmation ચાલુ હોય તો ઈમેલમાં આવેલી લિંકથી ખાતું confirm કરો.");
+});
+
+$("loginBtn").addEventListener("click",async () => {
+  const email = $("authEmail").value.trim();
+  const password = $("authPassword").value;
+  const {data,error} = await db.auth.signInWithPassword({email,password});
+  if (error) return note("Login Error: " + error.message);
+  await refreshSession(data.session);
+});
+
+$("logoutBtn").addEventListener("click",async () => {
+  const {error} = await db.auth.signOut();
+  if (error) return note("Logout Error: " + error.message);
+  await refreshSession(null);
+});
+
+$("profileForm").addEventListener("submit",async event => {
+  event.preventDefault();
+  if (!currentUser) return note("પહેલાં Login કરો.","profileStatus");
+
+  const profile = {
+    id:currentUser.id,
+    full_name:$("fullName").value.trim(),
+    birth_date:$("birthDate").value || null,
+    gender:$("gender").value || null,
+    city:$("city").value.trim() || null,
+    education:$("education").value.trim() || null,
+    occupation:$("occupation").value.trim() || null,
+    about_me:$("aboutMe").value.trim() || null,
+    updated_at:new Date().toISOString()
+  };
+
+  if (!profile.full_name) return note("પૂરું નામ લખો.","profileStatus");
+
+  const file = $("photoFile").files[0];
+  if (file && file.size > 5 * 1024 * 1024) {
+    return note("Photo 5 MB કરતાં નાનો રાખો.","profileStatus");
   }
 
-  function hide(id) { $(id).classList.add("hidden"); }
-  function show(id) { $(id).classList.remove("hidden"); }
-
-  function safe(value) {
-    return String(value ?? "").replace(/[&<>"']/g, c => ({
-      "&":"&amp;",
-      "<":"&lt;",
-      ">":"&gt;",
-      '"':"&quot;",
-      "'":"&#39;"
-    }[c]));
-  }
-
-  async function checkAdmin(user) {
-    if (!user) return false;
-
-    const { data, error } = await db
-      .from("admin_users")
-      .select("user_id")
-      .eq("user_id", user.id)
-      .maybeSingle();
-
-    if (error) {
-      console.warn("Admin check failed:", error.message);
-      return false;
-    }
-
-    return !!data;
-  }
-
-  async function refreshSession(session) {
-    currentUser = session?.user || null;
-    isAdmin = false;
-
-    if (!currentUser) {
-      show("authSection");
-      [
-        "accountSection",
-        "profileSection",
-        "searchSection",
-        "interestsSection",
-        "plansSection",
-        "adminSection"
-      ].forEach(hide);
-
-      note("Login કરો અથવા નવું એકાઉન્ટ બનાવો.");
-      return;
-    }
-
-    hide("authSection");
-    show("accountSection");
-    show("profileSection");
-    show("searchSection");
-    show("interestsSection");
-    show("plansSection");
-
-    $("accountInfo").textContent = "Login: " + (currentUser.email || "");
-    note("Login સફળ થયું.");
-
-    await loadProfile();
-
-    isAdmin = await checkAdmin(currentUser);
-
-    if (isAdmin) {
-      show("adminSection");
-      note("Admin Login સફળ થયું. Admin Dashboard ઉપલબ્ધ છે.");
-      await loadAdminMembers();
-    } else {
-      hide("adminSection");
-    }
-  }
-
-  async function loadProfile() {
-    if (!currentUser) return;
-
-    const { data, error } = await db
-      .from("member_profiles")
-      .select("full_name,birth_date,gender,city,education,occupation,about_me")
-      .eq("id", currentUser.id)
-      .maybeSingle();
-
-    if (error) {
-      note("Profile load error: " + error.message, "profileStatus");
-      return;
-    }
-
-    if (!data) return;
-
-    $("fullName").value = data.full_name || "";
-    $("birthDate").value = data.birth_date || "";
-    $("gender").value = data.gender || "";
-    $("city").value = data.city || "";
-    $("education").value = data.education || "";
-    $("occupation").value = data.occupation || "";
-    $("aboutMe").value = data.about_me || "";
-  }
-
-  $("signupBtn").addEventListener("click", async () => {
-    const email = $("authEmail").value.trim();
-    const password = $("authPassword").value;
-
-    if (!email || password.length < 6) {
-      return note("યોગ્ય ઈમેલ અને ઓછામાં ઓછા 6 અક્ષરનો પાસવર્ડ લખો.");
-    }
-
-    const { error } = await db.auth.signUp({ email, password });
-
-    if (error) return note("Sign Up Error: " + error.message);
-
-    note("Sign Up વિનંતી મોકલાઈ. જો Email confirmation ચાલુ હોય તો ઈમેલમાં આવેલી લિંકથી ખાતું confirm કરો, પછી Login કરો.");
-  });
-
-  $("loginBtn").addEventListener("click", async () => {
-    const email = $("authEmail").value.trim();
-    const password = $("authPassword").value;
-
-    const { data, error } = await db.auth.signInWithPassword({
-      email,
-      password
+  if (file) {
+    const ext = (file.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g,"");
+    const path = currentUser.id + "/profile-" + Date.now() + "." + ext;
+    const upload = await db.storage.from("profile-photos").upload(path,file,{
+      upsert:true,contentType:file.type
     });
+    if (upload.error) return note("Photo Upload Error: " + upload.error.message,"profileStatus");
 
-    if (error) return note("Login Error: " + error.message);
-
-    await refreshSession(data.session);
-  });
-
-  $("logoutBtn").addEventListener("click", async () => {
-    const { error } = await db.auth.signOut();
-
-    if (error) return note("Logout Error: " + error.message);
-
-    await refreshSession(null);
-  });
-
-  $("profileForm").addEventListener("submit", async event => {
-    event.preventDefault();
-
-    if (!currentUser) {
-      return note("પહેલાં Login કરો.", "profileStatus");
-    }
-
-    const profile = {
-      id: currentUser.id,
-      full_name: $("fullName").value.trim(),
-      birth_date: $("birthDate").value || null,
-      gender: $("gender").value || null,
-      city: $("city").value.trim() || null,
-      education: $("education").value.trim() || null,
-      occupation: $("occupation").value.trim() || null,
-      about_me: $("aboutMe").value.trim() || null,
-      updated_at: new Date().toISOString()
-    };
-
-    if (!profile.full_name) {
-      return note("પૂરું નામ લખો.", "profileStatus");
-    }
-
-    const { error } = await db
-      .from("member_profiles")
-      .upsert(profile, { onConflict: "id" });
-
-    if (error) {
-      return note("Profile Save Error: " + error.message, "profileStatus");
-    }
-
-    const file = $("photoFile").files[0];
-
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        return note("Photo 5 MB કરતાં નાનો રાખો. Profile ની બાકીની માહિતી Save થઈ ગઈ છે.", "profileStatus");
-      }
-
-      const ext = (file.name.split(".").pop() || "jpg")
-        .toLowerCase()
-        .replace(/[^a-z0-9]/g, "");
-
-      const path = currentUser.id + "/profile-" + Date.now() + "." + ext;
-
-      const upload = await db.storage
-        .from("profile-photos")
-        .upload(path, file, {
-          upsert: true,
-          contentType: file.type
-        });
-
-      if (upload.error) {
-        return note("Profile Save થઈ ગઈ, પરંતુ Photo Upload Error: " + upload.error.message, "profileStatus");
-      }
-
-      const { data: signed, error: signError } = await db.storage
-        .from("profile-photos")
-        .createSignedUrl(path, 60 * 60 * 24 * 7);
-
-      if (signError) {
-        return note("Profile Save થઈ ગઈ, પરંતુ Photo URL Error: " + signError.message, "profileStatus");
-      }
-
-      const photoUpdate = await db
-        .from("member_profiles")
-        .update({
-          photo_url: signed.signedUrl,
-          updated_at: new Date().toISOString()
-        })
-        .eq("id", currentUser.id);
-
-      if (photoUpdate.error) {
-        return note("Profile Save થઈ ગઈ, પરંતુ photo_url Error: " + photoUpdate.error.message, "profileStatus");
-      }
-    }
-
-    note("તમારી Profile Save થઈ ગઈ.", "profileStatus");
-  });
-
-  async function loadSearch() {
-    if (!currentUser) return;
-
-    const city = $("searchCity").value.trim();
-    const gender = $("searchGender").value;
-
-    let query = db
-      .from("member_profiles")
-      .select("id,full_name,birth_date,gender,city,education,occupation,about_me,photo_url")
-      .neq("id", currentUser.id)
-      .order("updated_at", { ascending: false })
-      .limit(50);
-
-    if (city) query = query.ilike("city", "%" + city + "%");
-    if (gender) query = query.eq("gender", gender);
-
-    const { data, error } = await query;
-
-    if (error) {
-      return note("Members Search Error: " + error.message, "membersList");
-    }
-
-    if (!data?.length) {
-      $("membersList").textContent = "હાલ કોઈ પ્રોફાઇલ મળી નથી.";
-      return;
-    }
-
-    $("membersList").innerHTML = data.map(m => `
-      <div class="member">
-        ${m.photo_url ? `<img src="${safe(m.photo_url)}" alt="Profile photo">` : ""}
-        <h3>${safe(m.full_name || "નામ આપ્યું નથી")}</h3>
-        <div class="muted">${safe([m.city,m.gender,m.education,m.occupation].filter(Boolean).join(" • "))}</div>
-        <p>${safe(m.about_me || "")}</p>
-        <button data-interest="${safe(m.id)}">Send Interest</button>
-      </div>
-    `).join("");
-
-    $("membersList").querySelectorAll("[data-interest]").forEach(btn => {
-      btn.addEventListener("click", () => sendInterest(btn.dataset.interest));
-    });
+    const {data:signed,error:signError} = await db.storage.from("profile-photos")
+      .createSignedUrl(path,60*60*24*7);
+    if (signError) return note("Photo URL Error: " + signError.message,"profileStatus");
+    profile.photo_url = signed.signedUrl;
   }
 
-  $("searchBtn").addEventListener("click", loadSearch);
+  const {error} = await db.from("member_profiles").upsert(profile,{onConflict:"id"});
+  if (error) return note("Profile Save Error: " + error.message,"profileStatus");
+  note("તમારી Profile Save થઈ ગઈ.","profileStatus");
+});
 
-  async function sendInterest(receiverId) {
-    if (!currentUser) return;
+async function loadSearch() {
+  if (!currentUser) return;
+  const city = $("searchCity").value.trim();
+  const gender = $("searchGender").value;
 
-    const { error } = await db
-      .from("member_interests")
-      .insert({
-        sender_id: currentUser.id,
-        receiver_id: receiverId
-      });
+  let query = db.from("member_profiles")
+    .select("id,full_name,birth_date,gender,city,education,occupation,about_me,photo_url")
+    .neq("id",currentUser.id).order("updated_at",{ascending:false}).limit(50);
+  if (city) query = query.ilike("city","%" + city + "%");
+  if (gender) query = query.eq("gender",gender);
 
-    if (error) {
-      return note("Send Interest Error: " + error.message, "membersList");
-    }
-
-    note("Interest મોકલાઈ.", "membersList");
+  const {data,error} = await query;
+  if (error) return note("Members Search Error: " + error.message,"membersList");
+  if (!data?.length) {
+    $("membersList").textContent = "હાલ કોઈ પ્રોફાઇલ મળી નથી.";
+    return;
   }
 
-  async function loadReceived() {
-    if (!currentUser) return;
+  $("membersList").innerHTML = data.map(m => `
+    <div class="member">
+      ${m.photo_url ? `<img src="${safe(m.photo_url)}" alt="Profile photo">` : ""}
+      <h3>${safe(m.full_name || "નામ આપ્યું નથી")}</h3>
+      <div class="muted">${safe([m.city,m.gender,m.education,m.occupation].filter(Boolean).join(" • "))}</div>
+      <p>${safe(m.about_me || "")}</p>
+      <button data-interest="${safe(m.id)}">Send Interest</button>
+    </div>`).join("");
 
-    const { data, error } = await db
-      .from("member_interests")
-      .select("id,sender_id,created_at")
-      .eq("receiver_id", currentUser.id)
-      .order("created_at", { ascending: false })
-      .limit(100);
+  $("membersList").querySelectorAll("[data-interest]").forEach(btn => {
+    btn.addEventListener("click",() => sendInterest(btn.dataset.interest));
+  });
+}
+$("searchBtn").addEventListener("click",loadSearch);
 
-    if (error) {
-      return note("Received Interests Error: " + error.message, "receivedList");
-    }
+async function sendInterest(receiverId) {
+  if (!currentUser) return;
+  const {error} = await db.from("member_interests").insert({
+    sender_id:currentUser.id,receiver_id:receiverId
+  });
+  if (error) return note("Send Interest Error: " + error.message,"membersList");
+  note("Interest મોકલાઈ.","membersList");
+}
 
-    if (!data?.length) {
-      $("receivedList").textContent = "હજુ કોઈ Interest મળ્યો નથી.";
-      return;
-    }
+async function loadReceived() {
+  if (!currentUser) return;
+  const {data,error} = await db.from("member_interests")
+    .select("id,sender_id,created_at").eq("receiver_id",currentUser.id)
+    .order("created_at",{ascending:false}).limit(100);
 
-    const ids = [...new Set(data.map(x => x.sender_id))];
-
-    const profiles = await db
-      .from("member_profiles")
-      .select("id,full_name,city,occupation")
-      .in("id", ids);
-
-    const map = new Map((profiles.data || []).map(p => [p.id, p]));
-
-    $("receivedList").innerHTML = data.map(item => {
-      const p = map.get(item.sender_id) || {};
-
-      return `
-        <div class="member">
-          <strong>${safe(p.full_name || "સભ્ય")}</strong>
-          <div class="muted">${safe([p.city,p.occupation].filter(Boolean).join(" • "))}</div>
-          <span class="pill">Interest received</span>
-        </div>
-      `;
-    }).join("");
+  if (error) return note("Received Interests Error: " + error.message,"receivedList");
+  if (!data?.length) {
+    $("receivedList").textContent = "હજુ કોઈ Interest મળ્યો નથી.";
+    return;
   }
 
-  $("receivedBtn").addEventListener("click", loadReceived);
+  const ids = [...new Set(data.map(x => x.sender_id))];
+  const profiles = await db.from("member_profiles")
+    .select("id,full_name,city,occupation").in("id",ids);
+  const map = new Map((profiles.data || []).map(p => [p.id,p]));
 
-  async function startPayment(plan) {
-    if (!currentUser) return note("ચુકવણી પહેલાં Login કરો.");
+  $("receivedList").innerHTML = data.map(item => {
+    const p = map.get(item.sender_id) || {};
+    return `<div class="member"><strong>${safe(p.full_name || "સભ્ય")}</strong>
+      <div class="muted">${safe([p.city,p.occupation].filter(Boolean).join(" • "))}</div>
+      <span class="pill">Interest received</span></div>`;
+  }).join("");
+}
+$("receivedBtn").addEventListener("click",loadReceived);
 
-    const { data: sessionData } = await db.auth.getSession();
-    const token = sessionData?.session?.access_token;
+async function startPayment(plan) {
+  if (!currentUser) return note("ચુકવણી પહેલાં Login કરો.");
+  const {data:sessionData} = await db.auth.getSession();
+  const token = sessionData?.session?.access_token;
+  if (!token) return note("Session મળ્યું નથી. ફરી Login કરો.");
 
-    if (!token) return note("Session મળ્યું નથી. ફરી Login કરો.");
-
-    try {
-      const response = await fetch(
-        SUPABASE_URL + "/functions/v1/bright-api",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + token,
-            "apikey": SUPABASE_KEY
-          },
-          body: JSON.stringify({ action: "create_order", plan })
-        }
-      );
-
-      const order = await response.json();
-
-      if (!response.ok) {
-        throw new Error(order.error || "Order બનાવવામાં ભૂલ આવી.");
-      }
-
-      if (!order.order_id || !order.key_id) {
-        throw new Error("Server તરફથી order_id અથવા key_id મળ્યું નથી.");
-      }
-
-      const options = {
-        key: order.key_id,
-        amount: order.amount,
-        currency: order.currency || "INR",
-        name: "Elite Matrimony",
-        description: "Premium Membership",
-        order_id: order.order_id,
-        prefill: { email: currentUser.email || "" },
-
-        handler: async function (paymentResponse) {
   try {
-    const { data: sessionData } = await db.auth.getSession();
-    const token = sessionData?.session?.access_token;
+    const response = await fetch(SUPABASE_URL + "/functions/v1/bright-api",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "Authorization":"Bearer " + token,
+        "apikey":SUPABASE_KEY
+      },
+      body:JSON.stringify({action:"create_order",plan})
+    });
+    const order = await response.json();
+    if (!response.ok) throw new Error(order.error || "Order બનાવવામાં ભૂલ આવી.");
+    if (!order.order_id || !order.key_id) throw new Error("Server તરફથી order_id અથવા key_id મળ્યું નથી.");
 
-    if (!token) {
-      return note("ફરી Login કરો.");
-    }
+    const options = {
+      key:order.key_id,
+      amount:order.amount,
+      currency:order.currency || "INR",
+      name:"Elite Matrimony",
+      description:"Premium Membership - " + plan,
+      order_id:order.order_id,
+      prefill:{email:currentUser.email || ""},
+      handler:async function(paymentResponse) {
+        try {
+          const {data:s} = await db.auth.getSession();
+          const freshToken = s?.session?.access_token;
+          if (!freshToken) throw new Error("ફરી Login કરો.");
 
-    const response = await fetch(
-      SUPABASE_URL + "/functions/v1/bright-api",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer " + token,
-          "apikey": SUPABASE_KEY
-        },
-        body: JSON.stringify({
-          action: "verify_payment",
-          razorpay_order_id: paymentResponse.razorpay_order_id,
-          razorpay_payment_id: paymentResponse.razorpay_payment_id,
-          razorpay_signature: paymentResponse.razorpay_signature
-        })
-      }
-    );
-
-    const result = await response.json();
-
-    if (!response.ok || !result.success) {
-      throw new Error(result.error || "Payment verification failed.");
-    }
-
-    note("ચુકવણી સફળ! Premium Membership સક્રિય થઈ ગયું છે.");
-  } catch (e) {
-    note("Payment verification error: " + e.message);
-  }
-},
-        modal: {
-          ondismiss: function () {
-            note("ચુકવણી વિન્ડો બંધ થઈ.");
+          const verifyResponse = await fetch(SUPABASE_URL + "/functions/v1/bright-api",{
+            method:"POST",
+            headers:{
+              "Content-Type":"application/json",
+              "Authorization":"Bearer " + freshToken,
+              "apikey":SUPABASE_KEY
+            },
+            body:JSON.stringify({
+              action:"verify_payment",
+              plan,
+              razorpay_order_id:paymentResponse.razorpay_order_id,
+              razorpay_payment_id:paymentResponse.razorpay_payment_id,
+              razorpay_signature:paymentResponse.razorpay_signature
+            })
+          });
+          const result = await verifyResponse.json();
+          if (!verifyResponse.ok || !result.success) {
+            throw new Error(result.error || "Payment verification failed.");
           }
+          note("ચુકવણી સફળ. Membership સ્થિતિ Refresh થઈ રહી છે.");
+          await loadMembership();
+        } catch (e) {
+          note("Payment verification error: " + e.message);
         }
-      };
+      },
+      modal:{ondismiss:() => note("ચુકવણી વિન્ડો બંધ થઈ.")}
+    };
+    new Razorpay(options).open();
+  } catch (e) {
+    note("Payment Error: " + e.message);
+  }
+}
 
-      new Razorpay(options).open();
+document.querySelectorAll("[data-plan]").forEach(btn => {
+  btn.addEventListener("click",() => startPayment(btn.dataset.plan));
+});
 
-    } catch (e) {
-      note("Payment Error: " + e.message);
-    }
+async function loadAdminMembers() {
+  if (!currentUser || !isAdmin) return note("આ એકાઉન્ટને Admin પરવાનગી નથી.","adminStatus");
+  const status = $("adminStatus");
+  status.classList.remove("hidden");
+  status.textContent = "સભ્યોની યાદી લોડ થઈ રહી છે...";
+
+  const {data,error} = await db.from("member_profiles")
+    .select("id,full_name,birth_date,gender,city,education,occupation,about_me,updated_at")
+    .order("updated_at",{ascending:false}).limit(200);
+
+  if (error) {
+    status.textContent = "Admin સભ્યો લોડ કરવામાં ભૂલ: " + error.message;
+    $("adminMembers").innerHTML = "";
+    return;
   }
 
-  document.querySelectorAll("[data-plan]").forEach(btn => {
-    btn.addEventListener("click", () => startPayment(btn.dataset.plan));
-  });
-
-  async function loadAdminMembers() {
-    if (!currentUser || !isAdmin) {
-      return note("આ એકાઉન્ટને Admin પરવાનગી નથી.", "adminStatus");
-    }
-
-    const status = $("adminStatus");
-    status.classList.remove("hidden");
-    status.textContent = "સભ્યોની યાદી લોડ થઈ રહી છે...";
-
-    const { data, error } = await db
-      .from("member_profiles")
-      .select("id,full_name,birth_date,gender,city,education,occupation,about_me,updated_at")
-      .order("updated_at", { ascending: false })
-      .limit(200);
-
-    if (error) {
-      status.textContent = "Admin સભ્યો લોડ કરવામાં ભૂલ: " + error.message;
-      $("adminMembers").innerHTML = "";
-      return;
-    }
-
-    status.textContent = "કુલ બતાવેલા સભ્યો: " + (data?.length || 0);
-
-    $("adminMembers").innerHTML = (data || []).map(m => `
-      <div class="member">
-        <h3>${safe(m.full_name || "નામ આપ્યું નથી")}</h3>
-        <div class="muted">${safe([m.city,m.gender,m.education,m.occupation].filter(Boolean).join(" • "))}</div>
-        <p>${safe(m.about_me || "")}</p>
-        <div class="muted">User ID: ${safe(m.id)}</div>
-      </div>
-    `).join("") || "કોઈ સભ્ય મળ્યો નથી.";
-  }
-
-  $("adminRefreshBtn").addEventListener("click", loadAdminMembers);
-
-  db.auth.onAuthStateChange((_event, session) => {
-    setTimeout(() => refreshSession(session), 0);
-  });
-
-  db.auth.getSession().then(({ data }) => refreshSession(data.session));
-})();
-</script>
-</body>
-  </html>
-  
+  status.textContent = "કુલ બતાવેલા સભ્યો: " + (data?.length || 0);
+  $("admin
