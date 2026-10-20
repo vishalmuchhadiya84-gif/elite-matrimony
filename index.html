@@ -187,7 +187,27 @@ hr{border:0;border-top:1px solid var(--line);margin:14px 0}
   // અહીં તમારી સાચી Supabase Publishable Key મૂકો.
   const SUPABASE_KEY = "sb_publishable_4z4DovXpyPVCZkqXxfLpMw_tCQtiWAp";
 
-  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const $ = id => document.getElementById(id);
+
+if (!window.supabase ||
+    typeof window.supabase.createClient !== "function") {
+  $("notice").textContent =
+    "Supabase લોડ થયું નથી. Internet તપાસીને પેજ Refresh કરો.";
+  return;
+}
+
+let db;
+
+try {
+  db = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+} catch (error) {
+  $("notice").textContent =
+    "Supabase Error: " + error.message;
+  return;
+}
   const $ = id => document.getElementById(id);
   let currentUser = null;
   let isAdmin = false;
