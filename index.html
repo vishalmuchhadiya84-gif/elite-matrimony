@@ -213,7 +213,7 @@ async function startPayment(planKey) {
   status("paymentStatus","સુરક્ષિત payment order બનાવાઈ રહ્યો છે...");
   // The Edge Function must validate plan prices on the server; never trust the browser amount.
   const {data,error}=await supabase.functions.invoke("bright-api",{body:{action:"create_order",plan:planKey}});
-  if(error || !data?.success || !data?.order?.id) return status("paymentStatus","Payment order error: "+(data?.error||error?.message||"Order create ન થયો."),"error");
+  if(error || !data?.success || !(data?.order?.id || data?.order_id)) return status("paymentStatus","Payment order error: "+(data?.error||error?.message||"Order create ન થયો."),"error");
   const options={
     key:data.key_id,
     amount:data.order.amount,
