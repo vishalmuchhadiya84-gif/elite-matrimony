@@ -175,7 +175,22 @@ async function loadProfiles() {
   const city=$("searchCity").value.trim(), gender=$("searchGender").value;
   if (city) q=q.ilike("city","%"+city+"%");
   if (gender) q=q.eq("gender",gender);
-  const {data,error}=await q;
+  
+let result;
+try {
+  result = await Promise.race([
+    q,
+    new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("Supabase તરફથી જવાબ મળ્યો નથી. Internet અને Database તપાસો.")), 12000)
+    )
+  ]);
+} catch (e) {
+  host.innerHTML = '<div class="card">Profiles લોડ થઈ શકી નથી.</div>';
+  status("profilesStatus", "ભૂલ: " + (e?.message || "અજ્ઞાત ભૂલ"), "error");
+  return;
+}
+const { data, error } = result;
+
   if (error) { host.innerHTML=""; status("profilesStatus","Profiles લોડ કરવામાં ભૂલ: "+error.message,"error"); return; }
   if (!data?.length) { host.innerHTML='<div class="card">હાલ કોઈ પ્રોફાઇલ મળી નથી.</div>'; status("profilesStatus",""); return; }
   host.innerHTML=data.map(p=>`<article class="card profile-card"><div class="avatar">♡</div><h3>${esc(p.full_name||"Elite Member")}</h3><span class="pill">${esc(p.gender||"")}</span><div>${esc(p.city||"")}</div><div>${esc(p.education||"")}</div><div>${esc(p.occupation||"")}</div><div>${esc(p.community||"")}</div><p>${esc(p.about_me||"")}</p>${currentUser && p.user_id!==currentUser.id ? `<button class="btn interestBtn" data-user="${esc(p.user_id)}" type="button">Express Interest</button>`:""}</article>`).join("");
