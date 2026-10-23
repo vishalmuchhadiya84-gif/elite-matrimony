@@ -198,14 +198,118 @@ $("loadInterestsBtn").addEventListener("click",async()=>{
   status("interestStatus","તમને "+data.length+" interest મળ્યા છે. Sender IDs નીચે:\n"+data.map(x=>x.sender_id).join("\n"));
 });
 
+
 const plans = {
-  month_1:{label:"1 Month",base:499,months:1},
-  month_3:{label:"3 Months",base:1249,months:3},
-  month_6:{label:"6 Months",base:1999,months:6},
-  month_12:{label:"12 Months",base:2999,months:12}
+  month_1: { label: "1 Month", base: 499, months: 1 },
+  month_3: { label: "3 Months", base: 1249, months: 3 },
+  month_6: { label: "6 Months", base: 1999, months: 6 },
+  month_12: { label: "12 Months", base: 2999, months: 12 }
 };
-document.querySelectorAll(".choosePlan").forEach(btn=>btn.addEventListener("click",()=>startPayment(btn.dataset.plan)));
+
+document.querySelectorAll(".choosePlan").forEach(btn => {
+  btn.addEventListener("click", () => startPayment(btn.dataset.plan));
+});
+
 async function startPayment(planKey) {
+  if (!currentUser) {
+    status("paymentStatus", "Premium લેવા પહેલાં Login કરો.", "error");
+    $("login").scrollIntoView({ behavior: "smooth" });
+    return;
+  }
+
+  const plan = plans[planKey];
+  if (!plan) {
+    status("paymentStatus", "પ્લાન મળ્યો નથી.", "error");
+    return;
+  }
+
+  if (typeof window.Razorpay !== "function") {
+    status("paymentStatus", "Razorpay Checkout લોડ થયું નથી. Internet તપાસો.", "error");
+    return;
+  }
+
+  status("paymentStatus", "સુરક્ષિત payment order બનાવાઈ રહ્યો છે...");
+
+  try {
+    const { data, error } = await supabase.functions.invoke("bright-api", {
+      body: { action: "create_order", plan: planKey }
+    });
+
+    if (error || !data?.success || !data?.order_id || !data?.key_id || !data?.amount) {
+      return status(
+        "paymentStatus",
+        "Payment order error: " +
+          (data?.error || error?.message || "Order response અધૂનો છે."),
+        "error"
+      );
+    }
+
+    const options = {
+      key: data.key_id,
+      amount: data.amount,
+      currency: data.currency || "INR",
+      name: "Elite Matrimony",
+      description: plan.label + " Premium Membership (18% GST સહિત)",
+      order_id: data.order_id,
+      prefill: { email: currentUser.email || "" },
+      notes: { plan: planKey, user_id: currentUser.id },
+
+      handler: async response => {
+        status("paymentStatus", "ચુકવણી verify થઈ રહી છે...");
+
+        try {
+          const { data: verified, error: verifyError } =
+            await supabase.functions.invoke("bright-api", {
+              body: {
+                action: "verify_payment",
+                plan: planKey,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature
+              }
+            });
+
+          if (verifyError || !verified?.success) {
+            status(
+              "paymentStatus",
+              "Payment verification error: " +
+                (verified?.error || verifyError?.message || "Verification નિષ્ફળ."),
+              "error"
+            );
+            return;
+          }
+
+          status(
+            "paymentStatus",
+            "ચુકવણી સફળ! તમારું Premium Membership સક્રિય થયું.",
+            "success"
+          );
+        } catch (e) {
+          status(
+            "paymentStatus",
+            "Verification error: " + (e?.message || "અજ્ઞાત ભૂલ."),
+            "error"
+          );
+        }
+      },
+
+      modal: {
+        ondismiss: () => status("paymentStatus", "ચુકવણી વિન્ડો બંધ થઈ.")
+      },
+
+      theme: { color: "#791b3a" }
+    };
+
+    new window.Razorpay(options).open();
+  } catch (e) {
+    status(
+      "paymentStatus",
+      "Payment Error: " + (e?.message || "Order બનાવવામાં ભૂલ."),
+      "error"
+    );
+  }
+}
+ {
   if (!currentUser) { status("paymentStatus","Premium લેવા પહેલાં Login કરો.","error"); $("login").scrollIntoView({behavior:"smooth"}); return; }
   if (!plans[planKey]) return status("paymentStatus","પ્લાન મળ્યો નથી.","error");
   if (typeof window.Razorpay !== "function") return status("paymentStatus","Razorpay checkout લોડ થયું નથી. Internet ચકાસો.","error");
