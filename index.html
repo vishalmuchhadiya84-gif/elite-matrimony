@@ -308,39 +308,6 @@ async function startPayment(planKey) {
       "error"
     );
   }
-}
- {
-  if (!currentUser) { status("paymentStatus","Premium લેવા પહેલાં Login કરો.","error"); $("login").scrollIntoView({behavior:"smooth"}); return; }
-  if (!plans[planKey]) return status("paymentStatus","પ્લાન મળ્યો નથી.","error");
-  if (typeof window.Razorpay !== "function") return status("paymentStatus","Razorpay checkout લોડ થયું નથી. Internet ચકાસો.","error");
-  const plan=plans[planKey], total=Math.round(plan.base*1.18*100)/100;
-  status("paymentStatus","સુરક્ષિત payment order બનાવાઈ રહ્યો છે...");
-  // The Edge Function must validate plan prices on the server; never trust the browser amount.
-  const {data,error}=await supabase.functions.invoke("bright-api",{body:{action:"create_order",plan:planKey}});
-  if(error || !data?.success || !(data?.order?.id || data?.order_id)) return status("paymentStatus","Payment order error: "+(data?.error||error?.message||"Order create ન થયો."),"error");
-  const options={
-    key:data.key_id,
-    amount:data.order.amount,
-    currency:data.order.currency||"INR",
-    name:"Elite Matrimony",
-    description:plan.label+" Premium Membership",
-    order_id:data.order?.id || data.order_id,
-    prefill:{email:currentUser.email||""},
-    notes:{plan:planKey,user_id:currentUser.id},
-    handler:async response=>{
-      status("paymentStatus","ચુકવણી verify થઈ રહી છે...");
-      const {data:verified,error:verifyError}=await supabase.functions.invoke("bright-api",{body:{
-        action:"verify_payment",plan:planKey,order_id:response.razorpay_order_id,
-        payment_id:response.razorpay_payment_id,razorpay_signature:response.razorpay_signature
-      }});
-      if(verifyError || !verified?.success) return status("paymentStatus","Payment verification error: "+(verified?.error||verifyError?.message||"Verification નિષ્ફળ."),"error");
-      status("paymentStatus","ચુકવણી સફળ! તમારું Premium Membership સક્રિય થયું.","success");
-    },
-    modal:{ondismiss:()=>status("paymentStatus","ચુકવણી વિન્ડો બંધ થઈ.")}
-  };
-  try { new window.Razorpay(options).open(); }
-  catch(e) { status("paymentStatus","Payment Error: "+e.message,"error"); }
-}
 
 $("adminBtn").addEventListener("click",async()=>{
   if(!currentUser) return status("adminStatus","Admin access તપાસવા પહેલાં Login કરો.","error");
