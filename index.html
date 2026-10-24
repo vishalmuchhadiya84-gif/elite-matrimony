@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#791b3a">
-<title>Elite Matrimony | Your Perfect Match</title>
-<meta name="description" content="Elite Matrimony - Find your life partner in Gujarat.">
+<title>Elite Gujarati Matrimony | Your Perfect Match</title>
+<meta name="description" content="Elite Gujarati Matrimony - Find your life partner in Gujarat.">
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <style>
 :root{--wine:#791b3a;--dark:#501126;--gold:#d5ad62;--cream:#fffaf4;--text:#29232a;--muted:#706873;--border:#eadfe2}
@@ -14,7 +14,7 @@
 </head>
 <body>
 <header><div class="container nav">
-<a class="brand" href="#home">ELITE MATRIMONY<small>YOUR PERFECT MATCH</small></a>
+<a class="brand" href="#home">ELITE GUJARATI MATRIMONY<small>YOUR PERFECT MATCH</small></a>
 <nav class="nav-links" aria-label="Main navigation">
 <a href="#home">Home</a><a href="#profiles">Profiles</a><a href="#plans">Premium</a><a href="#profile-form">My Profile</a>
 <button class="btn outline" id="loginNav" type="button">Login</button><button class="btn hidden" id="logoutBtn" type="button">Logout</button>
@@ -22,10 +22,10 @@
 <main>
 <div class="container"><div id="globalStatus" class="status">વેબસાઇટ શરૂ થઈ રહી છે...</div></div>
 <section class="hero" id="home"><div class="container hero-inner">
-<div><div class="eyebrow">WELCOME TO ELITE MATRIMONY</div><h1>તમારા જીવનસાથીની નવી શરૂઆત અહીંથી કરો</h1>
+<div><div class="eyebrow">WELCOME TO ELITE GUJARATI MATRIMONY</div><h1>તમારા જીવનસાથીની નવી શરૂઆત અહીંથી કરો</h1>
 <p>ગુજરાતમાં તમારા માટે યોગ્ય જીવનસાથી શોધવાની સફર. તમારી પ્રોફાઇલ બનાવો, સભ્યોને જાણો અને સમજદારીથી આગળ વધો.</p>
 <a class="btn" href="#register">Create Your Profile</a> <a class="btn outline" href="#plans">View Premium Plans</a></div>
-<div class="hero-panel"><h3>Elite Matrimony સાથે જોડાઓ</h3><p>તમારી પ્રોફાઇલ બનાવો અને યોગ્ય જીવનસાથી શોધવાની શરૂઆત કરો.</p><ul><li>તમારી પ્રોફાઇલ મેનેજ કરો</li><li>સભ્યોની ઉપલબ્ધ પ્રોફાઇલ જુઓ</li><li>Premium પ્લાન પસંદ કરો</li></ul><a href="#register" class="btn">Register Now</a></div>
+<div class="hero-panel"><h3>Elite Gujarati Matrimony સાથે જોડાઓ</h3><p>તમારી પ્રોફાઇલ બનાવો અને યોગ્ય જીવનસાથી શોધવાની શરૂઆત કરો.</p><ul><li>તમારી પ્રોફાઇલ મેનેજ કરો</li><li>સભ્યોની ઉપલબ્ધ પ્રોફાઇલ જુઓ</li><li>Premium પ્લાન પસંદ કરો</li></ul><a href="#register" class="btn">Register Now</a></div>
 </div></section>
 <section id="register"><div class="container"><div class="section-head"><h2>Register / Login</h2><p>નવું એકાઉન્ટ બનાવો અથવા તમારા એકાઉન્ટમાં પ્રવેશ કરો.</p></div>
 <div class="grid">
@@ -69,7 +69,7 @@
 </div><div id="paymentStatus" class="status" role="status"></div></div></section>
 <section id="admin"><div class="container"><div class="section-head"><h2>Admin Panel</h2><p>માત્ર અધિકૃત Admin માટે.</p></div><div class="card"><p>Admin access માટે Supabaseમાં server-side permissions અને RLS policies યોગ્ય હોવી જરૂરી છે.</p><button class="btn outline" id="adminBtn" type="button">Check Admin Access</button><div id="adminStatus" class="status" role="status"></div><div id="adminMembers" class="grid"></div></div></div></section>
 </main>
-<footer><div class="container footer-row"><div><strong>ELITE MATRIMONY</strong><p>તમારા જીવનસાથીની શોધમાં એક નવી શરૂઆત.</p></div><div><p>Privacy • Terms • Contact</p><p>© <span id="year"></span> Elite Matrimony</p></div></div></footer>
+<footer><div class="container footer-row"><div><strong>ELITE GUJARATI MATRIMONY</strong><p>તમારા જીવનસાથીની શોધમાં એક નવી શરૂઆત.</p></div><div><p>Privacy • Terms • Contact</p><p>© <span id="year"></span> Elite Gujarati Matrimony</p></div></div></footer>
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
@@ -173,18 +173,7 @@ async function loadProfiles() {
   const city=$("searchCity").value.trim(), gender=$("searchGender").value;
   if (city) q=q.ilike("city","%"+city+"%");
   if (gender) q=q.eq("gender",gender);
-  let result;
-  try {
-    result = await Promise.race([
-      q,
-      new Promise((_, reject) => setTimeout(() => reject(new Error("Supabase તરફથી 12 સેકન્ડમાં જવાબ મળ્યો નથી. Internet, Supabase અને Database policies તપાસો.")), 12000))
-    ]);
-  } catch (e) {
-    host.innerHTML = '<div class="card">Profiles લોડ થઈ શકી નથી.</div>';
-    status("profilesStatus", "ભૂલ: " + (e?.message || "અજ્ઞાત ભૂલ"), "error");
-    return;
-  }
-  const {data,error}=result;
+  const {data,error}=await q;
   if (error) { host.innerHTML=""; status("profilesStatus","Profiles લોડ કરવામાં ભૂલ: "+error.message,"error"); return; }
   if (!data?.length) { host.innerHTML='<div class="card">હાલ કોઈ પ્રોફાઇલ મળી નથી.</div>'; status("profilesStatus",""); return; }
   host.innerHTML=data.map(p=>`<article class="card profile-card"><div class="avatar">♡</div><h3>${esc(p.full_name||"Elite Member")}</h3><span class="pill">${esc(p.gender||"")}</span><div>${esc(p.city||"")}</div><div>${esc(p.education||"")}</div><div>${esc(p.occupation||"")}</div><div>${esc(p.community||"")}</div><p>${esc(p.about_me||"")}</p>${currentUser && p.user_id!==currentUser.id ? `<button class="btn interestBtn" data-user="${esc(p.user_id)}" type="button">Express Interest</button>`:""}</article>`).join("");
@@ -227,7 +216,7 @@ async function startPayment(planKey) {
     key:data.key_id,
     amount:data.order.amount,
     currency:data.order.currency||"INR",
-    name:"Elite Matrimony",
+    name:"Elite Gujarati Matrimony",
     description:plan.label+" Premium Membership",
     order_id:data.order.id,
     prefill:{email:currentUser.email||""},
@@ -263,19 +252,11 @@ supabase.auth.onAuthStateChange((_event,session)=>{
   if(currentUser) setTimeout(()=>{loadMyProfile();loadProfiles();},0);
 });
 async function init(){
-  try {
-    const {data,error}=await Promise.race([
-      supabase.auth.getSession(),
-      new Promise((_, reject) => setTimeout(() => reject(new Error("Supabase session જવાબમાં વિલંબ થયો.")), 12000))
-    ]);
-    if(error) status("globalStatus","Supabase session error: "+error.message,"error");
-    currentUser=data?.session?.user||null; updateUI();
-    if(currentUser){await loadMyProfile();await loadProfiles();}
-    else { $("profilesList").innerHTML='<div class="card">Profiles જોવા માટે Login કરો.</div>'; status("globalStatus","વેબસાઇટ તૈયાર છે. Register અથવા Login કરો.","success"); }
-  } catch(e) {
-    status("globalStatus", "વેબસાઇટ શરૂ કરવામાં ભૂલ: " + (e?.message || "અજ્ઞાત ભૂલ") + " — પેજ Refresh કરો.", "error");
-    $("profilesList").innerHTML='<div class="card">Profiles હાલ લોડ થઈ શકી નથી. Login પછી ફરી પ્રયાસ કરો.</div>';
-  }
+  const {data,error}=await supabase.auth.getSession();
+  if(error) status("globalStatus","Supabase session error: "+error.message,"error");
+  currentUser=data?.session?.user||null; updateUI();
+  if(currentUser){await loadMyProfile();await loadProfiles();}
+  else { $("profilesList").innerHTML='<div class="card">Profiles જોવા માટે Login કરો.</div>'; status("globalStatus","વેબસાઇટ તૈયાર છે. Register અથવા Login કરો.","success"); }
 }
 init();
 </script>
