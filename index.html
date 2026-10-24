@@ -170,7 +170,7 @@ full_name:$("fullName").value.trim(),
 
 async function loadProfiles() {
   const host=$("profilesList");
-  host.innerHTML='<div class="card">Profiles લોડ થઈ રહી છે...</div>';
+  host.innerHTML='<div class="card">TEST VERSION 123</div>';
   let q=supabase.from("member_profiles").select("user_id,full_name,gender,birth_date,city,education,occupation,community,marital_status,about_me").order("updated_at",{ascending:false}).limit(100);
   const city=$("searchCity").value.trim(), gender=$("searchGender").value;
   if (city) q=q.ilike("city","%"+city+"%");
