@@ -220,11 +220,11 @@ async function startPayment(planKey) {
   if(error || !data?.success || !data?.order_id) return status("paymentStatus","Payment order error: "+(data?.error||error?.message||"Order create ન થયો."),"error");
   const options={
     key:data.key_id,
-    amount:data.order.amount,
-    currency:data.order.currency||"INR",
+    amount:data.amount,
+    currency:data.currency||"INR",
     name:"Elite Gujarati Matrimony",
     description:plan.label+" Premium Membership",
-    order_id:data.order.id,
+    order_id:data.order_id,
     prefill:{email:currentUser.email||""},
     notes:{plan:planKey,user_id:currentUser.id},
     handler:async response=>{
