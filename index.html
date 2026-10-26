@@ -212,38 +212,38 @@ async function loadProfiles() {
     }
 
     const uuidPattern =
-      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-    host.innerHTML = data.map(p => {
-      const validUserId =
-        typeof p.user_id === "string" &&
-        uuidPattern.test(p.user_id);
+host.innerHTML = data.map(p => {
+  const profileUserId = p.user_id || p.id || "";
+  const validUserId =
+    typeof profileUserId === "string" &&
+    uuidPattern.test(profileUserId);
+  const isOwnProfile =
+    !!currentUser && profileUserId === currentUser.id;
 
-      const canSendInterest =
-        currentUser &&
-        validUserId &&
-        p.user_id !== currentUser.id;
-
-      return `
-        <article class="card profile-card">
-          <div class="avatar">♡</div>
-          <h3>${esc(p.full_name || "Elite Member")}</h3>
-          <span class="pill">${esc(p.gender || "")}</span>
-          <div>${esc(p.city || "")}</div>
-          <div>${esc(p.education || "")}</div>
-          <div>${esc(p.occupation || "")}</div>
-          <div>${esc(p.community || "")}</div>
-          <p>${esc(p.about_me || "")}</p>
-          ${
-            canSendInterest
-              ? `<button class="btn interestBtn"
-                   data-user="${esc(p.user_id)}"
-                   type="button">Express Interest</button>`
-              : ""
-          }
-        </article>
-      `;
-    }).join("");
+  return `
+    <article class="card profile-card">
+      <div class="avatar">♡</div>
+      <h3>${esc(p.full_name || "Elite Member")}</h3>
+      <span class="pill">${esc(p.gender || "")}</span>
+      <div>${esc(p.city || "")}</div>
+      <div>${esc(p.education || "")}</div>
+      <div>${esc(p.occupation || "")}</div>
+      <div>${esc(p.community || "")}</div>
+      <p>${esc(p.about_me || "")}</p>
+      ${
+        !validUserId
+          ? `<p class="muted">સભ્યની ID ઉપલબ્ધ નથી.</p>`
+          : isOwnProfile
+            ? `<button class="btn" type="button" disabled>તમારી Profile</button>`
+            : `<button class="btn interestBtn"
+                 data-user="${esc(profileUserId)}"
+                 type="button">Express Interest</button>`
+      }
+    </article>
+  `;
+}).join("");
 
     status("profilesStatus", "કુલ પ્રોફાઇલ: " + data.length);
 
