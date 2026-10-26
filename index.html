@@ -179,7 +179,7 @@ async function loadProfiles() {
   const city=$("searchCity").value.trim(), gender=$("searchGender").value;
   if (city) q=q.ilike("city","%"+city+"%");
   if (gender) q=q.eq("gender",gender);
-  const {data,error}=await q;
+  let {data,error}=await q;
  if (data) {
   const uuidPattern =
     /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
