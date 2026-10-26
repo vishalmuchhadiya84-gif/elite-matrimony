@@ -173,28 +173,95 @@ $("profileForm").addEventListener("submit", async e => {
 });
 
 async function loadProfiles() {
-  const host=$("profilesList");
-  host.innerHTML='<div class="card">Profiles લોડ થઈ રહી છે...</div>';
-  let q=supabase.from("member_profiles").select("user_id,full_name,gender,birth_date,city,education,occupation,community,marital_status,about_me").order("updated_at",{ascending:false}).limit(100);
-  const city=$("searchCity").value.trim(), gender=$("searchGender").value;
-  if (city) q=q.ilike("city","%"+city+"%");
-  if (gender) q=q.eq("gender",gender);
-  let {data,error}=await q;
- if (data) {
-  const uuidPattern =
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  const host = $("profilesList");
+  host.innerHTML =
+    '<div class="card">Profiles લોડ થઈ રહી છે...</div>';
 
-  data = data.filter(
-    p => typeof p.user_id === "string" && uuidPattern.test(p.user_id)
-  );
- }
-  if (error) { host.innerHTML=""; status("profilesStatus","Profiles લોડ કરવામાં ભૂલ: "+error.message,"error"); return; }
-  if (!data?.length) { host.innerHTML='<div class="card">હાલ કોઈ પ્રોફાઇલ મળી નથી.</div>'; status("profilesStatus",""); return; }
-  host.innerHTML=data.map(p=>`<article class="card profile-card"><div class="avatar">♡</div><h3>${esc(p.full_name||"Elite Member")}</h3><span class="pill">${esc(p.gender||"")}</span><div>${esc(p.city||"")}</div><div>${esc(p.education||"")}</div><div>${esc(p.occupation||"")}</div><div>${esc(p.community||"")}</div><p>${esc(p.about_me||"")}</p>${currentUser && p.user_id!==currentUser.id ? `<button class="btn interestBtn" data-user="${esc(p.user_id)}" type="button">Express Interest</button>`:""}</article>`).join("");
-  status("profilesStatus","કુલ પ્રોફાઇલ: "+data.length);
-  host.querySelectorAll(".interestBtn").forEach(btn=>btn.addEventListener("click",()=>sendInterest(btn.dataset.user)));
+  try {
+    let q = supabase
+      .from("member_profiles")
+      .select(
+        "user_id,full_name,gender,birth_date,city,education,occupation,community,marital_status,about_me"
+      )
+      .order("updated_at", { ascending: false })
+      .limit(100);
+
+    const city = $("searchCity").value.trim();
+    const gender = $("searchGender").value;
+
+    if (city) q = q.ilike("city", "%" + city + "%");
+    if (gender) q = q.eq("gender", gender);
+
+    const { data, error } = await q;
+
+    if (error) {
+      host.innerHTML = "";
+      status(
+        "profilesStatus",
+        "Profiles લોડ કરવામાં ભૂલ: " + error.message,
+        "error"
+      );
+      return;
+    }
+
+    if (!data || data.length === 0) {
+      host.innerHTML =
+        '<div class="card">હાલ કોઈ પ્રોફાઇલ મળી નથી.</div>';
+      status("profilesStatus", "કુલ પ્રોફાઇલ: 0");
+      return;
+    }
+
+    const uuidPattern =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+    host.innerHTML = data.map(p => {
+      const validUserId =
+        typeof p.user_id === "string" &&
+        uuidPattern.test(p.user_id);
+
+      const canSendInterest =
+        currentUser &&
+        validUserId &&
+        p.user_id !== currentUser.id;
+
+      return `
+        <article class="card profile-card">
+          <div class="avatar">♡</div>
+          <h3>${esc(p.full_name || "Elite Member")}</h3>
+          <span class="pill">${esc(p.gender || "")}</span>
+          <div>${esc(p.city || "")}</div>
+          <div>${esc(p.education || "")}</div>
+          <div>${esc(p.occupation || "")}</div>
+          <div>${esc(p.community || "")}</div>
+          <p>${esc(p.about_me || "")}</p>
+          ${
+            canSendInterest
+              ? `<button class="btn interestBtn"
+                   data-user="${esc(p.user_id)}"
+                   type="button">Express Interest</button>`
+              : ""
+          }
+        </article>
+      `;
+    }).join("");
+
+    status("profilesStatus", "કુલ પ્રોફાઇલ: " + data.length);
+
+    host.querySelectorAll(".interestBtn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        sendInterest(btn.dataset.user);
+      });
+    });
+
+  } catch (e) {
+    host.innerHTML = "";
+    status(
+      "profilesStatus",
+      "ભૂલ: " + (e.message || "Profiles લોડ થઈ શકી નથી."),
+      "error"
+    );
+  }
 }
-$("searchBtn").addEventListener("click",loadProfiles);
 
 async function sendInterest(targetUserId) {
   if (!currentUser) {
