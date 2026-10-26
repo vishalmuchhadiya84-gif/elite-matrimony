@@ -181,7 +181,7 @@ async function loadProfiles() {
     let q = supabase
       .from("member_profiles")
       .select(
-        "user_id,full_name,gender,birth_date,city,education,occupation,community,marital_status,about_me"
+        "id,user_id,full_name,gender,birth_date,city,education,occupation,community,marital_status,about_me"
       )
       .order("updated_at", { ascending: false })
       .limit(100);
