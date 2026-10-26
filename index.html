@@ -247,11 +247,6 @@ async function sendInterest(targetUserId) {
     "Interest સફળતાપૂર્વક મોકલાયો.",
     "success"
   );
- }
-  if (!currentUser) { status("profilesStatus","Interest મોકલવા માટે Login કરો.","error"); return; }
-  if (targetUserId===currentUser.id) return status("profilesStatus","તમારી પોતાની પ્રોફાઇલમાં interest મોકલી શકાતો નથી.","error");
-  const {error}=await supabase.from("interests").insert({sender_id:currentUser.id,receiver_id:targetUserId});
-  status("profilesStatus",error ? "Interest મોકલવામાં ભૂલ: "+error.message : "Interest સફળતાપૂર્વક મોકલાયો.",error?"error":"success");
 }
 $("loadInterestsBtn").addEventListener("click",async()=>{
   if (!currentUser) return status("interestStatus","Received Interest જોવા માટે Login કરો.","error");
