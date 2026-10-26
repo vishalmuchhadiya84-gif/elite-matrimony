@@ -189,6 +189,58 @@ async function loadProfiles() {
 $("searchBtn").addEventListener("click",loadProfiles);
 
 async function sendInterest(targetUserId) {
+ async function sendInterest(targetUserId) {
+  if (!currentUser) {
+    status("profilesStatus", "Interest મોકલવા માટે Login કરો.", "error");
+    return;
+  }
+
+  const uuidPattern =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+  if (
+    typeof targetUserId !== "string" ||
+    !uuidPattern.test(targetUserId)
+  ) {
+    status(
+      "profilesStatus",
+      "આ સભ્યની Profile ID ખોટી છે. Profile ફરી સાચવવાની જરૂર છે.",
+      "error"
+    );
+    return;
+  }
+
+  if (targetUserId === currentUser.id) {
+    status(
+      "profilesStatus",
+      "તમારી પોતાની Profile માં Interest મોકલી શકાતો નથી.",
+      "error"
+    );
+    return;
+  }
+
+  const { error } = await supabase
+    .from("interests")
+    .insert({
+      sender_id: currentUser.id,
+      receiver_id: targetUserId
+    });
+
+  if (error) {
+    status(
+      "profilesStatus",
+      "Interest મોકલવામાં ભૂલ: " + error.message,
+      "error"
+    );
+    return;
+  }
+
+  status(
+    "profilesStatus",
+    "Interest સફળતાપૂર્વક મોકલાયો.",
+    "success"
+  );
+ }
   if (!currentUser) { status("profilesStatus","Interest મોકલવા માટે Login કરો.","error"); return; }
   if (targetUserId===currentUser.id) return status("profilesStatus","તમારી પોતાની પ્રોફાઇલમાં interest મોકલી શકાતો નથી.","error");
   const {error}=await supabase.from("interests").insert({sender_id:currentUser.id,receiver_id:targetUserId});
