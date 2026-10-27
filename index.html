@@ -230,7 +230,7 @@ host.innerHTML = data.map(p => {
     typeof profileUserId === "string" &&
     uuidPattern.test(profileUserId);
   const isOwnProfile =
-    !!currentUser && profileUserId === currentUser.id;
+!!currentUser && profileUserId === currentUser.id;
 
   return `
     <article class="card profile-card">
@@ -375,175 +375,41 @@ $("loadInterestsBtn").addEventListener("click", async () => {
     const card = document.createElement("div");
     card.className = "card";
 
-$("loadInterestsBtn").addEventListener("click", async () => {
-  if (!currentUser) {
-    status("interestStatus", "Received Interest જોવા માટે Login કરો.", "error");
-    return;
-  }
+    const name = document.createElement("strong");
+    name.textContent = profile?.full_name || "પ્રોફાઇલ મળી નથી";
+    card.appendChild(name);
 
-  status("interestStatus", "Interest લોડ થઈ રહ્યા છે...");
+    const city = document.createElement("p");
+    city.textContent = profile?.city || "";
+    card.appendChild(city);
 
-  try {
-    const { data, error } = await supabase
-      .from("interests")
-      .select("id, sender_id, created_at, status")
-      .eq("receiver_id", currentUser.id)
-      .order("created_at", { ascending: false });
+    const state = document.createElement("p");
+    state.textContent = "Status: " + item.status;
+    card.appendChild(state);
 
-    if (error) {
-      status("interestStatus", "Interest લોડ કરવામાં ભૂલ: " + error.message, "error");
-      return;
-    }
-
-    if (!data || data.length === 0) {
-      status("interestStatus", "હજુ કોઈ Interest મળ્યો નથી.");
-      return;
-    }
-
-    const senderIds = [...new Set(data.map(item => item.sender_id))];
-
-    const { data: profiles, error: profileError } = await supabase
-      .from("member_profiles")
-      .select("id,user_id,full_name,city,gender,birth_date,education,occupation,community,marital_status,about_me")
-      .in("user_id", senderIds);
-
-    if (profileError) {
-      status("interestStatus", "પ્રોફાઇલ લોડ કરવામાં ભૂલ: " + profileError.message, "error");
-      return;
-    }
-
-    const profileMap = new Map();
-    (profiles || []).forEach(profile => {
-      profileMap.set(profile.user_id, profile);
-    });
-
-    const host = $("interestStatus");
-    host.textContent = "";
-
-    const heading = document.createElement("p");
-    heading.textContent = "તમને " + data.length + " Interest મળ્યા છે.";
-    host.appendChild(heading);
-
-    data.forEach(item => {
-      const profile = profileMap.get(item.sender_id);
-      const card = document.createElement("div");
-      card.className = "card";
-
-      const name = document.createElement("h3");
-      name.textContent = profile?.full_name || "પ્રોફાઇલ મળી નથી";
-      card.appendChild(name);
-
-      const city = document.createElement("p");
-      city.textContent = "શહેર: " + (profile?.city || "ઉપલબ્ધ નથી");
-      card.appendChild(city);
-
-      const stateText = document.createElement("p");
-      stateText.textContent = "Status: " + item.status;
-      card.appendChild(stateText);
-
-      const viewBtn = document.createElement("button");
-      viewBtn.className = "btn";
-      viewBtn.type = "button";
-      viewBtn.textContent = "View Profile";
-
-      viewBtn.addEventListener("click", async () => {
-        if (!profile) {
-          alert("આ સભ્યની પ્રોફાઇલ મળી નથી.");
-          return;
-        }
-
-        const details = [
-          ["નામ", profile.full_name],
-          ["શહેર", profile.city],
-          ["લિંગ", profile.gender],
-          ["જન્મ તારીખ", profile.birth_date],
-          ["શિક્ષણ", profile.education],
-          ["વ્યવસાય", profile.occupation],
-          ["સમુદાય", profile.community],
-          ["વૈવાહિક સ્થિતિ", profile.marital_status],
-          ["વિશે", profile.about_me]
-        ];
-
-        let message = details
-          .filter(([label, value]) => value)
-          .map(([label, value]) => label + ": " + value)
-          .join("\n");
-
-        if (item.status === "accepted") {
-          viewBtn.disabled = true;
-          viewBtn.textContent = "થોડી રાહ જુઓ...";
-
-          try {
-            const { data: contact, error: contactError } =
-              await supabase.functions.invoke("contact-details", {
-                body: { target_user_id: item.sender_id }
-              });
-
-            if (contactError) {
-              message += "\n\nસંપર્ક વિગતો મળી નથી. ફરી પ્રયાસ કરો.";
-            } else if (contact?.success && contact.phone_number) {
-              message += "\nમોબાઇલ નંબર: " + contact.phone_number;
-            } else {
-              message += "\n\n" + (contact?.error || "મોબાઇલ નંબર ઉપલબ્ધ નથી.");
-            }
-          } catch {
-            message += "\n\nસંપર્ક વિગતો મેળવવામાં ભૂલ થઈ.";
-          } finally {
-            viewBtn.disabled = false;
-            viewBtn.textContent = "View Profile";
-          }
-        } else {
-          message += "\n\nમોબાઇલ નંબર જોવા માટે Interest સ્વીકારાયેલો હોવો જોઈએ.";
-        }
-
-        alert(message);
-      });
-
-      card.appendChild(viewBtn);
-
-      if (item.status === "pending") {
-        const acceptBtn = document.createElement("button");
-        acceptBtn.className = "btn";
-        acceptBtn.type = "button";
-        acceptBtn.style.marginLeft = "8px";
-        acceptBtn.textContent = "Accept Interest";
-
-        acceptBtn.addEventListener("click", async () => {
-          acceptBtn.disabled = true;
-
-          const { data: updated, error: updateError } = await supabase
-            .from("interests")
-            .update({
-              status: "accepted",
-              updated_at: new Date().toISOString()
-            })
-            .eq("id", item.id)
-            .eq("receiver_id", currentUser.id)
-            .eq("status", "pending")
-            .select("id,status")
-            .maybeSingle();
-
-          if (updateError || !updated) {
-            acceptBtn.disabled = false;
-            alert("Interest સ્વીકારી શકાયો નથી: " + (updateError?.message || "ફરી પ્રયાસ કરો."));
-            return;
-          }
-
-          item.status = "accepted";
-          stateText.textContent = "Status: accepted";
-          acceptBtn.remove();
-          alert("Interest સ્વીકારાયો! સંપર્ક વિગતો માટે View Profile દબાવો.");
-        });
-
-        card.appendChild(acceptBtn);
+    const viewBtn = document.createElement("button");
+    viewBtn.textContent = "View Profile";
+    viewBtn.addEventListener("click", () => {
+      if (!profile) {
+        alert("આ સભ્યની પ્રોફાઇલ મળી નથી.");
+        return;
       }
 
-      host.appendChild(card);
-    });
-  } catch (e) {
-    status("interestStatus", "ભૂલ: " + (e.message || "Interest લોડ થઈ શક્યા નથી."), "error");
-  }
-});
+      const details = [
+        ["નામ", profile.full_name],
+        ["શહેર", profile.city],
+        ["લિંગ", profile.gender],
+        ["જન્મ તારીખ", profile.birth_date],
+        ["શિક્ષણ", profile.education],
+        ["વ્યવસાય", profile.occupation],
+        ["સમુદાય", profile.community],
+        ["વૈવાહિક સ્થિતિ", profile.marital_status],
+        ["વિશે", profile.about_me]
+      ];
+
+      alert(details
+        .filter(([label, value]) => value)
+        .map(([label, value]) => label + ": " + value)
 
 $("loadInterestsBtn").addEventListener("click", async () => {
   if (!currentUser) {
