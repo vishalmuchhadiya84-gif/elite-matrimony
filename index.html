@@ -315,15 +315,64 @@ async function sendInterest(targetUserId) {
     "success"
   );
 }
-$("loadInterestsBtn").addEventListener("click",async()=>{
-  if (!currentUser) return status("interestStatus","Received Interest જોવા માટે Login કરો.","error");
-  const {data,error}=await supabase.from("interests").select("sender_id,created_at").eq("receiver_id",currentUser.id).order("created_at",{ascending:false});
-  if(error) return status("interestStatus","Interest લોડ કરવામાં ભૂલ: "+error.message+". Database table/policies ચકાસો.","error");
-  if(!data?.length) return status("interestStatus","હજુ કોઈ Interest મળ્યો નથી.");
-  status("interestStatus","તમને "+data.length+" interest મળ્યા છે. Sender IDs નીચે:\n"+data.map(x=>x.sender_id).join("\n"));
-});
+$("loadInterestsBtn").addEventListener("click", async () => {
+  if (!currentUser) {
+    return status("interestStatus", "Received Interest જોવા માટે Login કરો.", "error");
+  }
 
-const plans = {
+  const { data, error } = await supabase
+    .from("interests")
+    .select("sender_id, created_at")
+    .eq("receiver_id", currentUser.id)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    return status(
+      "interestStatus",
+      "Interest લોડ કરવામાં ભૂલ: " + error.message,
+      "error"
+    );
+  }
+
+  if (!data || data.length === 0) {
+    return status("interestStatus", "હજુ કોઈ Interest મળ્યો નથી.");
+  }
+
+  const senderIds = [...new Set(data.map(item => item.sender_id))];
+
+  const { data: profiles, error: profileError } = await supabase
+    .from("member_profiles")
+    .select("user_id, id, full_name, city")
+    .in("user_id", senderIds);
+
+  if (profileError) {
+    return status(
+      "interestStatus",
+      "Interest મળ્યો, પરંતુ નામ લોડ કરવામાં ભૂલ: " + profileError.message,
+      "error"
+    );
+  }
+
+  const profileMap = new Map();
+
+  (profiles || []).forEach(profile => {
+    profileMap.set(profile.user_id || profile.id, profile);
+    profileMap.set(profile.id, profile);
+  });
+
+  const result = data.map(item => {
+    const profile = profileMap.get(item.sender_id);
+
+    return profile
+      ? `${profile.full_name || "નામ ઉપલબ્ધ નથી"}${profile.city ? " — " + profile.city : ""}`
+      : `પ્રોફાઇલ મળી નથી (${item.sender_id})`;
+  });
+
+  status(
+    "interestStatus",
+    `તમને ${data.length} Interest મળ્યા છે:\n` + result.join("\n")
+  );
+});const plans = {
   month_1:{label:"1 Month",base:499,months:1},
   month_3:{label:"3 Months",base:1249,months:3},
   month_6:{label:"6 Months",base:1999,months:6},
