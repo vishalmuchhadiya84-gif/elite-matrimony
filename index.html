@@ -410,7 +410,122 @@ $("loadInterestsBtn").addEventListener("click", async () => {
       alert(details
         .filter(([label, value]) => value)
         .map(([label, value]) => label + ": " + value)
-        .join("\n"));
+
+$("loadInterestsBtn").addEventListener("click", async () => {
+  if (!currentUser) {
+    return status("interestStatus", "Received Interest જોવા માટે Login કરો.", "error");
+  }
+
+  const { data, error } = await supabase
+    .from("interests")
+    .select("id, sender_id, created_at, status")
+    .eq("receiver_id", currentUser.id)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    return status("interestStatus", "Interest લોડ કરવામાં ભૂલ: " + error.message, "error");
+  }
+
+  if (!data?.length) {
+    $("interestStatus").textContent = "હજુ કોઈ Interest મળ્યો નથી.";
+    return;
+  }
+
+  const senderIds = [...new Set(data.map(item => item.sender_id))];
+
+  const { data: profiles, error: profileError } = await supabase
+    .from("member_profiles")
+    .select("id, user_id, full_name, city, gender, birth_date, education, occupation, community, marital_status, about_me")
+    .or(
+      "user_id.in.(" + senderIds.join(",") + "),id.in.(" + senderIds.join(",") + ")"
+    );
+
+  if (profileError) {
+    return status("interestStatus", "પ્રોફાઇલ લોડ કરવામાં ભૂલ: " + profileError.message, "error");
+  }
+
+  const profileMap = new Map();
+  (profiles || []).forEach(profile => {
+    if (profile.user_id) profileMap.set(profile.user_id, profile);
+    profileMap.set(profile.id, profile);
+  });
+
+  $("interestStatus").innerHTML =
+    `<strong>તમને ${data.length} Interest મળ્યા છે.</strong>`;
+
+  const container = document.createElement("div");
+  container.className = "card";
+
+  data.forEach(item => {
+    const profile = profileMap.get(item.sender_id);
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const name = document.createElement("strong");
+    name.textContent = profile?.full_name || "પ્રોફાઇલ મળી નથી";
+    card.appendChild(name);
+
+    const city = document.createElement("p");
+    city.textContent = profile?.city || "";
+    card.appendChild(city);
+
+    const state = document.createElement("p");
+    state.textContent = "Status: " + item.status;
+    card.appendChild(state);
+
+    const viewBtn = document.createElement("button");
+    viewBtn.textContent = "View Profile";
+    viewBtn.addEventListener("click", async () => {
+      if (!profile) {
+        alert("આ સભ્યની પ્રોફાઇલ મળી નથી.");
+        return;
+      }
+
+      const details = [
+        ["નામ", profile.full_name],
+        ["શહેર", profile.city],
+        ["લિંગ", profile.gender],
+        ["જન્મ તારીખ", profile.birth_date],
+        ["શિક્ષણ", profile.education],
+        ["વ્યવસાય", profile.occupation],
+        ["સમુદાય", profile.community],
+        ["વૈવાહિક સ્થિતિ", profile.marital_status],
+        ["વિશે", profile.about_me]
+      ];
+
+      let message = details
+        .filter(([label, value]) => value)
+        .map(([label, value]) => label + ": " + value)
+        .join("\n");
+
+      if (item.status === "accepted") {
+        viewBtn.disabled = true;
+        viewBtn.textContent = "સંપર્ક વિગતો તપાસી રહ્યા છીએ...";
+
+        try {
+          const { data: contact, error: contactError } =
+            await supabase.functions.invoke("contact-details", {
+              body: { target_user_id: item.sender_id }
+            });
+
+          if (contactError) {
+            message += "\n\nસંપર્ક વિગતો અત્યારે મળી શકી નથી. ફરી પ્રયાસ કરો.";
+          } else if (contact?.success && contact.phone_number) {
+            message += "\nમોબાઇલ નંબર: " + contact.phone_number;
+          } else {
+            message += "\n\n" + (contact?.error || "મોબાઇલ નંબર ઉપલબ્ધ નથી.");
+          }
+        } catch {
+          message += "\n\nસંપર્ક વિગતો મેળવવામાં ભૂલ થઈ.";
+        } finally {
+          viewBtn.disabled = false;
+          viewBtn.textContent = "View Profile";
+        }
+      } else {
+        message += "\n\nમોબાઇલ નંબર જોવા માટે Interest સ્વીકારાયેલો હોવો જોઈએ.";
+      }
+
+      alert(message);
     });
     card.appendChild(viewBtn);
 
@@ -422,7 +537,10 @@ $("loadInterestsBtn").addEventListener("click", async () => {
 
         const { error: updateError } = await supabase
           .from("interests")
-          .update({ status: "accepted", updated_at: new Date().toISOString() })
+          .update({
+            status: "accepted",
+            updated_at: new Date().toISOString()
+          })
           .eq("id", item.id)
           .eq("receiver_id", currentUser.id)
           .eq("status", "pending");
@@ -432,9 +550,10 @@ $("loadInterestsBtn").addEventListener("click", async () => {
           return alert("Interest સ્વીકારી શકાયો નથી: " + updateError.message);
         }
 
+        item.status = "accepted";
         state.textContent = "Status: accepted";
         acceptBtn.remove();
-        alert("Interest સ્વીકારાયો!");
+        alert("Interest સ્વીકારાયો! સંપર્ક વિગતો જોવા View Profile ફરી દબાવો.");
       });
       card.appendChild(acceptBtn);
     }
@@ -444,61 +563,7 @@ $("loadInterestsBtn").addEventListener("click", async () => {
 
   $("interestStatus").appendChild(container);
 });
- const plans = {
-  month_1:{label:"1 Month",base:499,months:1},
-  month_3:{label:"3 Months",base:1249,months:3},
-  month_6:{label:"6 Months",base:1999,months:6},
-  month_12:{label:"12 Months",base:2999,months:12}
-};
-document.querySelectorAll(".choosePlan").forEach(btn=>btn.addEventListener("click",()=>startPayment(btn.dataset.plan)));
-async function startPayment(planKey) {
-  if (!currentUser) { status("paymentStatus","Premium લેવા પહેલાં Login કરો.","error"); $("login").scrollIntoView({behavior:"smooth"}); return; }
-  if (!plans[planKey]) return status("paymentStatus","પ્લાન મળ્યો નથી.","error");
-  if (typeof window.Razorpay !== "function") return status("paymentStatus","Razorpay checkout લોડ થયું નથી. Internet ચકાસો.","error");
-  const plan=plans[planKey], total=Math.round(plan.base*1.18*100)/100;
-  status("paymentStatus","સુરક્ષિત payment order બનાવાઈ રહ્યો છે...");
-  // The Edge Function must validate plan prices on the server; never trust the browser amount.
-  const {data,error}=await supabase.functions.invoke("bright-api",{body:{action:"create_order",plan:planKey}});
-  if(error || !data?.success || !data?.order_id) return status("paymentStatus","Payment order error: "+(data?.error||error?.message||"Order create ન થયો."),"error");
-  const options={
-    key:data.key_id,
-    amount:data.amount,
-    currency:data.currency||"INR",
-    name:"Elite Gujarati Matrimony",
-    description:plan.label+" Premium Membership",
-    order_id:data.order_id,
-    prefill:{email:currentUser.email||""},
-    notes:{plan:planKey,user_id:currentUser.id},
-    handler:async response=>{
-      status("paymentStatus","ચુકવણી verify થઈ રહી છે...");
-      const {data:verified,error:verifyError}=await supabase.functions.invoke("bright-api",{body:{
-       action:"verify_payment",plan:planKey,razorpay_order_id:response.razorpay_order_id,
-        payment_id:response.razorpay_payment_id,razorpay_signature:response.razorpay_signature
-      }});
-      if(verifyError || !verified?.success) return status("paymentStatus","Payment verification error: "+(verified?.error||verifyError?.message||"Verification નિષ્ફળ."),"error");
-      status("paymentStatus","ચુકવણી સફળ! તમારું Premium Membership સક્રિય થયું.","success");
-    },
-    modal:{ondismiss:()=>status("paymentStatus","ચુકવણી વિન્ડો બંધ થઈ.")}
-  };
-  try { new window.Razorpay(options).open(); }
-  catch(e) { status("paymentStatus","Payment Error: "+e.message,"error"); }
-}
 
-$("adminBtn").addEventListener("click",async()=>{
-  if(!currentUser) return status("adminStatus","Admin access તપાસવા પહેલાં Login કરો.","error");
-  const {data,error}=await supabase.from("admin_users").select("user_id").eq("user_id",currentUser.id).maybeSingle();
-  if(error) return status("adminStatus","Admin ચકાસણીમાં ભૂલ: "+error.message,"error");
-  if(!data) return status("adminStatus","આ એકાઉન્ટને Admin પરવાનગી નથી.","error");
-  const {data:members,error:memberError}=await supabase.from("member_profiles").select("full_name,city,gender,updated_at").order("updated_at",{ascending:false}).limit(100);
-  if(memberError) return status("adminStatus","સભ્યો લોડ કરવામાં ભૂલ: "+memberError.message,"error");
-  $("adminMembers").innerHTML=(members||[]).map(m=>`<div class="card"><strong>${esc(m.full_name||"")}</strong><div>${esc(m.city||"")} • ${esc(m.gender||"")}</div></div>`).join("");
-  status("adminStatus","Admin access સફળ. સભ્યો: "+(members?.length||0),"success");
-});
-
-supabase.auth.onAuthStateChange((_event,session)=>{
-  currentUser=session?.user||null; updateUI();
-  if(currentUser) setTimeout(()=>{loadMyProfile();loadProfiles();},0);
-});
 async function init(){
   const {data,error}=await supabase.auth.getSession();
   if(error) status("globalStatus","Supabase session error: "+error.message,"error");
