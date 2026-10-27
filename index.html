@@ -232,7 +232,7 @@ host.innerHTML = data.map(p => {
   const isOwnProfile =
 !!currentUser && profileUserId === currentUser.id;
 
-  return `
+ return `
     <article class="card profile-card">
       <div class="avatar">♡</div>
       <h3>${esc(p.full_name || "Elite Member")}</h3>
@@ -574,4 +574,4 @@ async function init(){
 init();
 </script>
 </body>
-</html>
+</html> 
