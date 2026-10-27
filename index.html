@@ -322,57 +322,119 @@ $("loadInterestsBtn").addEventListener("click", async () => {
 
   const { data, error } = await supabase
     .from("interests")
-    .select("sender_id, created_at")
+    .select("id, sender_id, created_at, status")
     .eq("receiver_id", currentUser.id)
     .order("created_at", { ascending: false });
 
   if (error) {
-    return status(
-      "interestStatus",
-      "Interest લોડ કરવામાં ભૂલ: " + error.message,
-      "error"
-    );
+    return status("interestStatus", "Interest લોડ કરવામાં ભૂલ: " + error.message, "error");
   }
 
-  if (!data || data.length === 0) {
-    return status("interestStatus", "હજુ કોઈ Interest મળ્યો નથી.");
+  if (!data?.length) {
+    $("interestStatus").innerHTML = "હજુ કોઈ Interest મળ્યો નથી.";
+    return;
   }
 
   const senderIds = [...new Set(data.map(item => item.sender_id))];
 
   const { data: profiles, error: profileError } = await supabase
     .from("member_profiles")
-    .select("user_id, id, full_name, city")
-    .in("user_id", senderIds);
+    .select("id, user_id, full_name, city, gender, birth_date, education, occupation, community, marital_status, about_me")
+    .or(
+      "user_id.in.(" + senderIds.join(",") + "),id.in.(" + senderIds.join(",") + ")"
+    );
 
   if (profileError) {
-    return status(
-      "interestStatus",
-      "Interest મળ્યો, પરંતુ નામ લોડ કરવામાં ભૂલ: " + profileError.message,
-      "error"
-    );
+    return status("interestStatus", "પ્રોફાઇલ લોડ કરવામાં ભૂલ: " + profileError.message, "error");
   }
 
   const profileMap = new Map();
-
   (profiles || []).forEach(profile => {
-    profileMap.set(profile.user_id || profile.id, profile);
+    if (profile.user_id) profileMap.set(profile.user_id, profile);
     profileMap.set(profile.id, profile);
   });
 
-  const result = data.map(item => {
-    const profile = profileMap.get(item.sender_id);
+  $("interestStatus").innerHTML =
+    `<strong>તમને ${data.length} Interest મળ્યા છે.</strong>`;
 
-    return profile
-      ? `${profile.full_name || "નામ ઉપલબ્ધ નથી"}${profile.city ? " — " + profile.city : ""}`
-      : `પ્રોફાઇલ મળી નથી (${item.sender_id})`;
+  const container = document.createElement("div");
+  container.className = "card";
+
+  data.forEach(item => {
+    const profile = profileMap.get(item.sender_id);
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const name = document.createElement("strong");
+    name.textContent = profile?.full_name || "પ્રોફાઇલ મળી નથી";
+    card.appendChild(name);
+
+    const city = document.createElement("p");
+    city.textContent = profile?.city || "";
+    card.appendChild(city);
+
+    const state = document.createElement("p");
+    state.textContent = "Status: " + item.status;
+    card.appendChild(state);
+
+    const viewBtn = document.createElement("button");
+    viewBtn.textContent = "View Profile";
+    viewBtn.addEventListener("click", () => {
+      if (!profile) {
+        alert("આ સભ્યની પ્રોફાઇલ મળી નથી.");
+        return;
+      }
+
+      const details = [
+        ["નામ", profile.full_name],
+        ["શહેર", profile.city],
+        ["લિંગ", profile.gender],
+        ["જન્મ તારીખ", profile.birth_date],
+        ["શિક્ષણ", profile.education],
+        ["વ્યવસાય", profile.occupation],
+        ["સમુદાય", profile.community],
+        ["વૈવાહિક સ્થિતિ", profile.marital_status],
+        ["વિશે", profile.about_me]
+      ];
+
+      alert(details
+        .filter(([label, value]) => value)
+        .map(([label, value]) => label + ": " + value)
+        .join("\n"));
+    });
+    card.appendChild(viewBtn);
+
+    if (item.status === "pending") {
+      const acceptBtn = document.createElement("button");
+      acceptBtn.textContent = "Accept Interest";
+      acceptBtn.addEventListener("click", async () => {
+        acceptBtn.disabled = true;
+
+        const { error: updateError } = await supabase
+          .from("interests")
+          .update({ status: "accepted", updated_at: new Date().toISOString() })
+          .eq("id", item.id)
+          .eq("receiver_id", currentUser.id)
+          .eq("status", "pending");
+
+        if (updateError) {
+          acceptBtn.disabled = false;
+          return alert("Interest સ્વીકારી શકાયો નથી: " + updateError.message);
+        }
+
+        state.textContent = "Status: accepted";
+        acceptBtn.remove();
+        alert("Interest સ્વીકારાયો!");
+      });
+      card.appendChild(acceptBtn);
+    }
+
+    container.appendChild(card);
   });
 
-  status(
-    "interestStatus",
-    `તમને ${data.length} Interest મળ્યા છે:\n` + result.join("\n")
-  );
-});const plans = {
+  $("interestStatus").appendChild(container);
+});
+ const plans = {
   month_1:{label:"1 Month",base:499,months:1},
   month_3:{label:"3 Months",base:1249,months:3},
   month_6:{label:"6 Months",base:1999,months:6},
