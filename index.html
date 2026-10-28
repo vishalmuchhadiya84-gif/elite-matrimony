@@ -478,6 +478,151 @@ $("loadInterestsBtn").addEventListener("click", async () => {
   $("interestStatus").appendChild(container);
 });
 
+
+// Premium payment: create a server-side Razorpay order, then verify it server-side.
+document.querySelectorAll(".choosePlan").forEach(button => {
+  button.addEventListener("click", async () => {
+    const planKey = button.dataset.plan;
+    if (!currentUser) {
+      status("paymentStatus", "Premium ખરીદવા માટે પહેલાં Login કરો.", "error");
+      $("login").scrollIntoView({ behavior: "smooth" });
+      return;
+    }
+    if (!window.Razorpay) {
+      status("paymentStatus", "Razorpay Checkout લોડ થયું નથી. Internet તપાસી ફરી પ્રયાસ કરો.", "error");
+      return;
+    }
+    const planNames = {
+      month_1: "1 Month Premium",
+      month_3: "3 Months Premium",
+      month_6: "6 Months Premium",
+      month_12: "12 Months Premium"
+    };
+    button.disabled = true;
+    status("paymentStatus", "Payment order બનાવાઈ રહ્યો છે...");
+    try {
+      const { data: orderData, error: orderError } = await supabase.functions.invoke(
+        "bright-api",
+        { body: { action: "create_order", plan: planKey } }
+      );
+      if (orderError) throw new Error(orderData?.error || orderError.message || "Payment order બનાવી શકાયો નથી.");
+      if (!orderData?.success || !orderData?.order_id || !orderData?.key_id) {
+        throw new Error(orderData?.error || "Payment order response અધૂરો છે.");
+      }
+      const checkout = new window.Razorpay({
+        key: orderData.key_id,
+        amount: orderData.amount,
+        currency: orderData.currency || "INR",
+        name: "Elite Gujarati Matrimony",
+        description: planNames[planKey] || "Premium Membership",
+        order_id: orderData.order_id,
+        prefill: { email: currentUser.email || "" },
+        notes: { plan: planKey },
+        theme: { color: "#791b3a" },
+        handler: async function (response) {
+          status("paymentStatus", "Payment ચકાસાઈ રહ્યું છે...");
+          try {
+            const { data: verifyData, error: verifyError } = await supabase.functions.invoke(
+              "bright-api",
+              { body: {
+                action: "verify_payment",
+                plan: planKey,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature
+              } }
+            );
+            if (verifyError) throw new Error(verifyData?.error || verifyError.message || "Payment ચકાસી શકાયું નથી.");
+            if (!verifyData?.success) throw new Error(verifyData?.error || "Payment verification નિષ્ફળ થયું.");
+            status("paymentStatus", "Payment સફળ થયું! તમારું Premium Membership સક્રિય છે.", "success");
+          } catch (verifyErr) {
+            status("paymentStatus", "Payment મળ્યું હોઈ શકે છે, પરંતુ membership ચકાસવામાં સમસ્યા આવી: " + (verifyErr.message || "ફરી તપાસો."), "error");
+          }
+        },
+        modal: {
+          ondismiss: function () {
+            status("paymentStatus", "Payment બંધ કરવામાં આવ્યું. કોઈ નવી ચુકવણી શરૂ થઈ નથી.");
+            button.disabled = false;
+          }
+        }
+      });
+      checkout.on("payment.failed", function (response) {
+        status("paymentStatus", "Payment નિષ્ફળ થયું: " + (response.error?.description || "ફરી પ્રયાસ કરો."), "error");
+        button.disabled = false;
+      });
+      checkout.open();
+      button.disabled = false;
+    } catch (err) {
+      status("paymentStatus", "Payment શરૂ થઈ શક્યું નથી: " + (err.message || "Login કરીને ફરી પ્રયાસ કરો."), "error");
+      button.disabled = false;
+    }
+  });
+});
+
+
+// Admin panel: checks the signed-in user's membership in admin_users.
+// The database must enforce RLS; this browser code is not an authorization boundary.
+$("adminBtn").addEventListener("click", async () => {
+  const button = $("adminBtn");
+  const host = $("adminMembers");
+  host.innerHTML = "";
+  if (!currentUser) {
+    status("adminStatus", "Admin Panel માટે પહેલાં Admin accountથી Login કરો.", "error");
+    $("login").scrollIntoView({ behavior: "smooth" });
+    return;
+  }
+  button.disabled = true;
+  status("adminStatus", "Admin access તપાસી રહ્યા છીએ...");
+  try {
+    const { data: adminRow, error: adminError } = await supabase
+      .from("admin_users")
+      .select("user_id")
+      .eq("user_id", currentUser.id)
+      .maybeSingle();
+
+    if (adminError) {
+      throw new Error("Admin permission તપાસી શકાયું નથી. admin_users table અને તેની RLS policy તપાસો. વિગતો: " + adminError.message);
+    }
+    if (!adminRow) {
+      status("adminStatus", "આ Login accountને Admin permission નથી.", "error");
+      return;
+    }
+
+    const { data: members, error: membersError } = await supabase
+      .from("member_profiles")
+      .select("id,user_id,full_name,gender,city,education,occupation,community,marital_status,updated_at")
+      .order("updated_at", { ascending: false })
+      .limit(200);
+
+    if (membersError) {
+      throw new Error("Admin ઓળખાયો, પરંતુ સભ્યોની યાદી મળી નથી. member_profiles માટે Admin SELECT RLS policy તપાસો. વિગતો: " + membersError.message);
+    }
+
+    if (!members || members.length === 0) {
+      status("adminStatus", "Admin access સફળ. હજી કોઈ સભ્યની Profile નથી.", "success");
+      return;
+    }
+
+    host.innerHTML = members.map(member => `
+      <article class="card profile-card">
+        <h3>${esc(member.full_name || "Elite Member")}</h3>
+        <div>Email/User ID: ${esc(member.user_id || "")}</div>
+        <div>શહેર: ${esc(member.city || "—")}</div>
+        <div>લિંગ: ${esc(member.gender || "—")}</div>
+        <div>અભ્યાસ: ${esc(member.education || "—")}</div>
+        <div>વ્યવસાય: ${esc(member.occupation || "—")}</div>
+        <div>સમાજ: ${esc(member.community || "—")}</div>
+        <div>વૈવાહિક સ્થિતિ: ${esc(member.marital_status || "—")}</div>
+      </article>
+    `).join("");
+    status("adminStatus", "Admin access સફળ. કુલ સભ્યો: " + members.length, "success");
+  } catch (err) {
+    status("adminStatus", err instanceof Error ? err.message : "Admin Panel ખોલવામાં ભૂલ આવી.", "error");
+  } finally {
+    button.disabled = false;
+  }
+});
+
 async function init(){
   const {data,error}=await supabase.auth.getSession();
   if(error) status("globalStatus","Supabase session error: "+error.message,"error");
