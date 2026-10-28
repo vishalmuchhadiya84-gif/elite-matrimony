@@ -232,7 +232,7 @@ host.innerHTML = data.map(p => {
   const isOwnProfile =
 !!currentUser && profileUserId === currentUser.id;
 
- return `
+return `
     <article class="card profile-card">
       <div class="avatar">♡</div>
       <h3>${esc(p.full_name || "Elite Member")}</h3>
@@ -325,92 +325,6 @@ async function sendInterest(targetUserId) {
     "success"
   );
 }
-$("loadInterestsBtn").addEventListener("click", async () => {
-  if (!currentUser) {
-    return status("interestStatus", "Received Interest જોવા માટે Login કરો.", "error");
-  }
-
-  const { data, error } = await supabase
-    .from("interests")
-    .select("id, sender_id, created_at, status")
-    .eq("receiver_id", currentUser.id)
-    .order("created_at", { ascending: false });
-
-  if (error) {
-    return status("interestStatus", "Interest લોડ કરવામાં ભૂલ: " + error.message, "error");
-  }
-
-  if (!data?.length) {
-    $("interestStatus").innerHTML = "હજુ કોઈ Interest મળ્યો નથી.";
-    return;
-  }
-
-  const senderIds = [...new Set(data.map(item => item.sender_id))];
-
-  const { data: profiles, error: profileError } = await supabase
-    .from("member_profiles")
-    .select("id, user_id, full_name, city, gender, birth_date, education, occupation, community, marital_status, about_me")
-    .or(
-      "user_id.in.(" + senderIds.join(",") + "),id.in.(" + senderIds.join(",") + ")"
-    );
-
-  if (profileError) {
-    return status("interestStatus", "પ્રોફાઇલ લોડ કરવામાં ભૂલ: " + profileError.message, "error");
-  }
-
-  const profileMap = new Map();
-  (profiles || []).forEach(profile => {
-    if (profile.user_id) profileMap.set(profile.user_id, profile);
-    profileMap.set(profile.id, profile);
-  });
-
-  $("interestStatus").innerHTML =
-    `<strong>તમને ${data.length} Interest મળ્યા છે.</strong>`;
-
-  const container = document.createElement("div");
-  container.className = "card";
-
-  data.forEach(item => {
-    const profile = profileMap.get(item.sender_id);
-    const card = document.createElement("div");
-    card.className = "card";
-
-    const name = document.createElement("strong");
-    name.textContent = profile?.full_name || "પ્રોફાઇલ મળી નથી";
-    card.appendChild(name);
-
-    const city = document.createElement("p");
-    city.textContent = profile?.city || "";
-    card.appendChild(city);
-
-    const state = document.createElement("p");
-    state.textContent = "Status: " + item.status;
-    card.appendChild(state);
-
-    const viewBtn = document.createElement("button");
-    viewBtn.textContent = "View Profile";
-    viewBtn.addEventListener("click", () => {
-      if (!profile) {
-        alert("આ સભ્યની પ્રોફાઇલ મળી નથી.");
-        return;
-      }
-
-      const details = [
-        ["નામ", profile.full_name],
-        ["શહેર", profile.city],
-        ["લિંગ", profile.gender],
-        ["જન્મ તારીખ", profile.birth_date],
-        ["શિક્ષણ", profile.education],
-        ["વ્યવસાય", profile.occupation],
-        ["સમુદાય", profile.community],
-        ["વૈવાહિક સ્થિતિ", profile.marital_status],
-        ["વિશે", profile.about_me]
-      ];
-
-      alert(details
-        .filter(([label, value]) => value)
-        .map(([label, value]) => label + ": " + value)
-
 $("loadInterestsBtn").addEventListener("click", async () => {
   if (!currentUser) {
     return status("interestStatus", "Received Interest જોવા માટે Login કરો.", "error");
