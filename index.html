@@ -479,36 +479,84 @@ $("loadInterestsBtn").addEventListener("click", async () => {
 });
 
 
-// Premium payment: create a server-side Razorpay order, then verify it server-side.
-document.querySelectorAll(".choosePlan").forEach(button => {
+// ===== ELITE MATRIMONY PREMIUM PAYMENT FIX =====
+document.querySelectorAll(".choosePlan").forEach((button) => {
   button.addEventListener("click", async () => {
     const planKey = button.dataset.plan;
-    if (!currentUser) {
-      status("paymentStatus", "Premium ખરીદવા માટે પહેલાં Login કરો.", "error");
-      $("login").scrollIntoView({ behavior: "smooth" });
-      return;
-    }
-    if (!window.Razorpay) {
-      status("paymentStatus", "Razorpay Checkout લોડ થયું નથી. Internet તપાસી ફરી પ્રયાસ કરો.", "error");
-      return;
-    }
-    const planNames = {
-      month_1: "1 Month Premium",
-      month_3: "3 Months Premium",
-      month_6: "6 Months Premium",
-      month_12: "12 Months Premium"
-    };
+
     button.disabled = true;
-    status("paymentStatus", "Payment order બનાવાઈ રહ્યો છે...");
+    status("paymentStatus", "Login session તપાસી રહ્યા છીએ...");
+
     try {
-      const { data: orderData, error: orderError } = await supabase.functions.invoke(
-        "bright-api",
-        { body: { action: "create_order", plan: planKey } }
-      );
-      if (orderError) throw new Error(orderData?.error || orderError.message || "Payment order બનાવી શકાયો નથી.");
-      if (!orderData?.success || !orderData?.order_id || !orderData?.key_id) {
-        throw new Error(orderData?.error || "Payment order response અધૂરો છે.");
+      // Supabaseનું તાજું session મેળવો
+      const {
+        data: sessionData,
+        error: sessionError
+      } = await supabase.auth.getSession();
+
+      if (sessionError) {
+        throw new Error("Login session: " + sessionError.message);
       }
+
+      const session = sessionData?.session;
+      currentUser = session?.user || null;
+      updateUI();
+
+      if (!session?.access_token || !currentUser) {
+        throw new Error(
+          "Login session મળ્યું નથી. ફરી Login કરીને પ્રયાસ કરો."
+        );
+      }
+
+      if (!window.Razorpay) {
+        throw new Error(
+          "Razorpay Checkout લોડ થયું નથી. Internet તપાસો."
+        );
+      }
+
+      const planNames = {
+        month_1: "1 Month Premium",
+        month_3: "3 Months Premium",
+        month_6: "6 Months Premium",
+        month_12: "12 Months Premium"
+      };
+
+      status("paymentStatus", "Payment order બનાવી રહ્યા છીએ...");
+
+      // Serverને authenticated request મોકલો
+      const {
+        data: orderData,
+        error: orderError
+      } = await supabase.functions.invoke("bright-api", {
+        body: {
+          action: "create_order",
+          plan: planKey
+        },
+        headers: {
+          Authorization: "Bearer " + session.access_token
+        }
+      });
+
+      if (orderError) {
+        throw new Error(
+          orderData?.error ||
+          orderError.message ||
+          "Payment order બની શક્યો નથી."
+        );
+      }
+
+      if (
+        !orderData?.success ||
+        !orderData?.order_id ||
+        !orderData?.key_id ||
+        !orderData?.amount
+      ) {
+        throw new Error(
+          orderData?.error ||
+          "Server તરફથી Payment Orderની માહિતી અધૂરી છે."
+        );
+      }
+
       const checkout = new window.Razorpay({
         key: orderData.key_id,
         amount: orderData.amount,
@@ -516,36 +564,111 @@ document.querySelectorAll(".choosePlan").forEach(button => {
         name: "Elite Gujarati Matrimony",
         description: planNames[planKey] || "Premium Membership",
         order_id: orderData.order_id,
-        prefill: { email: currentUser.email || "" },
-        notes: { plan: planKey },
-        theme: { color: "#791b3a" },
+
+        prefill: {
+          email: currentUser.email || ""
+        },
+
+        notes: {
+          plan: planKey
+        },
+
+        theme: {
+          color: "#791b3a"
+        },
+
         handler: async function (response) {
-          status("paymentStatus", "Payment ચકાસાઈ રહ્યું છે...");
+          status(
+            "paymentStatus",
+            "Paymentની ચકાસણી કરી રહ્યા છીએ..."
+          );
+
           try {
-            const { data: verifyData, error: verifyError } = await supabase.functions.invoke(
-              "bright-api",
-              { body: {
+            const {
+              data: verifyData,
+              error: verifyError
+            } = await supabase.functions.invoke("bright-api", {
+              body: {
                 action: "verify_payment",
                 plan: planKey,
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature
-              } }
+                razorpay_order_id:
+                  response.razorpay_order_id,
+                razorpay_payment_id:
+                  response.razorpay_payment_id,
+                razorpay_signature:
+                  response.razorpay_signature
+              },
+              headers: {
+                Authorization: "Bearer " + session.access_token
+              }
+            });
+
+            if (verifyError) {
+              throw new Error(
+                verifyData?.error ||
+                verifyError.message ||
+                "Payment verification નિષ્ફળ થયું."
+              );
+            }
+
+            if (!verifyData?.success) {
+              throw new Error(
+                verifyData?.error ||
+                "Membership સક્રિય થઈ નથી."
+              );
+            }
+
+            status(
+              "paymentStatus",
+              "Payment સફળ થયું અને Premium Membership સક્રિય થઈ છે.",
+              "success"
             );
-            if (verifyError) throw new Error(verifyData?.error || verifyError.message || "Payment ચકાસી શકાયું નથી.");
-            if (!verifyData?.success) throw new Error(verifyData?.error || "Payment verification નિષ્ફળ થયું.");
-            status("paymentStatus", "Payment સફળ થયું! તમારું Premium Membership સક્રિય છે.", "success");
-          } catch (verifyErr) {
-            status("paymentStatus", "Payment મળ્યું હોઈ શકે છે, પરંતુ membership ચકાસવામાં સમસ્યા આવી: " + (verifyErr.message || "ફરી તપાસો."), "error");
+          } catch (error) {
+            status(
+              "paymentStatus",
+              "Payment verificationમાં સમસ્યા: " +
+                (error.message || "ફરી તપાસ જરૂરી છે."),
+              "error"
+            );
+          } finally {
+            button.disabled = false;
           }
         },
+
         modal: {
           ondismiss: function () {
-            status("paymentStatus", "Payment બંધ કરવામાં આવ્યું. કોઈ નવી ચુકવણી શરૂ થઈ નથી.");
+            status(
+              "paymentStatus",
+              "Checkout બંધ થયું. Paymentની સ્થિતિ Dashboardમાં તપાસો."
+            );
             button.disabled = false;
           }
         }
       });
+
+      checkout.on("payment.failed", function (response) {
+        status(
+          "paymentStatus",
+          "Payment નિષ્ફળ થયું: " +
+            (response.error?.description || "ફરી પ્રયાસ કરો."),
+          "error"
+        );
+        button.disabled = false;
+      });
+
+      checkout.open();
+    } catch (error) {
+      status(
+        "paymentStatus",
+        "Payment શરૂ થઈ શક્યું નથી: " +
+          (error.message || "અજાણી ભૂલ."),
+        "error"
+      );
+
+      button.disabled = false;
+    }
+  });
+});
       checkout.on("payment.failed", function (response) {
         status("paymentStatus", "Payment નિષ્ફળ થયું: " + (response.error?.description || "ફરી પ્રયાસ કરો."), "error");
         button.disabled = false;
