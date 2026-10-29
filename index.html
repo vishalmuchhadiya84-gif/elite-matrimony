@@ -669,19 +669,6 @@ document.querySelectorAll(".choosePlan").forEach((button) => {
     }
   });
 });
-      checkout.on("payment.failed", function (response) {
-        status("paymentStatus", "Payment નિષ્ફળ થયું: " + (response.error?.description || "ફરી પ્રયાસ કરો."), "error");
-        button.disabled = false;
-      });
-      checkout.open();
-      button.disabled = false;
-    } catch (err) {
-      status("paymentStatus", "Payment શરૂ થઈ શક્યું નથી: " + (err.message || "Login કરીને ફરી પ્રયાસ કરો."), "error");
-      button.disabled = false;
-    }
-  });
-});
-
 
 // Admin panel: checks the signed-in user's membership in admin_users.
 // The database must enforce RLS; this browser code is not an authorization boundary.
