@@ -61,11 +61,35 @@
 <button class="btn" type="submit">Save Profile</button></form><div id="profileStatus" class="status" role="status"></div></div>
 </div></section>
 <section id="profiles"><div class="container"><div class="section-head"><h2>Member Profiles</h2><p>ઉપલબ્ધ પ્રોફાઇલ્સ જુઓ.</p></div>
-<div class="grid" style="margin-bottom:16px"><div class="card"><label for="searchCity">શહેર પ્રમાણે</label><input id="searchCity" placeholder="જેમ કે Ahmedabad"></div><div class="card"><label for="searchGender">Gender</label><select id="searchGender"><option value="">બધા</option><option value="Male">પુરુષ</option><option value="Female">સ્ત્રી</option><option value="Other">અન્ય</option></select></div><div class="card"><p>સભ્યોની પ્રોફાઇલ જોવા માટે Login અને Supabase access policies જરૂરી હોઈ શકે છે.</p><button class="btn" id="searchBtn" type="button">સભ્યો શોધો</button></div></div>
+<div class="card" style="margin-bottom:16px">
+<div class="form-grid">
+<div><label for="searchCity">City</label><input id="searchCity" placeholder="Ahmedabad"></div>
+<div><label for="searchGender">Gender</label><select id="searchGender"><option value="">બધા</option><option value="Male">પુરુષ</option><option value="Female">સ્ત્રી</option><option value="Other">અન્ય</option></select></div>
+<div><label for="filterAgeMin">ઉંમર From</label><input id="filterAgeMin" type="number" min="18" max="100" placeholder="18"></div>
+<div><label for="filterAgeMax">ઉંમર To</label><input id="filterAgeMax" type="number" min="18" max="100" placeholder="40"></div>
+<div><label for="filterHeight">Height</label><input id="filterHeight" placeholder="5 ft 4 in"></div>
+<div><label for="filterEducation">Education</label><input id="filterEducation" placeholder="Graduate"></div>
+<div><label for="filterOccupation">Occupation</label><input id="filterOccupation" placeholder="Business / Job"></div>
+<div><label for="filterCommunity">Community / Caste</label><input id="filterCommunity" placeholder="Community"></div>
+<div><label for="filterMarital">Marital Status</label><select id="filterMarital"><option value="">બધા</option><option value="Never Married">અપરિણીત</option><option value="Divorced">Divorced</option><option value="Widowed">Widowed</option></select></div>
+</div>
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+<button class="btn" id="searchBtn" type="button">Apply Filters</button>
+<button class="btn outline" id="clearFiltersBtn" type="button">Clear Filters</button>
+</div>
+<p class="muted">વધુ Filters માટે Profile માં માહિતી ઉપલબ્ધ હોવી અને Database columns જરૂરી છે.</p>
+</div>
 <div id="profilesList" class="grid"><div class="card">Profiles લોડ થઈ રહી છે...</div></div><div id="profilesStatus" class="status" role="status"></div>
 </div></section>
 <section id="interests"><div class="container"><div class="section-head"><h2>Received Interest</h2><p>તમારી પ્રોફાઇલમાં રસ દર્શાવનાર સભ્યો.</p></div>
 <div class="card"><p>Interest સુવિધા માટે databaseમાં interests ટેબલ અને યોગ્ય access rules જરૂરી છે.</p><button class="btn" id="loadInterestsBtn" type="button">View Received Interest</button><div id="interestStatus" class="status" role="status"></div></div></div></section>
+<section id="activity"><div class="container"><div class="section-head"><h2>Activity</h2><p>તમારી Profile અને Interest Activity</p></div>
+<div class="grid">
+<div class="card"><h3>Profile Visits</h3><p>Profile Visits માટે activity tracking જરૂરી છે.</p></div>
+<div class="card"><h3>Shortlisted Profiles</h3><p>Shortlist tracking હાલ અલગથી સેટ કરવાનું બાકી છે.</p></div>
+<div class="card"><h3>Contact Views</h3><p>Contact details access tracking જરૂરી છે.</p></div>
+</div><div class="card" style="margin-top:16px"><h3>Interests</h3><p>Received / Accepted / Sent Interests</p><a class="btn" href="#interests">View Interests</a></div></div></section>
+<section id="messenger"><div class="container"><div class="section-head"><h2>Messenger</h2><p>Accepted matches સાથે વાતચીત</p></div><div class="card"><p>Chat માટે real-time messaging database table અને security policies જરૂરી છે.</p><a class="btn" href="#interests">Accepted Interests જુઓ</a></div></div></section>
 <section id="plans"><div class="container"><div class="section-head"><h2>Premium Membership Plans</h2><p>તમારી જરૂરિયાત પ્રમાણે પ્લાન પસંદ કરો.</p><p class="muted">બેઝ કિંમત અને 18% GST અલગ દર્શાવેલ છે.</p></div>
 <div class="grid">
 <div class="card plan"><span class="tag">1 Month</span><h3>Monthly Plan</h3><div class="price">₹499</div><div class="gst">Base price</div><div class="gst">GST (18%): ₹89.82</div><div class="total">કુલ: ₹588.82</div><button class="btn choosePlan" data-plan="month_1" type="button">Choose Plan</button></div>
@@ -178,7 +202,7 @@ async function loadMyProfile() {
     $("birthDate").value = data.birth_date || "";
     $("city").value = data.city || "";
     $("education").value = data.education || "";
-        $("occupation").value = data.occupation || "";
+    $("occupation").value = data.occupation || "";
     $("community").value = data.community || "";
     $("maritalStatus").value = data.marital_status || "";
     $("aboutMe").value = data.about_me || "";
@@ -356,6 +380,23 @@ async function init(){
   else { $("profilesList").innerHTML='<div class="card">Profiles જોવા માટે Login કરો.</div>'; status("globalStatus","વેબસાઇટ તૈયાર છે. Register અથવા Login કરો.","success"); }
 }
 init();
+</script>
+<nav class="mobile-bottom-nav" aria-label="Mobile navigation">
+<a href="#profiles">Matches</a><a href="#activity">Activity</a><a href="#messenger">Messenger</a><a href="#plans">Upgrade</a>
+</nav>
+<style>
+.mobile-bottom-nav{display:none}
+@media(max-width:700px){.mobile-bottom-nav{position:sticky;bottom:0;z-index:50;background:#fff;border-top:1px solid #eee;display:flex;justify-content:space-around;padding:12px 4px;box-shadow:0 -4px 18px #00000008}.mobile-bottom-nav a{font-size:13px;color:#791b3a;text-decoration:none;font-weight:600}.form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+<script>
+(function(){
+const clear=document.getElementById("clearFiltersBtn");
+if(clear) clear.addEventListener("click",()=>{
+["searchCity","filterAgeMin","filterAgeMax","filterHeight","filterEducation","filterOccupation","filterCommunity"].forEach(id=>{const e=document.getElementById(id);if(e)e.value=""});
+["searchGender","filterMarital"].forEach(id=>{const e=document.getElementById(id);if(e)e.value=""});
+const b=document.getElementById("searchBtn");if(b)b.click();
+});
+})();
 </script>
 </body>
 </html>
