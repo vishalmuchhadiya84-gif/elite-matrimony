@@ -178,7 +178,7 @@ async function loadMyProfile() {
     $("birthDate").value = data.birth_date || "";
     $("city").value = data.city || "";
     $("education").value = data.education || "";
-    $("occupation").value = data.occupation || "";
+        $("occupation").value = data.occupation || "";
     $("community").value = data.community || "";
     $("maritalStatus").value = data.marital_status || "";
     $("aboutMe").value = data.about_me || "";
@@ -257,20 +257,42 @@ async function sendInterest(targetUserId,button) {
 
 $("searchBtn").addEventListener("click",loadProfiles);
 
-async function sendInterest(targetUserId) {
-  if (!currentUser) { status("profilesStatus","Interest મોકલવા માટે Login કરો.","error"); return; }
-  if (targetUserId===currentUser.id) return status("profilesStatus","તમારી પોતાની પ્રોફાઇલમાં interest મોકલી શકાતો નથી.","error");
-  const {error}=await supabase.from("interests").insert({sender_id:currentUser.id,receiver_id:targetUserId});
-  status("profilesStatus",error ? "Interest મોકલવામાં ભૂલ: "+error.message : "Interest સફળતાપૂર્વક મોકલાયો.",error?"error":"success");
-}
-$("loadInterestsBtn").addEventListener("click",async()=>{
-  if (!currentUser) return status("interestStatus","Received Interest જોવા માટે Login કરો.","error");
-  const {data,error}=await supabase.from("interests").select("sender_id,created_at").eq("receiver_id",currentUser.id).order("created_at",{ascending:false});
-  if(error) return status("interestStatus","Interest લોડ કરવામાં ભૂલ: "+error.message+". Database table/policies ચકાસો.","error");
-  if(!data?.length) return status("interestStatus","હજુ કોઈ Interest મળ્યો નથી.");
-  status("interestStatus","તમને "+data.length+" interest મળ્યા છે. Sender IDs નીચે:\n"+data.map(x=>x.sender_id).join("\n"));
-});
 
+$("loadInterestsBtn").addEventListener("click",async()=>{
+  if(!currentUser)return status("interestStatus","Received Interest જોવા માટે Login કરો.","error");
+  const {data,error}=await supabase.from("interests")
+    .select("id,sender_id,created_at,status")
+    .eq("receiver_id",currentUser.id).order("created_at",{ascending:false});
+  if(error)return status("interestStatus","Interest લોડ કરવામાં ભૂલ: "+error.message,"error");
+  const box=$("interestStatus");
+  box.innerHTML="";
+  if(!data?.length){box.textContent="હજુ કોઈ Interest મળ્યો નથી.";return;}
+  const ids=[...new Set(data.map(x=>x.sender_id))];
+  const {data:profiles,error:pe}=await supabase.from("member_profiles")
+    .select("user_id,full_name,gender,birth_date,city,education,occupation,community,marital_status,about_me")
+    .in("user_id",ids);
+  if(pe)return status("interestStatus","Profiles લોડ કરવામાં ભૂલ: "+pe.message,"error");
+  const map=new Map((profiles||[]).map(p=>[p.user_id,p]));
+  const grid=document.createElement("div");grid.className="grid";
+  data.forEach(item=>{
+    const p=map.get(item.sender_id),card=document.createElement("article");card.className="card profile-card";
+    const h=document.createElement("h3");h.textContent=p?.full_name||"Member";card.appendChild(h);
+    const info=document.createElement("p");info.textContent=(p?.city||"")+" • "+(p?.gender||"");card.appendChild(info);
+    const view=document.createElement("button");view.className="btn";view.textContent="View Profile";
+    view.onclick=()=>alert(["Name: "+(p?.full_name||""),"City: "+(p?.city||""),"Gender: "+(p?.gender||""),"Birth date: "+(p?.birth_date||""),"Education: "+(p?.education||""),"Occupation: "+(p?.occupation||""),"Community: "+(p?.community||""),"Marital status: "+(p?.marital_status||""),"About: "+(p?.about_me||""),item.status==="accepted"?"Interest Accepted":"Contact details after accepting Interest"].join("\\n"));
+    card.appendChild(view);
+    const st=document.createElement("p");st.textContent="Status: "+(item.status||"pending");card.appendChild(st);
+    if((item.status||"pending")==="pending"){
+      const accept=document.createElement("button");accept.className="btn";accept.textContent="Accept Interest";accept.style.marginTop="8px";
+      accept.onclick=async()=>{accept.disabled=true;const {error:ue}=await supabase.from("interests").update({status:"accepted"}).eq("id",item.id).eq("receiver_id",currentUser.id).eq("status","pending");
+        if(ue){accept.disabled=false;alert("Accept error: "+ue.message);return;}item.status="accepted";st.textContent="Status: accepted";accept.remove();alert("Interest accepted!");};
+      card.appendChild(accept);
+    }
+    grid.appendChild(card);
+  });
+  box.appendChild(document.createTextNode("તમને "+data.length+" Interest મળ્યા છે."));
+  box.appendChild(grid);
+});
 const plans = {
   month_1:{label:"1 Month",base:499,months:1},
   month_3:{label:"3 Months",base:1249,months:3},
