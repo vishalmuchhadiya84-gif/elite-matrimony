@@ -290,9 +290,9 @@ const {error:contactError} = await supabase
     phone_number: $("phoneNumber").value.trim()
   });
 
-if(contactError) return status("profileStatus","Contact Save error: "+contactError.message,"error");
+if (error) return status("profileStatus","Profile Save error: "+error.message,"error");
 
-  if (error) return status("profileStatus","Profile Save error: "+error.message,"error");
+if(contactError) return status("profileStatus","Contact Save error: "+contactError.message,"error");
   currentProfile=payload; status("profileStatus","તમારી Profile સફળતાપૂર્વક સાચવાઈ ગઈ!","success"); await loadProfiles();
 });
 
