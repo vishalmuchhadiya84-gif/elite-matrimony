@@ -261,51 +261,62 @@ async function loadMyProfile() {
 }
 
 $("profileForm").addEventListener("submit", async e => {
+
+$("profileForm").addEventListener("submit", async e => {
   e.preventDefault();
-  if (!currentUser) { status("profileStatus","Profile Save કરવા પહેલાં Login કરો.","error"); $("login").scrollIntoView({behavior:"smooth"}); return; }
-async function saveProfile() {
+
   if (!currentUser) {
-    alert("Please Login First");
+    status("profileStatus","Profile Save કરવા પહેલાં Login કરો.","error");
+    $("login").scrollIntoView({behavior:"smooth"});
     return;
   }
 
-  const phone = document.getElementById("phoneNumber").value.trim();
-
-  if (!phone) {
-    alert("Mobile Number દાખલ કરો");
-    return;
-  }
+  const phone = $("phoneNumber").value.trim();
 
   const payload = {
     user_id: currentUser.id,
-    full_name: document.getElementById("fullName").value.trim(),
-    phone_number: phone
+    full_name: $("fullName").value.trim(),
+    phone_number: phone,
+    gender: $("gender").value,
+    birth_date: $("birthDate").value,
+    city: $("city").value.trim(),
+    education: $("education").value.trim(),
+    occupation: $("occupation").value.trim(),
+    community: $("community").value.trim(),
+    marital_status: $("maritalStatus").value,
+    about_me: $("aboutMe").value.trim(),
+    updated_at: new Date().toISOString()
   };
 
-  const { error: profileError } = await supabase
-    .from("member_profiles")
-    .upsert(payload, { onConflict: "user_id" });
+  status("profileStatus","Profile Save થઈ રહી છે...");
 
-  if (profileError) {
-    alert("Profile Save Error: " + profileError.message);
+  const {error: profileError} = await supabase
+    .from("member_profiles")
+    .upsert(payload,{onConflict:"user_id"});
+
+  if(profileError) {
+    status("profileStatus","Profile Save Error: "+profileError.message,"error");
     return;
   }
 
-  const { error: contactError } = await supabase
+  const {error: contactError} = await supabase
     .from("member_contacts")
     .upsert({
-      user_id: currentUser.id,
-      phone_number: phone,
-      updated_at: new Date().toISOString()
-    }, { onConflict: "user_id" });
+      user_id:currentUser.id,
+      phone_number:phone,
+      updated_at:new Date().toISOString()
+    },{onConflict:"user_id"});
 
-  if (contactError) {
-    alert("Contact Save Error: " + contactError.message);
+  if(contactError) {
+    status("profileStatus","Contact Save Error: "+contactError.message,"error");
     return;
   }
 
-  alert("Profile અને Phone Number સફળતાપૂર્વક Save થયા!");
-}
+  status("profileStatus","Profile અને Phone Number સફળતાપૂર્વક Save થયા!","success");
+  await loadMyProfile();
+  await loadProfiles();
+});
+
 
 async function loadProfiles() {
   const host=$("profilesList");
