@@ -165,6 +165,7 @@ function updateUI() {
   $("logoutBtn").classList.toggle("hidden", !currentUser);
   $("accountInfo").classList.toggle("hidden", !currentUser);
   $("loginNav").textContent = currentUser ? "My Account" : "Login";
+ $("admin").classList.toggle("hidden", !isAdmin);
   $("accountEmail").textContent = currentUser ? "Login: " + currentUser.email : "";
 }
 $("loginNav").addEventListener("click", () => {
