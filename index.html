@@ -261,8 +261,12 @@ async function loadMyProfile() {
 $("profileForm").addEventListener("submit", async e => {
   e.preventDefault();
   if (!currentUser) { status("profileStatus","Profile Save કરવા પહેલાં Login કરો.","error"); $("login").scrollIntoView({behavior:"smooth"}); return; }
-  const payload = {
-    id: currentUser.id, user_id: currentUser.id, full_name:$("fullName").value.trim(),
+const payload = {
+  id: currentUser.id,
+  user_id: currentUser.id,
+  full_name: $("fullName").value.trim(),
+  phone_number: $("phoneNumber").value.trim(),
+  gender: $("gender").value,
     gender:$("gender").value, birth_date:$("birthDate").value || null,
     city:$("city").value.trim(), education:$("education").value.trim(),
     occupation:$("occupation").value.trim(), community:$("community").value.trim(),
