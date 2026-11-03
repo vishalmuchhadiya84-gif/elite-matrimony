@@ -152,6 +152,24 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const $ = id => document.getElementById(id);
 $("year").textContent = new Date().getFullYear();
 let currentUser = null;
+ async function checkAdminAccess() {
+  isAdmin = false;
+
+  if (!currentUser) {
+    updateUI();
+    return;
+  }
+
+  const { data, error } = await supabase
+    .from("admin_users")
+    .select("user_id")
+    .eq("user_id", currentUser.id)
+    .maybeSingle();
+
+  isAdmin = !error && !!data;
+
+  updateUI();
+ }
 let currentProfile = null;
 let isAdmin = false;
 function status(id, message, type="") {
