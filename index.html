@@ -480,8 +480,15 @@ $("adminBtn").addEventListener("click",async()=>{
 });
 
 supabase.auth.onAuthStateChange((_event,session)=>{
-  currentUser=session?.user||null; updateUI();
-  if(currentUser) setTimeout(()=>{loadMyProfile();loadProfiles();},0);
+  currentUser=session?.user||null;
+  isAdmin=false;
+  updateUI();
+
+  if(currentUser) setTimeout(async()=>{
+    await checkAdminAccess();
+    loadMyProfile();
+    loadProfiles();
+  },0);
 });
 async function init(){
   const {data,error}=await supabase.auth.getSession();
