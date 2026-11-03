@@ -492,10 +492,22 @@ supabase.auth.onAuthStateChange((_event,session)=>{
 });
 async function init(){
   const {data,error}=await supabase.auth.getSession();
+
   if(error) status("globalStatus","Supabase session error: "+error.message,"error");
-  currentUser=data?.session?.user||null; updateUI();
-  if(currentUser){await loadMyProfile();await loadProfiles();}
-  else { $("profilesList").innerHTML='<div class="card">Profiles જોવા માટે Login કરો.</div>'; status("globalStatus","વેબસાઇટ તૈયાર છે. Register અથવા Login કરો.","success"); }
+
+  currentUser=data?.session?.user||null;
+  isAdmin=false;
+  updateUI();
+
+  if(currentUser){
+    await checkAdminAccess();
+    await loadMyProfile();
+    await loadProfiles();
+  }
+  else {
+    $("profilesList").innerHTML='<div class="card">Profiles જોવા માટે Login કરો.</div>';
+    status("globalStatus","વેબસાઇટ તૈયાર છે. Register અથવા Login કરો.","success");
+  }
 }
 init();
 </script>
