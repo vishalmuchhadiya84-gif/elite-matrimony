@@ -202,11 +202,23 @@ $("logoutBtn").addEventListener("click", async () => {
   status("globalStatus","Logout સફળ થયું.","success");
 });
 
+
 async function loadMyProfile() {
   if (!currentUser) return;
-  const {data,error} = await supabase.from("member_profiles").select("*").eq("user_id",currentUser.id).maybeSingle();
-  if (error) { status("profileStatus","Profile લોડ કરવામાં ભૂલ: "+error.message,"error"); return; }
+
+  const { data, error } = await supabase
+    .from("member_profiles")
+    .select("*")
+    .eq("user_id", currentUser.id)
+    .maybeSingle();
+
+  if (error) {
+    status("profileStatus", "Profile લોડ કરવામાં ભૂલ: " + error.message, "error");
+    return;
+  }
+
   currentProfile = data;
+
   if (data) {
     $("fullName").value = data.full_name || currentUser.user_metadata?.full_name || "";
     $("gender").value = data.gender || "";
@@ -217,9 +229,35 @@ async function loadMyProfile() {
     $("community").value = data.community || "";
     $("maritalStatus").value = data.marital_status || "";
     $("aboutMe").value = data.about_me || "";
-    status("profileStatus","તમારી Profile લોડ થઈ ગઈ.","success");
-  } else if (currentUser.user_metadata?.full_name) $("fullName").value = currentUser.user_metadata.full_name;
+
+    $("premiumBadge").textContent =
+      data.premium_status === "active"
+        ? "Premium Status: Active"
+        : "Premium Status: Inactive";
+
+    $("premiumPlan").textContent =
+      data.premium_plan
+        ? "Premium Plan: " + data.premium_plan
+        : "Premium Plan: Not Active";
+
+    $("premiumExpiry").textContent =
+      data.premium_expiry
+        ? "Premium Expiry: " +
+          new Date(data.premium_expiry).toLocaleDateString("en-IN")
+        : "Premium Expiry: Not Available";
+
+    status("profileStatus", "તમારી Profile લોડ થઈ ગઈ.", "success");
+  } else {
+    $("premiumBadge").textContent = "Premium Status: Inactive";
+    $("premiumPlan").textContent = "Premium Plan: Not Active";
+    $("premiumExpiry").textContent = "Premium Expiry: Not Available";
+
+    if (currentUser.user_metadata?.full_name) {
+      $("fullName").value = currentUser.user_metadata.full_name;
+    }
+  }
 }
+
 $("profileForm").addEventListener("submit", async e => {
   e.preventDefault();
   if (!currentUser) { status("profileStatus","Profile Save કરવા પહેલાં Login કરો.","error"); $("login").scrollIntoView({behavior:"smooth"}); return; }
