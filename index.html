@@ -227,9 +227,6 @@ async function loadMyProfile() {
   if (!currentUser) return;
 
 
-async function loadMyProfile() {
-  if (!currentUser) return;
-
   const { data, error } = await supabase
     .from("member_profiles")
     .select("id,user_id,full_name,gender,birth_date,city,education,occupation,community,marital_status,about_me,photo_url,premium_status,premium_plan,premium_expiry,updated_at")
