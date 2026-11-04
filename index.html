@@ -497,7 +497,7 @@ async function startPayment(planKey) {
   if (!currentUser) { status("paymentStatus","Premium લેવા પહેલાં Login કરો.","error"); $("login").scrollIntoView({behavior:"smooth"}); return; }
   if (!plans[planKey]) return status("paymentStatus","પ્લાન મળ્યો નથી.","error");
   if (typeof window.Razorpay !== "function") return status("paymentStatus","Razorpay checkout લોડ થયું નથી. Internet ચકાસો.","error");
-  const plan=plans[planKey], total=Math.round(plan.base*1.18*100)/100;
+const plan=plans[planKey];
   status("paymentStatus","સુરક્ષિત payment order બનાવાઈ રહ્યો છે...");
   // The Edge Function must validate plan prices on the server; never trust the browser amount.
   const {data,error}=await supabase.functions.invoke("bright-api",{body:{action:"create_order",plan:planKey}});
