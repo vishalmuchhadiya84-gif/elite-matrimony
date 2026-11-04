@@ -50,27 +50,16 @@
 <section id="profile-form"><div class="container"><div class="section-head"><h2>તમારી Matrimony Profile</h2><p>પ્રોફાઇલ સાચવવા માટે પહેલા Login કરો.</p></div>
 <div class="card"><form id="profileForm"><div class="form-grid">
 <div><label for="fullName">પૂરું નામ *</label><input id="fullName" required maxlength="100"></div>
- <div><label for="phoneNumber">Phone Number</label><input id="phoneNumber" type="tel" placeholder="Mobile Number" maxlength="15"></div>
 <div><label for="gender">Gender *</label><select id="gender" required><option value="">પસંદ કરો</option><option value="Male">પુરુષ</option><option value="Female">સ્ત્રી</option><option value="Other">અન્ય</option></select></div>
 <div><label for="birthDate">જન્મ તારીખ *</label><input id="birthDate" type="date" required></div>
 <div><label for="city">શહેર *</label><input id="city" required maxlength="100" placeholder="ઉદાહરણ: Ahmedabad"></div>
+<div><label for="phoneNumber">Mobile Number *</label><input id="phoneNumber" type="tel" inputmode="numeric" maxlength="10" required></div>
 <div><label for="education">અભ્યાસ</label><input id="education" maxlength="150"></div>
 <div><label for="occupation">વ્યવસાય</label><input id="occupation" maxlength="150"></div>
 <div><label for="community">સમાજ / Community</label><input id="community" maxlength="100"></div>
 <div><label for="maritalStatus">વૈવાહિક સ્થિતિ</label><select id="maritalStatus"><option value="">પસંદ કરો</option><option value="Never Married">અપરિણીત</option><option value="Divorced">છૂટાછેડા લીધેલા</option><option value="Widowed">વિધવા / વિધુર</option><option value="Other">અન્ય</option></select></div>
 </div><div><label for="aboutMe">તમારા વિશે</label><textarea id="aboutMe" maxlength="1000" placeholder="તમારા વિશે ટૂંકમાં લખો"></textarea></div>
-<button class="btn" type="submit">Save Profile</button></form>
-
-<div id="profileStatus" class="status" role="status"></div>
-
-<div id="premiumInfo" class="card" style="margin-top:15px">
-  <h3>Premium Membership</h3>
-  <p id="premiumBadge">Premium Status: તપાસ થઈ રહી છે...</p>
-  <p id="premiumPlan"></p>
-  <p id="premiumExpiry"></p>
-</div>
-
-</div>
+<button class="btn" type="submit">Save Profile</button></form><div id="profileStatus" class="status" role="status"></div></div>
 </div></section>
 <section id="profiles"><div class="container"><div class="section-head"><h2>Member Profiles</h2><p>ઉપલબ્ધ પ્રોફાઇલ્સ જુઓ.</p></div>
 <div class="card" style="margin-bottom:16px">
@@ -103,13 +92,13 @@
 </div><div class="card" style="margin-top:16px"><h3>Interests</h3><p>Received / Accepted / Sent Interests</p><a class="btn" href="#interests">View Interests</a></div></div></section>
 <section id="messenger"><div class="container"><div class="section-head"><h2>Messenger</h2><p>Accepted matches સાથે વાતચીત</p></div><div class="card"><p>Chat માટે real-time messaging database table અને security policies જરૂરી છે.</p><a class="btn" href="#interests">Accepted Interests જુઓ</a></div></div></section>
 <section id="plans"><div class="container"><div class="section-head"><h2>Premium Membership Plans</h2><p>તમારી જરૂરિયાત પ્રમાણે પ્લાન પસંદ કરો.</p><p class="muted">બેઝ કિંમત અને 18% GST અલગ દર્શાવેલ છે.</p></div>
-<div class="grid" id="premiumPlansGrid">
-  <div class="card">Premium Plans લોડ થઈ રહ્યા છે...</div>
-</div>
-
-<div id="offerStatus" class="status" role="status"></div>
-<div id="paymentStatus" class="status" role="status"></div>
-<section id="admin" class="hidden"><div class="container"><div class="section-head"><h2>Admin Panel</h2><p>માત્ર અધિકૃત Admin માટે.</p></div><div class="card"><p>Admin access માટે Supabaseમાં server-side permissions અને RLS policies યોગ્ય હોવી જરૂરી છે.</p><button class="btn outline" id="adminBtn" type="button">Check Admin Access</button><div id="adminStatus" class="status" role="status"></div><div id="adminMembers" class="grid"></div></div></div></section>
+<div class="grid">
+<div class="card plan"><span class="tag">1 Month</span><h3>Monthly Plan</h3><div class="price">₹499</div><div class="gst">Base price</div><div class="gst">GST (18%): ₹89.82</div><div class="total">કુલ: ₹588.82</div><button class="btn choosePlan" data-plan="month_1" type="button">Choose Plan</button></div>
+<div class="card plan"><span class="tag">3 Months</span><h3>Quarterly Plan</h3><div class="price">₹1,249</div><div class="gst">Base price</div><div class="gst">GST (18%): ₹224.82</div><div class="total">કુલ: ₹1,473.82</div><button class="btn choosePlan" data-plan="month_3" type="button">Choose Plan</button></div>
+<div class="card plan"><span class="tag">6 Months</span><h3>Half-Year Plan</h3><div class="price">₹1,999</div><div class="gst">Base price</div><div class="gst">GST (18%): ₹359.82</div><div class="total">કુલ: ₹2,358.82</div><button class="btn choosePlan" data-plan="month_6" type="button">Choose Plan</button></div>
+<div class="card plan"><span class="tag">12 Months</span><h3>Annual Plan</h3><div class="price">₹2,999</div><div class="gst">Base price</div><div class="gst">GST (18%): ₹539.82</div><div class="total">કુલ: ₹3,538.82</div><button class="btn choosePlan" data-plan="month_12" type="button">Choose Plan</button></div>
+</div><div id="paymentStatus" class="status" role="status"></div></div></section>
+<section id="admin"><div class="container"><div class="section-head"><h2>Admin Panel</h2><p>માત્ર અધિકૃત Admin માટે.</p></div><div class="card"><p>Admin access માટે Supabaseમાં server-side permissions અને RLS policies યોગ્ય હોવી જરૂરી છે.</p><button class="btn outline" id="adminBtn" type="button">Check Admin Access</button><div id="adminStatus" class="status" role="status"></div><div id="adminMembers" class="grid"></div></div></div></section>
 
 <section id="privacy"><div class="container policy-content">
 <div class="section-head"><h2>Privacy Policy</h2><p>Elite Gujarati Matrimony</p></div><div class="card">
@@ -142,8 +131,9 @@
 
 </main>
 <footer><div class="container footer-row"><div><strong>ELITE GUJARATI MATRIMONY</strong><p>તમારા જીવનસાથીની શોધમાં એક નવી શરૂઆત.</p></div><div><div class="footer-links"><a href="#privacy">Privacy Policy</a> <a href="#terms">Terms &amp; Conditions</a> <a href="#contact">Contact</a></div><p>© <span id="year"></span> Elite Gujarati Matrimony</p></div></div></footer>
-<script type="module">
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const { createClient } = window.supabase;
 
 // Public/publishable key only. Never place service-role or Razorpay secret keys here.
 const SUPABASE_URL = "https://zwgdqsskwskgthytdahl.supabase.co";
@@ -152,26 +142,8 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const $ = id => document.getElementById(id);
 $("year").textContent = new Date().getFullYear();
 let currentUser = null;
- async function checkAdminAccess() {
-  isAdmin = false;
-
-  if (!currentUser) {
-    updateUI();
-    return;
-  }
-
-  const { data, error } = await supabase
-    .from("admin_users")
-    .select("user_id")
-    .eq("user_id", currentUser.id)
-    .maybeSingle();
-
-  isAdmin = !error && !!data;
-
-  updateUI();
- }
 let currentProfile = null;
-let isAdmin = false;
+
 function status(id, message, type="") {
   const el = $(id); if (!el) return;
   el.textContent = message; el.className = "status " + type;
@@ -183,7 +155,6 @@ function updateUI() {
   $("logoutBtn").classList.toggle("hidden", !currentUser);
   $("accountInfo").classList.toggle("hidden", !currentUser);
   $("loginNav").textContent = currentUser ? "My Account" : "Login";
- $("admin").classList.toggle("hidden", !isAdmin);
   $("accountEmail").textContent = currentUser ? "Login: " + currentUser.email : "";
 }
 $("loginNav").addEventListener("click", () => {
@@ -222,32 +193,16 @@ $("logoutBtn").addEventListener("click", async () => {
   status("globalStatus","Logout સફળ થયું.","success");
 });
 
-
 async function loadMyProfile() {
   if (!currentUser) return;
-
-
-  const { data, error } = await supabase
-    .from("member_profiles")
+  const {data,error} = await supabase.from("member_profiles")
     .select("id,user_id,full_name,gender,birth_date,city,education,occupation,community,marital_status,about_me,photo_url,premium_status,premium_plan,premium_expiry,updated_at")
-    .eq("user_id", currentUser.id)
-    .maybeSingle();
-
-  if (error) {
-    status("profileStatus", "Profile લોડ કરવામાં ભૂલ: " + error.message, "error");
-    return;
-  }
-
+    .eq("user_id",currentUser.id).maybeSingle();
+  if (error) { status("profileStatus","Profile લોડ કરવામાં ભૂલ: "+error.message,"error"); return; }
   currentProfile = data;
-
-  const { data: contact } = await supabase
-    .from("member_contacts")
-    .select("phone_number")
-    .eq("user_id", currentUser.id)
-    .maybeSingle();
-
+  const { data: contact } = await supabase.from("member_contacts")
+    .select("phone_number").eq("user_id",currentUser.id).maybeSingle();
   $("phoneNumber").value = contact?.phone_number || "";
-
   if (data) {
     $("fullName").value = data.full_name || currentUser.user_metadata?.full_name || "";
     $("gender").value = data.gender || "";
@@ -258,90 +213,30 @@ async function loadMyProfile() {
     $("community").value = data.community || "";
     $("maritalStatus").value = data.marital_status || "";
     $("aboutMe").value = data.about_me || "";
-
-    $("premiumBadge").textContent =
-      data.premium_status === "active"
-        ? "Premium Status: Active"
-        : "Premium Status: Inactive";
-
-    $("premiumPlan").textContent =
-      data.premium_plan
-        ? "Premium Plan: " + data.premium_plan
-        : "Premium Plan: Not Active";
-
-    $("premiumExpiry").textContent =
-      data.premium_expiry
-        ? "Premium Expiry: " +
-          new Date(data.premium_expiry).toLocaleDateString("en-IN")
-        : "Premium Expiry: Not Available";
-
-    status("profileStatus", "તમારી Profile લોડ થઈ ગઈ.", "success");
-  } else {
-    $("premiumBadge").textContent = "Premium Status: Inactive";
-    $("premiumPlan").textContent = "Premium Plan: Not Active";
-    $("premiumExpiry").textContent = "Premium Expiry: Not Available";
-
-    if (currentUser.user_metadata?.full_name) {
-      $("fullName").value = currentUser.user_metadata.full_name;
-    }
-  }
+    status("profileStatus","તમારી Profile લોડ થઈ ગઈ.","success");
+  } else if (currentUser.user_metadata?.full_name) $("fullName").value = currentUser.user_metadata.full_name;
 }
-
-
 $("profileForm").addEventListener("submit", async e => {
   e.preventDefault();
-
-  if (!currentUser) {
-    status("profileStatus","Profile Save કરવા પહેલાં Login કરો.","error");
-    $("login").scrollIntoView({behavior:"smooth"});
-    return;
-  }
-
-  const phone = $("phoneNumber").value.trim();
-
+  if (!currentUser) { status("profileStatus","Profile Save કરવા પહેલાં Login કરો.","error"); $("login").scrollIntoView({behavior:"smooth"}); return; }
   const payload = {
-  user_id: currentUser.id,
-  full_name: $("fullName").value.trim(),
-  gender: $("gender").value,
-  birth_date: $("birthDate").value,
-  city: $("city").value.trim(),
-  education: $("education").value.trim(),
-  occupation: $("occupation").value.trim(),
-  community: $("community").value.trim(),
-  marital_status: $("maritalStatus").value,
-  about_me: $("aboutMe").value.trim(),
-  updated_at: new Date().toISOString()
-};
-
-  status("profileStatus","Profile Save થઈ રહી છે...");
-
-  const {error: profileError} = await supabase
-    .from("member_profiles")
-    .upsert(payload,{onConflict:"user_id"});
-
-  if(profileError) {
-    status("profileStatus","Profile Save Error: "+profileError.message,"error");
-    return;
-  }
-
-  const {error: contactError} = await supabase
-    .from("member_contacts")
-    .upsert({
-      user_id:currentUser.id,
-      phone_number:phone,
-      updated_at:new Date().toISOString()
-    },{onConflict:"user_id"});
-
-  if(contactError) {
-    status("profileStatus","Contact Save Error: "+contactError.message,"error");
-    return;
-  }
-
-  status("profileStatus","Profile અને Phone Number સફળતાપૂર્વક Save થયા!","success");
-  await loadMyProfile();
-  await loadProfiles();
+    id: currentUser.id, user_id: currentUser.id, full_name:$("fullName").value.trim(),
+    gender:$("gender").value, birth_date:$("birthDate").value || null,
+    city:$("city").value.trim(), education:$("education").value.trim(),
+    occupation:$("occupation").value.trim(), community:$("community").value.trim(),
+    marital_status:$("maritalStatus").value, about_me:$("aboutMe").value.trim(),
+    updated_at:new Date().toISOString()
+  };
+  status("profileStatus","Profile સાચવાઈ રહી છે...");
+  const {error} = await supabase.from("member_profiles").upsert(payload,{onConflict:"user_id"});
+  if (error) return status("profileStatus","Profile Save error: "+error.message,"error");
+  const phone = $("phoneNumber").value.trim();
+  const {error:contactError} = await supabase.from("member_contacts").upsert({
+    user_id:currentUser.id, phone_number:phone, updated_at:new Date().toISOString()
+  },{onConflict:"user_id"});
+  if(contactError) return status("profileStatus","Phone Save error: "+contactError.message,"error");
+  currentProfile=payload; status("profileStatus","તમારી Profile સફળતાપૂર્વક સાચવાઈ ગઈ!","success"); await loadProfiles();
 });
-
 
 async function loadProfiles() {
   const host=$("profilesList");
@@ -372,11 +267,28 @@ async function loadProfiles() {
         own?'<button class="btn" type="button" disabled>તમારી Profile</button>':
         sentMap.has(uid)?`<button class="btn interestBtn" type="button" disabled>${sentMap.get(uid)==="accepted"?"Interest Accepted":"Interest Sent"}</button>`:
         `<button class="btn interestBtn" data-user="${esc(uid)}" type="button">Express Interest</button>`;
-      return `<article class="card profile-card"><div class="avatar">♡</div><h3>${esc(p.full_name||"Elite Member")}</h3><span class="pill">${esc(p.gender||"")}</span><div>${esc(p.city||"")}</div><div>${esc(p.education||"")}</div><div>${esc(p.occupation||"")}</div><div>${esc(p.community||"")}</div><p>${esc(p.about_me||"")}</p>${btn}</article>`;
+      const phoneBtn=!valid||own?'':`<button class="btn phoneBtn" data-profile="${esc(uid)}" type="button">View Phone Number</button><div class="phoneResult muted" id="phone-${esc(uid)}"></div>`;
+      return `<article class="card profile-card"><div class="avatar">♡</div><h3>${esc(p.full_name||"Elite Member")}</h3><span class="pill">${esc(p.gender||"")}</span><div>${esc(p.city||"")}</div><div>${esc(p.education||"")}</div><div>${esc(p.occupation||"")}</div><div>${esc(p.community||"")}</div><p>${esc(p.about_me||"")}</p>${btn}${phoneBtn}</article>`;
     }).join("");
     status("profilesStatus","કુલ પ્રોફાઇલ: "+data.length);
     host.querySelectorAll(".interestBtn:not([disabled])").forEach(btn=>btn.addEventListener("click",()=>sendInterest(btn.dataset.user,btn)));
+    host.querySelectorAll(".phoneBtn").forEach(btn=>btn.addEventListener("click",()=>viewPhoneNumber(btn.dataset.profile,btn)));
   }catch(e){host.innerHTML="";status("profilesStatus","ભૂલ: "+(e.message||"Profiles લોડ થઈ શકી નથી."),"error");}
+}
+
+async function viewPhoneNumber(profileId,button) {
+  if(!currentUser) return status("profilesStatus","Phone number જોવા માટે Login કરો.","error");
+  const box=document.getElementById("phone-"+profileId);
+  if(button){button.disabled=true;button.textContent="Loading...";}
+  if(box)box.textContent="નંબર મેળવાઈ રહ્યો છે...";
+  try{
+    const {data,error}=await supabase.functions.invoke("view-contact",{body:{profile_id:profileId}});
+    if(error||!data){if(box)box.textContent="";status("profilesStatus","Phone number error: "+(data?.error||error?.message||"નંબર મળ્યો નથી."),"error");if(button){button.disabled=false;button.textContent="View Phone Number";}return;}
+    if(data.error){if(box)box.textContent=data.error+(data.limit?" (Limit: "+data.limit+")":"");status("profilesStatus",data.error,"error");if(button){button.disabled=data.error==="Phone number limit reached";button.textContent=button.disabled?"Limit Reached":"View Phone Number";}return;}
+    if(box)box.innerHTML=`<strong>📞 ${esc(data.phone_number)}</strong><br><small>Used: ${Number(data.used||0)} / ${Number(data.limit||0)} numbers</small>`;
+    if(button){button.disabled=false;button.textContent="Phone Number Viewed";}
+    status("profilesStatus","Phone number સફળતાપૂર્વક મળ્યો.","success");
+  }catch(e){if(box)box.textContent="";status("profilesStatus","Phone number error: "+e.message,"error");if(button){button.disabled=false;button.textContent="View Phone Number";}}
 }
 
 async function sendInterest(targetUserId,button) {
@@ -435,69 +347,17 @@ $("loadInterestsBtn").addEventListener("click",async()=>{
   box.appendChild(grid);
 });
 const plans = {
-  month_1:{label:"1 Month",months:1},
-  month_3:{label:"3 Months",months:3},
-  month_6:{label:"6 Months",months:6},
-  month_12:{label:"12 Months",months:12}
+  month_1:{label:"1 Month",base:499,months:1},
+  month_3:{label:"3 Months",base:1249,months:3},
+  month_6:{label:"6 Months",base:1999,months:6},
+  month_12:{label:"12 Months",base:2999,months:12}
 };
-
-async function loadPricing(){
-  const host=$("premiumPlansGrid");
-  try{
-    const {data,error}=await supabase.functions.invoke("bright-api",{
-      body:{action:"get_pricing"}
-    });
-
-    if(error || !data?.success || !data.plans)
-      throw new Error(data?.error||error?.message||"Pricing મળ્યું નથી");
-
-    const names={
-      month_1:"Monthly Plan",
-      month_3:"Quarterly Plan",
-      month_6:"Half-Year Plan",
-      month_12:"Annual Plan"
-    };
-
-    const money=n=>Number(n).toLocaleString("en-IN",{
-      minimumFractionDigits:2,
-      maximumFractionDigits:2
-    });
-
-    host.innerHTML=Object.keys(plans).map(key=>{
-      const p=data.plans[key];
-      const base=p.base_paise/100;
-      const gst=p.gst_paise/100;
-      const total=p.total_paise/100;
-
-      return `<div class="card plan">
-        <span class="tag">${plans[key].label}</span>
-        <h3>${names[key]}</h3>
-        <div class="price">₹${money(base)}</div>
-        <div class="gst">Base Price</div>
-        <div class="gst">GST (18%): ₹${money(gst)}</div>
-        <div class="total">કુલ: ₹${money(total)}</div>
-        <button class="btn choosePlan" data-plan="${key}" type="button">Choose Plan</button>
-      </div>`;
-    }).join("");
-
-    $("offerStatus").textContent=data.offer_active
-      ?"🎉 30 દિવસની Launch Offer ચાલુ છે!"
-      :"Regular Membership Prices લાગુ છે.";
-
-    host.querySelectorAll(".choosePlan").forEach(btn=>{
-      btn.addEventListener("click",()=>startPayment(btn.dataset.plan));
-    });
-
-  }catch(e){
-    host.innerHTML='<div class="card">Pricing લોડ થઈ શક્યું નથી. Internet અથવા server તપાસો.</div>';
-    status("offerStatus",e.message,"error");
-  }
-}
+document.querySelectorAll(".choosePlan").forEach(btn=>btn.addEventListener("click",()=>startPayment(btn.dataset.plan)));
 async function startPayment(planKey) {
   if (!currentUser) { status("paymentStatus","Premium લેવા પહેલાં Login કરો.","error"); $("login").scrollIntoView({behavior:"smooth"}); return; }
   if (!plans[planKey]) return status("paymentStatus","પ્લાન મળ્યો નથી.","error");
   if (typeof window.Razorpay !== "function") return status("paymentStatus","Razorpay checkout લોડ થયું નથી. Internet ચકાસો.","error");
-const plan=plans[planKey];
+  const plan=plans[planKey], total=Math.round(plan.base*1.18*100)/100;
   status("paymentStatus","સુરક્ષિત payment order બનાવાઈ રહ્યો છે...");
   // The Edge Function must validate plan prices on the server; never trust the browser amount.
   const {data,error}=await supabase.functions.invoke("bright-api",{body:{action:"create_order",plan:planKey}});
@@ -518,10 +378,7 @@ const plan=plans[planKey];
         payment_id:response.razorpay_payment_id,razorpay_signature:response.razorpay_signature
       }});
       if(verifyError || !verified?.success) return status("paymentStatus","Payment verification error: "+(verified?.error||verifyError?.message||"Verification નિષ્ફળ."),"error");
-      
-status("paymentStatus","ચુકવણી સફળ! તમારું Premium Membership સક્રિય થયું.","success");
-await loadMyProfile();
-
+      status("paymentStatus","ચુકવણી સફળ! તમારું Premium Membership સક્રિય થયું.","success");
     },
     modal:{ondismiss:()=>status("paymentStatus","ચુકવણી વિન્ડો બંધ થઈ.")}
   };
@@ -541,37 +398,17 @@ $("adminBtn").addEventListener("click",async()=>{
 });
 
 supabase.auth.onAuthStateChange((_event,session)=>{
-  currentUser=session?.user||null;
-  isAdmin=false;
-  updateUI();
-
-  if(currentUser) setTimeout(async()=>{
-    await checkAdminAccess();
-    loadMyProfile();
-    loadProfiles();
-  },0);
+  currentUser=session?.user||null; updateUI();
+  if(currentUser) setTimeout(()=>{loadMyProfile();loadProfiles();},0);
 });
 async function init(){
   const {data,error}=await supabase.auth.getSession();
-
   if(error) status("globalStatus","Supabase session error: "+error.message,"error");
-
-  currentUser=data?.session?.user||null;
-  isAdmin=false;
-  updateUI();
-
-  if(currentUser){
-    await checkAdminAccess();
-    await loadMyProfile();
-    await loadProfiles();
-  }
-  else {
-    $("profilesList").innerHTML='<div class="card">Profiles જોવા માટે Login કરો.</div>';
-    status("globalStatus","વેબસાઇટ તૈયાર છે. Register અથવા Login કરો.","success");
-  }
+  currentUser=data?.session?.user||null; updateUI();
+  if(currentUser){await loadMyProfile();await loadProfiles();}
+  else { $("profilesList").innerHTML='<div class="card">Profiles જોવા માટે Login કરો.</div>'; status("globalStatus","વેબસાઇટ તૈયાર છે. Register અથવા Login કરો.","success"); }
 }
 init();
-loadPricing();
 </script>
 <nav class="mobile-bottom-nav" aria-label="Mobile navigation">
 <a href="#profiles">Matches</a><a href="#activity">Activity</a><a href="#messenger">Messenger</a><a href="#plans">Upgrade</a>
@@ -589,25 +426,6 @@ if(clear) clear.addEventListener("click",()=>{
 const b=document.getElementById("searchBtn");if(b)b.click();
 });
 })();
-</script>
- 
-<script>
-window.addEventListener("error", function(e) {
-  const box = document.getElementById("globalStatus");
-  if (box) {
-    box.textContent = "JavaScript Error: " + e.message;
-    box.className = "status error";
-  }
-});
-
-window.addEventListener("unhandledrejection", function(e) {
-  const box = document.getElementById("globalStatus");
-  if (box) {
-    box.textContent = "Promise Error: " + 
-      (e.reason?.message || e.reason);
-    box.className = "status error";
-  }
-});
 </script>
 </body>
 </html>
