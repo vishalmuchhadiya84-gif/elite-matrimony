@@ -537,5 +537,24 @@ const b=document.getElementById("searchBtn");if(b)b.click();
 });
 })();
 </script>
+ 
+<script>
+window.addEventListener("error", function(e) {
+  const box = document.getElementById("globalStatus");
+  if (box) {
+    box.textContent = "JavaScript Error: " + e.message;
+    box.className = "status error";
+  }
+});
+
+window.addEventListener("unhandledrejection", function(e) {
+  const box = document.getElementById("globalStatus");
+  if (box) {
+    box.textContent = "Promise Error: " + 
+      (e.reason?.message || e.reason);
+    box.className = "status error";
+  }
+});
+</script>
 </body>
 </html>
