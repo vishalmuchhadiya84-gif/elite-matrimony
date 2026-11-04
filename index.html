@@ -296,19 +296,18 @@ $("profileForm").addEventListener("submit", async e => {
   const phone = $("phoneNumber").value.trim();
 
   const payload = {
-    user_id: currentUser.id,
-    full_name: $("fullName").value.trim(),
-    phone_number: phone,
-    gender: $("gender").value,
-    birth_date: $("birthDate").value,
-    city: $("city").value.trim(),
-    education: $("education").value.trim(),
-    occupation: $("occupation").value.trim(),
-    community: $("community").value.trim(),
-    marital_status: $("maritalStatus").value,
-    about_me: $("aboutMe").value.trim(),
-    updated_at: new Date().toISOString()
-  };
+  user_id: currentUser.id,
+  full_name: $("fullName").value.trim(),
+  gender: $("gender").value,
+  birth_date: $("birthDate").value,
+  city: $("city").value.trim(),
+  education: $("education").value.trim(),
+  occupation: $("occupation").value.trim(),
+  community: $("community").value.trim(),
+  marital_status: $("maritalStatus").value,
+  about_me: $("aboutMe").value.trim(),
+  updated_at: new Date().toISOString()
+};
 
   status("profileStatus","Profile Save થઈ રહી છે...");
 
