@@ -226,11 +226,15 @@ $("logoutBtn").addEventListener("click", async () => {
 async function loadMyProfile() {
   if (!currentUser) return;
 
+
+async function loadMyProfile() {
+  if (!currentUser) return;
+
   const { data, error } = await supabase
-    ..from("member_profiles")
-.select("id,user_id,full_name,gender,birth_date,city,education,occupation,community,marital_status,about_me,photo_url,premium_status,premium_plan,premium_expiry,updated_at")
-.eq("user_id", currentUser.id)
-.maybeSingle();
+    .from("member_profiles")
+    .select("id,user_id,full_name,gender,birth_date,city,education,occupation,community,marital_status,about_me,photo_url,premium_status,premium_plan,premium_expiry,updated_at")
+    .eq("user_id", currentUser.id)
+    .maybeSingle();
 
   if (error) {
     status("profileStatus", "Profile લોડ કરવામાં ભૂલ: " + error.message, "error");
@@ -238,13 +242,15 @@ async function loadMyProfile() {
   }
 
   currentProfile = data;
-const { data: contact } = await supabase
-  .from("member_contacts")
-  .select("phone_number")
-  .eq("user_id", currentUser.id)
-  .maybeSingle();
 
-$("phoneNumber").value = contact?.phone_number || "";
+  const { data: contact } = await supabase
+    .from("member_contacts")
+    .select("phone_number")
+    .eq("user_id", currentUser.id)
+    .maybeSingle();
+
+  $("phoneNumber").value = contact?.phone_number || "";
+
   if (data) {
     $("fullName").value = data.full_name || currentUser.user_metadata?.full_name || "";
     $("gender").value = data.gender || "";
@@ -283,6 +289,7 @@ $("phoneNumber").value = contact?.phone_number || "";
     }
   }
 }
+
 
 $("profileForm").addEventListener("submit", async e => {
   e.preventDefault();
