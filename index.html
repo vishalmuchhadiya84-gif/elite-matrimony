@@ -435,12 +435,64 @@ $("loadInterestsBtn").addEventListener("click",async()=>{
   box.appendChild(grid);
 });
 const plans = {
-  month_1:{label:"1 Month",base:499,months:1},
-  month_3:{label:"3 Months",base:1249,months:3},
-  month_6:{label:"6 Months",base:1999,months:6},
-  month_12:{label:"12 Months",base:2999,months:12}
+  month_1:{label:"1 Month",months:1},
+  month_3:{label:"3 Months",months:3},
+  month_6:{label:"6 Months",months:6},
+  month_12:{label:"12 Months",months:12}
 };
-document.querySelectorAll(".choosePlan").forEach(btn=>btn.addEventListener("click",()=>startPayment(btn.dataset.plan)));
+
+async function loadPricing(){
+  const host=$("premiumPlansGrid");
+  try{
+    const {data,error}=await supabase.functions.invoke("bright-api",{
+      body:{action:"get_pricing"}
+    });
+
+    if(error || !data?.success || !data.plans)
+      throw new Error(data?.error||error?.message||"Pricing મળ્યું નથી");
+
+    const names={
+      month_1:"Monthly Plan",
+      month_3:"Quarterly Plan",
+      month_6:"Half-Year Plan",
+      month_12:"Annual Plan"
+    };
+
+    const money=n=>Number(n).toLocaleString("en-IN",{
+      minimumFractionDigits:2,
+      maximumFractionDigits:2
+    });
+
+    host.innerHTML=Object.keys(plans).map(key=>{
+      const p=data.plans[key];
+      const base=p.base_paise/100;
+      const gst=p.gst_paise/100;
+      const total=p.total_paise/100;
+
+      return `<div class="card plan">
+        <span class="tag">${plans[key].label}</span>
+        <h3>${names[key]}</h3>
+        <div class="price">₹${money(base)}</div>
+        <div class="gst">Base Price</div>
+        <div class="gst">GST (18%): ₹${money(gst)}</div>
+        <div class="total">કુલ: ₹${money(total)}</div>
+        <button class="btn choosePlan" data-plan="${key}" type="button">Choose Plan</button>
+      </div>`;
+    }).join("");
+
+    $("offerStatus").textContent=data.offer_active
+      ?"🎉 30 દિવસની Launch Offer ચાલુ છે!"
+      :"Regular Membership Prices લાગુ છે.";
+
+    host.querySelectorAll(".choosePlan").forEach(btn=>{
+      btn.addEventListener("click",()=>startPayment(btn.dataset.plan));
+    });
+
+  }catch(e){
+    host.innerHTML='<div class="card">Pricing લોડ થઈ શક્યું નથી. Internet અથવા server તપાસો.</div>';
+    status("offerStatus",e.message,"error");
+  }
+}
 async function startPayment(planKey) {
   if (!currentUser) { status("paymentStatus","Premium લેવા પહેલાં Login કરો.","error"); $("login").scrollIntoView({behavior:"smooth"}); return; }
   if (!plans[planKey]) return status("paymentStatus","પ્લાન મળ્યો નથી.","error");
