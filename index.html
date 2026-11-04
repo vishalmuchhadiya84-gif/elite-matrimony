@@ -103,12 +103,12 @@
 </div><div class="card" style="margin-top:16px"><h3>Interests</h3><p>Received / Accepted / Sent Interests</p><a class="btn" href="#interests">View Interests</a></div></div></section>
 <section id="messenger"><div class="container"><div class="section-head"><h2>Messenger</h2><p>Accepted matches સાથે વાતચીત</p></div><div class="card"><p>Chat માટે real-time messaging database table અને security policies જરૂરી છે.</p><a class="btn" href="#interests">Accepted Interests જુઓ</a></div></div></section>
 <section id="plans"><div class="container"><div class="section-head"><h2>Premium Membership Plans</h2><p>તમારી જરૂરિયાત પ્રમાણે પ્લાન પસંદ કરો.</p><p class="muted">બેઝ કિંમત અને 18% GST અલગ દર્શાવેલ છે.</p></div>
-<div class="grid">
-<div class="card plan"><span class="tag">1 Month</span><h3>Monthly Plan</h3><div class="price">₹499</div><div class="gst">Base price</div><div class="gst">GST (18%): ₹89.82</div><div class="total">કુલ: ₹588.82</div><button class="btn choosePlan" data-plan="month_1" type="button">Choose Plan</button></div>
-<div class="card plan"><span class="tag">3 Months</span><h3>Quarterly Plan</h3><div class="price">₹1,249</div><div class="gst">Base price</div><div class="gst">GST (18%): ₹224.82</div><div class="total">કુલ: ₹1,473.82</div><button class="btn choosePlan" data-plan="month_3" type="button">Choose Plan</button></div>
-<div class="card plan"><span class="tag">6 Months</span><h3>Half-Year Plan</h3><div class="price">₹1,999</div><div class="gst">Base price</div><div class="gst">GST (18%): ₹359.82</div><div class="total">કુલ: ₹2,358.82</div><button class="btn choosePlan" data-plan="month_6" type="button">Choose Plan</button></div>
-<div class="card plan"><span class="tag">12 Months</span><h3>Annual Plan</h3><div class="price">₹2,999</div><div class="gst">Base price</div><div class="gst">GST (18%): ₹539.82</div><div class="total">કુલ: ₹3,538.82</div><button class="btn choosePlan" data-plan="month_12" type="button">Choose Plan</button></div>
-</div><div id="paymentStatus" class="status" role="status"></div></div></section>
+<div class="grid" id="premiumPlansGrid">
+  <div class="card">Premium Plans લોડ થઈ રહ્યા છે...</div>
+</div>
+
+<div id="offerStatus" class="status" role="status"></div>
+<div id="paymentStatus" class="status" role="status"></div>
 <section id="admin" class="hidden"><div class="container"><div class="section-head"><h2>Admin Panel</h2><p>માત્ર અધિકૃત Admin માટે.</p></div><div class="card"><p>Admin access માટે Supabaseમાં server-side permissions અને RLS policies યોગ્ય હોવી જરૂરી છે.</p><button class="btn outline" id="adminBtn" type="button">Check Admin Access</button><div id="adminStatus" class="status" role="status"></div><div id="adminMembers" class="grid"></div></div></div></section>
 
 <section id="privacy"><div class="container policy-content">
