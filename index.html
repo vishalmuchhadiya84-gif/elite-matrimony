@@ -131,8 +131,25 @@
 
 </main>
 <footer><div class="container footer-row"><div><strong>ELITE GUJARATI MATRIMONY</strong><p>તમારા જીવનસાથીની શોધમાં એક નવી શરૂઆત.</p></div><div><div class="footer-links"><a href="#privacy">Privacy Policy</a> <a href="#terms">Terms &amp; Conditions</a> <a href="#contact">Contact</a></div><p>© <span id="year"></span> Elite Gujarati Matrimony</p></div></div></footer>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+ onerror="this.onerror=null;this.src='https://unpkg.com/@supabase/supabase-js@2';"></script>
 <script>
+<script>
+window.addEventListener("error",function(ev){
+ const box=document.getElementById("globalStatus");
+ if(box){box.textContent="JavaScript Error: "+(ev.message||"અજ્ઞાત ભૂલ")+" (line "+(ev.lineno||"?")+")";box.className="status error";}
+});
+window.addEventListener("unhandledrejection",function(ev){
+ const box=document.getElementById("globalStatus");
+ if(box){box.textContent="App Error: "+(ev.reason?.message||String(ev.reason));box.className="status error";}
+});
+</script>
+<script>
+if(!window.supabase || typeof window.supabase.createClient!=="function"){
+ const box=document.getElementById("globalStatus");
+ if(box){box.textContent="Supabase library લોડ નથી થઈ. Internet ચાલુ રાખીને page Reload કરો.";box.className="status error";}
+ throw new Error("Supabase JS library not loaded");
+}
 const { createClient } = window.supabase;
 
 // Public/publishable key only. Never place service-role or Razorpay secret keys here.
