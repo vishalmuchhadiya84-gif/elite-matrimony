@@ -91,13 +91,13 @@
 <div class="card"><h3>Contact Views</h3><p>Contact details access tracking જરૂરી છે.</p></div>
 </div><div class="card" style="margin-top:16px"><h3>Interests</h3><p>Received / Accepted / Sent Interests</p><a class="btn" href="#interests">View Interests</a></div></div></section>
 <section id="messenger"><div class="container"><div class="section-head"><h2>Messenger</h2><p>Accepted matches સાથે વાતચીત</p></div><div class="card"><p>Chat માટે real-time messaging database table અને security policies જરૂરી છે.</p><a class="btn" href="#interests">Accepted Interests જુઓ</a></div></div></section>
-<section id="plans"><div class="container"><div class="section-head"><h2>Premium Membership Plans</h2><p>તમારી જરૂરિયાત પ્રમાણે પ્લાન પસંદ કરો.</p><p class="muted">બેઝ કિંમત અને 18% GST અલગ દર્શાવેલ છે.</p></div>
+<section id="plans"><div class="container"><div class="section-head"><h2>Premium Membership Plans</h2><p>તમારી જરૂરિયાત પ્રમાણે પ્લાન પસંદ કરો.</p><p class="muted">30 દિવસની Launch Offer કિંમતો. ત્યારબાદ Regular Price લાગુ થશે. લાગુ 18% GST ચુકવણી વખતે ઉમેરાશે.</p></div>
 <div class="grid">
-<div class="card plan"><span class="tag">1 Month</span><h3>Monthly Plan</h3><div class="price">₹499</div><div class="gst">Base price</div><div class="gst">GST (18%): ₹89.82</div><div class="total">કુલ: ₹588.82</div><button class="btn choosePlan" data-plan="month_1" type="button">Choose Plan</button></div>
-<div class="card plan"><span class="tag">3 Months</span><h3>Quarterly Plan</h3><div class="price">₹1,249</div><div class="gst">Base price</div><div class="gst">GST (18%): ₹224.82</div><div class="total">કુલ: ₹1,473.82</div><button class="btn choosePlan" data-plan="month_3" type="button">Choose Plan</button></div>
-<div class="card plan"><span class="tag">6 Months</span><h3>Half-Year Plan</h3><div class="price">₹1,999</div><div class="gst">Base price</div><div class="gst">GST (18%): ₹359.82</div><div class="total">કુલ: ₹2,358.82</div><button class="btn choosePlan" data-plan="month_6" type="button">Choose Plan</button></div>
-<div class="card plan"><span class="tag">12 Months</span><h3>Annual Plan</h3><div class="price">₹2,999</div><div class="gst">Base price</div><div class="gst">GST (18%): ₹539.82</div><div class="total">કુલ: ₹3,538.82</div><button class="btn choosePlan" data-plan="month_12" type="button">Choose Plan</button></div>
-</div><div id="paymentStatus" class="status" role="status"></div></div></section>
+<div class="card plan"><span class="tag">1 Month</span><h3>Monthly Plan</h3><div class="price">₹599</div><div class="gst">Launch Offer Base Price: ₹599</div><div class="gst">Regular Price: ₹799</div><div class="gst">GST (18%): ₹107.82</div><div class="total">કુલ: ₹706.82</div><button class="btn choosePlan" data-plan="month_1" type="button">Choose Plan</button></div>
+<div class="card plan"><span class="tag">3 Months</span><h3>Quarterly Plan</h3><div class="price">₹1,499</div><div class="gst">Launch Offer Base Price: ₹1,499</div><div class="gst">Regular Price: ₹1,999</div><div class="gst">GST (18%): ₹269.82</div><div class="total">કુલ: ₹1,768.82</div><button class="btn choosePlan" data-plan="month_3" type="button">Choose Plan</button></div>
+<div class="card plan"><span class="tag">6 Months</span><h3>Half-Year Plan</h3><div class="price">₹2,299</div><div class="gst">Launch Offer Base Price: ₹2,299</div><div class="gst">Regular Price: ₹2,999</div><div class="gst">GST (18%): ₹413.82</div><div class="total">કુલ: ₹2,712.82</div><button class="btn choosePlan" data-plan="month_6" type="button">Choose Plan</button></div>
+<div class="card plan"><span class="tag">12 Months</span><h3>Annual Plan</h3><div class="price">₹3,999</div><div class="gst">Launch Offer Base Price: ₹3,999</div><div class="gst">Regular Price: ₹4,999</div><div class="gst">GST (18%): ₹719.82</div><div class="total">કુલ: ₹4,718.82</div><button class="btn choosePlan" data-plan="month_12" type="button">Choose Plan</button></div>
+</div><div class="notice" style="margin-top:12px">Launch Offer 30 દિવસ માટે છે. Offer પૂરી થયા પછી Regular Price લાગુ થશે. Razorpay checkoutમાં લાગુ GST સાથે અંતિમ રકમ દેખાશે.</div><div id="paymentStatus" class="status" role="status"></div></div></section>
 <section id="admin"><div class="container"><div class="section-head"><h2>Admin Panel</h2><p>માત્ર અધિકૃત Admin માટે.</p></div><div class="card"><p>Admin access માટે Supabaseમાં server-side permissions અને RLS policies યોગ્ય હોવી જરૂરી છે.</p><button class="btn outline" id="adminBtn" type="button">Check Admin Access</button><div id="adminStatus" class="status" role="status"></div><div id="adminMembers" class="grid"></div></div></div></section>
 
 <section id="privacy"><div class="container policy-content">
@@ -267,28 +267,11 @@ async function loadProfiles() {
         own?'<button class="btn" type="button" disabled>તમારી Profile</button>':
         sentMap.has(uid)?`<button class="btn interestBtn" type="button" disabled>${sentMap.get(uid)==="accepted"?"Interest Accepted":"Interest Sent"}</button>`:
         `<button class="btn interestBtn" data-user="${esc(uid)}" type="button">Express Interest</button>`;
-      const phoneBtn=!valid||own?'':`<button class="btn phoneBtn" data-profile="${esc(uid)}" type="button">View Phone Number</button><div class="phoneResult muted" id="phone-${esc(uid)}"></div>`;
-      return `<article class="card profile-card"><div class="avatar">♡</div><h3>${esc(p.full_name||"Elite Member")}</h3><span class="pill">${esc(p.gender||"")}</span><div>${esc(p.city||"")}</div><div>${esc(p.education||"")}</div><div>${esc(p.occupation||"")}</div><div>${esc(p.community||"")}</div><p>${esc(p.about_me||"")}</p>${btn}${phoneBtn}</article>`;
+      return `<article class="card profile-card"><div class="avatar">♡</div><h3>${esc(p.full_name||"Elite Member")}</h3><span class="pill">${esc(p.gender||"")}</span><div>${esc(p.city||"")}</div><div>${esc(p.education||"")}</div><div>${esc(p.occupation||"")}</div><div>${esc(p.community||"")}</div><p>${esc(p.about_me||"")}</p>${btn}</article>`;
     }).join("");
     status("profilesStatus","કુલ પ્રોફાઇલ: "+data.length);
     host.querySelectorAll(".interestBtn:not([disabled])").forEach(btn=>btn.addEventListener("click",()=>sendInterest(btn.dataset.user,btn)));
-    host.querySelectorAll(".phoneBtn").forEach(btn=>btn.addEventListener("click",()=>viewPhoneNumber(btn.dataset.profile,btn)));
   }catch(e){host.innerHTML="";status("profilesStatus","ભૂલ: "+(e.message||"Profiles લોડ થઈ શકી નથી."),"error");}
-}
-
-async function viewPhoneNumber(profileId,button) {
-  if(!currentUser) return status("profilesStatus","Phone number જોવા માટે Login કરો.","error");
-  const box=document.getElementById("phone-"+profileId);
-  if(button){button.disabled=true;button.textContent="Loading...";}
-  if(box)box.textContent="નંબર મેળવાઈ રહ્યો છે...";
-  try{
-    const {data,error}=await supabase.functions.invoke("view-contact",{body:{profile_id:profileId}});
-    if(error||!data){if(box)box.textContent="";status("profilesStatus","Phone number error: "+(data?.error||error?.message||"નંબર મળ્યો નથી."),"error");if(button){button.disabled=false;button.textContent="View Phone Number";}return;}
-    if(data.error){if(box)box.textContent=data.error+(data.limit?" (Limit: "+data.limit+")":"");status("profilesStatus",data.error,"error");if(button){button.disabled=data.error==="Phone number limit reached";button.textContent=button.disabled?"Limit Reached":"View Phone Number";}return;}
-    if(box)box.innerHTML=`<strong>📞 ${esc(data.phone_number)}</strong><br><small>Used: ${Number(data.used||0)} / ${Number(data.limit||0)} numbers</small>`;
-    if(button){button.disabled=false;button.textContent="Phone Number Viewed";}
-    status("profilesStatus","Phone number સફળતાપૂર્વક મળ્યો.","success");
-  }catch(e){if(box)box.textContent="";status("profilesStatus","Phone number error: "+e.message,"error");if(button){button.disabled=false;button.textContent="View Phone Number";}}
 }
 
 async function sendInterest(targetUserId,button) {
@@ -347,10 +330,10 @@ $("loadInterestsBtn").addEventListener("click",async()=>{
   box.appendChild(grid);
 });
 const plans = {
-  month_1:{label:"1 Month",base:499,months:1},
-  month_3:{label:"3 Months",base:1249,months:3},
-  month_6:{label:"6 Months",base:1999,months:6},
-  month_12:{label:"12 Months",base:2999,months:12}
+  month_1:{label:"1 Month",base:599,months:1},
+  month_3:{label:"3 Months",base:1499,months:3},
+  month_6:{label:"6 Months",base:2299,months:6},
+  month_12:{label:"12 Months",base:3999,months:12}
 };
 document.querySelectorAll(".choosePlan").forEach(btn=>btn.addEventListener("click",()=>startPayment(btn.dataset.plan)));
 async function startPayment(planKey) {
