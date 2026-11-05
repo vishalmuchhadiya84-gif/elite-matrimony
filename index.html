@@ -138,12 +138,12 @@ window.addEventListener("unhandledrejection",function(e){var b=document.getEleme
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" onerror="this.onerror=null;this.src='https://unpkg.com/@supabase/supabase-js@2';"></script>
 <script>
 if (!window.supabase || typeof window.supabase.createClient !== "function") { const st=document.getElementById("globalStatus"); if(st){st.style.display="block";st.textContent="Supabase library load ન થઈ. Internet/CDN તપાસો અને page refresh કરો.";} throw new Error("Supabase JS library unavailable"); }
-const { createClient } = window.supabase;
+const createSupabaseClient = window.supabase.createClient;
 
 // Public/publishable key only. Never place service-role or Razorpay secret keys here.
 const SUPABASE_URL = "https://zwgdqsskwskgthytdahl.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_4z4DovXpyPVCZkqXxfLpMw_tCQtiWAp";
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const sbClient = createSupabaseClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const $ = id => document.getElementById(id);
 $("year").textContent = new Date().getFullYear();
 let currentUser = null;
@@ -170,7 +170,7 @@ $("registerForm").addEventListener("submit", async e => {
   e.preventDefault();
   status("registerStatus","Registration થઈ રહ્યું છે...");
   const name = $("regName").value.trim(), email = $("regEmail").value.trim(), password = $("regPassword").value;
-  const {data,error} = await supabase.auth.signUp({email,password,options:{data:{full_name:name}}});
+  const {data,error} = await sbClient.auth.signUp({email,password,options:{data:{full_name:name}}});
   if (error) return status("registerStatus",error.message,"error");
   if (data.session) {
     currentUser = data.user; updateUI(); $("fullName").value = name;
@@ -179,7 +179,7 @@ $("registerForm").addEventListener("submit", async e => {
 });
 $("loginForm").addEventListener("submit", async e => {
   e.preventDefault(); status("loginStatus","Login થઈ રહ્યું છે...");
-  const {data,error} = await supabase.auth.signInWithPassword({email:$("loginEmail").value.trim(),password:$("loginPassword").value});
+  const {data,error} = await sbClient.auth.signInWithPassword({email:$("loginEmail").value.trim(),password:$("loginPassword").value});
   if (error) return status("loginStatus",error.message,"error");
   currentUser = data.user; updateUI(); status("loginStatus","Login સફળ થયું.","success");
   await loadMyProfile(); await loadProfiles();
@@ -187,11 +187,11 @@ $("loginForm").addEventListener("submit", async e => {
 $("forgotBtn").addEventListener("click", async () => {
   const email = $("loginEmail").value.trim();
   if (!email) return status("loginStatus","પહેલા Email લખો.","error");
-  const {error} = await supabase.auth.resetPasswordForEmail(email,{redirectTo:window.location.origin});
+  const {error} = await sbClient.auth.resetPasswordForEmail(email,{redirectTo:window.location.origin});
   status("loginStatus",error ? error.message : "જો આ email નોંધાયેલ હશે તો password reset email મોકલાશે.",error ? "error" : "success");
 });
 $("logoutBtn").addEventListener("click", async () => {
-  const {error} = await supabase.auth.signOut();
+  const {error} = await sbClient.auth.signOut();
   if (error) return status("globalStatus",error.message,"error");
   currentUser=null; currentProfile=null; updateUI();
   $("profilesList").innerHTML='<div class="card">Profiles જોવા માટે Login કરો.</div>';
@@ -200,12 +200,12 @@ $("logoutBtn").addEventListener("click", async () => {
 
 async function loadMyProfile() {
   if (!currentUser) return;
-  const {data,error} = await supabase.from("member_profiles")
+  const {data,error} = await sbClient.from("member_profiles")
     .select("id,user_id,full_name,gender,birth_date,city,education,occupation,community,marital_status,about_me,photo_url,premium_status,premium_plan,premium_expiry,updated_at")
     .eq("user_id",currentUser.id).maybeSingle();
   if (error) { status("profileStatus","Profile લોડ કરવામાં ભૂલ: "+error.message,"error"); return; }
   currentProfile = data;
-  const { data: contact } = await supabase.from("member_contacts")
+  const { data: contact } = await sbClient.from("member_contacts")
     .select("phone_number").eq("user_id",currentUser.id).maybeSingle();
   $("phoneNumber").value = contact?.phone_number || "";
   if (data) {
@@ -233,10 +233,10 @@ $("profileForm").addEventListener("submit", async e => {
     updated_at:new Date().toISOString()
   };
   status("profileStatus","Profile સાચવાઈ રહી છે...");
-  const {error} = await supabase.from("member_profiles").upsert(payload,{onConflict:"user_id"});
+  const {error} = await sbClient.from("member_profiles").upsert(payload,{onConflict:"user_id"});
   if (error) return status("profileStatus","Profile Save error: "+error.message,"error");
   const phone = $("phoneNumber").value.trim();
-  const {error:contactError} = await supabase.from("member_contacts").upsert({
+  const {error:contactError} = await sbClient.from("member_contacts").upsert({
     user_id:currentUser.id, phone_number:phone, updated_at:new Date().toISOString()
   },{onConflict:"user_id"});
   if(contactError) return status("profileStatus","Phone Save error: "+contactError.message,"error");
@@ -251,7 +251,7 @@ async function loadProfiles() {
   }
   host.innerHTML='<div class="card">Profiles લોડ થઈ રહી છે...</div>';
   try{
-    let q=supabase.from("member_profiles")
+    let q=sbClient.from("member_profiles")
       .select("id,user_id,full_name,gender,birth_date,city,education,occupation,community,marital_status,about_me")
       .order("updated_at",{ascending:false}).limit(100);
     const city=$("searchCity").value.trim(),gender=$("searchGender").value;
@@ -261,7 +261,7 @@ async function loadProfiles() {
     if(error){host.innerHTML="";return status("profilesStatus","Profiles લોડ કરવામાં ભૂલ: "+error.message,"error");}
     if(!data||data.length===0){host.innerHTML='<div class="card">હાલ કોઈ પ્રોફાઇલ મળી નથી.</div>';return status("profilesStatus","કુલ પ્રોફાઇલ: 0");}
 
-    const {data:sentInterests,error:sentError}=await supabase.from("interests")
+    const {data:sentInterests,error:sentError}=await sbClient.from("interests")
       .select("receiver_id,status").eq("sender_id",currentUser.id);
     if(sentError){host.innerHTML="";return status("profilesStatus","Interest તપાસવામાં ભૂલ: "+sentError.message,"error");}
     const sentMap=new Map((sentInterests||[]).map(x=>[x.receiver_id,x.status||"pending"]));
@@ -285,10 +285,10 @@ async function sendInterest(targetUserId,button) {
   if(typeof targetUserId!=="string"||!uuidPattern.test(targetUserId))return status("profilesStatus","આ સભ્યની Profile ID ખોટી છે.","error");
   if(targetUserId===currentUser.id)return status("profilesStatus","તમારી પોતાની Profile માં Interest મોકલી શકાતો નથી.","error");
   if(button){button.disabled=true;button.textContent="Sending...";}
-  const {error}=await supabase.from("interests").insert({sender_id:currentUser.id,receiver_id:targetUserId,status:"pending"});
+  const {error}=await sbClient.from("interests").insert({sender_id:currentUser.id,receiver_id:targetUserId,status:"pending"});
   if(!error){if(button)button.textContent="Interest Sent";return status("profilesStatus","Interest સફળતાપૂર્વક મોકલાયો.","success");}
   if(error.code==="23505"){
-    const {data:existing}=await supabase.from("interests").select("status").eq("sender_id",currentUser.id).eq("receiver_id",targetUserId).maybeSingle();
+    const {data:existing}=await sbClient.from("interests").select("status").eq("sender_id",currentUser.id).eq("receiver_id",targetUserId).maybeSingle();
     if(button){button.textContent=existing?.status==="accepted"?"Interest Accepted":"Interest Sent";button.disabled=true;}
     return status("profilesStatus",existing?.status==="accepted"?"આ Interest પહેલેથી સ્વીકારાયો છે.":"આ પ્રોફાઇલમાં Interest પહેલેથી મોકલેલો છે.","success");
   }
@@ -301,7 +301,7 @@ $("searchBtn").addEventListener("click",loadProfiles);
 
 $("loadInterestsBtn").addEventListener("click",async()=>{
   if(!currentUser)return status("interestStatus","Received Interest જોવા માટે Login કરો.","error");
-  const {data,error}=await supabase.from("interests")
+  const {data,error}=await sbClient.from("interests")
     .select("id,sender_id,created_at,status")
     .eq("receiver_id",currentUser.id).order("created_at",{ascending:false});
   if(error)return status("interestStatus","Interest લોડ કરવામાં ભૂલ: "+error.message,"error");
@@ -309,7 +309,7 @@ $("loadInterestsBtn").addEventListener("click",async()=>{
   box.innerHTML="";
   if(!data?.length){box.textContent="હજુ કોઈ Interest મળ્યો નથી.";return;}
   const ids=[...new Set(data.map(x=>x.sender_id))];
-  const {data:profiles,error:pe}=await supabase.from("member_profiles")
+  const {data:profiles,error:pe}=await sbClient.from("member_profiles")
     .select("user_id,full_name,gender,birth_date,city,education,occupation,community,marital_status,about_me")
     .in("user_id",ids);
   if(pe)return status("interestStatus","Profiles લોડ કરવામાં ભૂલ: "+pe.message,"error");
@@ -325,7 +325,7 @@ $("loadInterestsBtn").addEventListener("click",async()=>{
     const st=document.createElement("p");st.textContent="Status: "+(item.status||"pending");card.appendChild(st);
     if((item.status||"pending")==="pending"){
       const accept=document.createElement("button");accept.className="btn";accept.textContent="Accept Interest";accept.style.marginTop="8px";
-      accept.onclick=async()=>{accept.disabled=true;const {error:ue}=await supabase.from("interests").update({status:"accepted"}).eq("id",item.id).eq("receiver_id",currentUser.id).eq("status","pending");
+      accept.onclick=async()=>{accept.disabled=true;const {error:ue}=await sbClient.from("interests").update({status:"accepted"}).eq("id",item.id).eq("receiver_id",currentUser.id).eq("status","pending");
         if(ue){accept.disabled=false;alert("Accept error: "+ue.message);return;}item.status="accepted";st.textContent="Status: accepted";accept.remove();alert("Interest accepted!");};
       card.appendChild(accept);
     }
@@ -348,7 +348,7 @@ async function startPayment(planKey) {
   const plan=plans[planKey], total=Math.round(plan.base*1.18*100)/100;
   status("paymentStatus","સુરક્ષિત payment order બનાવાઈ રહ્યો છે...");
   // The Edge Function must validate plan prices on the server; never trust the browser amount.
-  const {data,error}=await supabase.functions.invoke("bright-api",{body:{action:"create_order",plan:planKey}});
+  const {data,error}=await sbClient.functions.invoke("bright-api",{body:{action:"create_order",plan:planKey}});
   if(error || !data?.success || !data?.order?.id) return status("paymentStatus","Payment order error: "+(data?.error||error?.message||"Order create ન થયો."),"error");
   const options={
     key:data.key_id,
@@ -361,7 +361,7 @@ async function startPayment(planKey) {
     notes:{plan:planKey,user_id:currentUser.id},
     handler:async response=>{
       status("paymentStatus","ચુકવણી verify થઈ રહી છે...");
-      const {data:verified,error:verifyError}=await supabase.functions.invoke("bright-api",{body:{
+      const {data:verified,error:verifyError}=await sbClient.functions.invoke("bright-api",{body:{
         action:"verify_payment",plan:planKey,order_id:response.razorpay_order_id,
         payment_id:response.razorpay_payment_id,razorpay_signature:response.razorpay_signature
       }});
@@ -376,21 +376,21 @@ async function startPayment(planKey) {
 
 $("adminBtn").addEventListener("click",async()=>{
   if(!currentUser) return status("adminStatus","Admin access તપાસવા પહેલાં Login કરો.","error");
-  const {data,error}=await supabase.from("admin_users").select("user_id").eq("user_id",currentUser.id).maybeSingle();
+  const {data,error}=await sbClient.from("admin_users").select("user_id").eq("user_id",currentUser.id).maybeSingle();
   if(error) return status("adminStatus","Admin ચકાસણીમાં ભૂલ: "+error.message,"error");
   if(!data) return status("adminStatus","આ એકાઉન્ટને Admin પરવાનગી નથી.","error");
-  const {data:members,error:memberError}=await supabase.from("member_profiles").select("full_name,city,gender,updated_at").order("updated_at",{ascending:false}).limit(100);
+  const {data:members,error:memberError}=await sbClient.from("member_profiles").select("full_name,city,gender,updated_at").order("updated_at",{ascending:false}).limit(100);
   if(memberError) return status("adminStatus","સભ્યો લોડ કરવામાં ભૂલ: "+memberError.message,"error");
   $("adminMembers").innerHTML=(members||[]).map(m=>`<div class="card"><strong>${esc(m.full_name||"")}</strong><div>${esc(m.city||"")} • ${esc(m.gender||"")}</div></div>`).join("");
   status("adminStatus","Admin access સફળ. સભ્યો: "+(members?.length||0),"success");
 });
 
-supabase.auth.onAuthStateChange((_event,session)=>{
+sbClient.auth.onAuthStateChange((_event,session)=>{
   currentUser=session?.user||null; updateUI();
   if(currentUser) setTimeout(()=>{loadMyProfile();loadProfiles();},0);
 });
 async function init(){
-  const {data,error}=await supabase.auth.getSession();
+  const {data,error}=await sbClient.auth.getSession();
   if(error) status("globalStatus","Supabase session error: "+error.message,"error");
   currentUser=data?.session?.user||null; updateUI();
   if(currentUser){await loadMyProfile();await loadProfiles();}
