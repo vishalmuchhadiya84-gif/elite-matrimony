@@ -63,7 +63,7 @@ window.addEventListener("unhandledrejection",function(e){var b=document.getEleme
 <div><label for="community">સમાજ / Community</label><input id="community" maxlength="100"></div>
 <div><label for="maritalStatus">વૈવાહિક સ્થિતિ</label><select id="maritalStatus"><option value="">પસંદ કરો</option><option value="Never Married">અપરિણીત</option><option value="Divorced">છૂટાછેડા લીધેલા</option><option value="Widowed">વિધવા / વિધુર</option><option value="Other">અન્ય</option></select></div>
 </div><div><label for="aboutMe">તમારા વિશે</label><textarea id="aboutMe" maxlength="1000" placeholder="તમારા વિશે ટૂંકમાં લખો"></textarea></div>
-<div style="margin:12px 0;padding:14px;background:#fff8ef;border-radius:10px"><label for="profilePhotoFile">Profile Photo (JPG, PNG અથવા WebP — 2 MB સુધી)</label><div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:8px 0"><img id="profilePhotoPreview" class="profile-photo-preview" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='110' height='110'%3E%3Crect width='110' height='110' rx='55' fill='%23f8edf1'/%3E%3Ctext x='55' y='68' text-anchor='middle' font-size='48' fill='%23791b3a'%3E%E2%99%A1%3C/text%3E%3C/svg%3E" alt="Profile photo preview"><div style="min-width:220px;flex:1"><input id="profilePhotoFile" type="file" accept="image/jpeg,image/png,image/webp"><button class="btn" id="uploadProfilePhotoBtn" type="button" style="margin-top:10px">Upload Photo</button><p class="muted" style="margin:6px 0">ફોટો પસંદ કર્યા પછી Upload Photo દબાવો.</p></div></div><div id="photoStatus" class="status" role="status"></div></div>
+<div style="margin:12px 0;padding:14px;background:#fff8ef;border-radius:10px"><label for="profilePhotoFile">Profile Photo (JPG, PNG અથવા WebP — 2 MB સુધી)</label><div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:8px 0"><img id="profilePhotoPreview" class="profile-photo-preview" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='110' height='110'%3E%3Crect width='110' height='110' rx='55' fill='%23f8edf1'/%3E%3Ctext x='55' y='68' text-anchor='middle' font-size='48' fill='%23791b3a'%3E%E2%99%A1%3C/text%3E%3C/svg%3E" alt="" title="Profile Photo Preview" onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='110' height='110'%3E%3Crect width='110' height='110' rx='55' fill='%23f8edf1'/%3E%3Ctext x='55' y='68' text-anchor='middle' font-size='48' fill='%23791b3a'%3E%E2%99%A1%3C/text%3E%3C/svg%3E';"><div style="min-width:220px;flex:1"><input id="profilePhotoFile" type="file" accept="image/jpeg,image/png,image/webp"><button class="btn" id="uploadProfilePhotoBtn" type="button" style="margin-top:10px">Upload Photo</button><p class="muted" style="margin:6px 0">ફોટો પસંદ કર્યા પછી Upload Photo દબાવો.</p></div></div><div id="photoStatus" class="status" role="status"></div></div>
 <button class="btn" type="submit">Save Profile</button></form><div id="profileStatus" class="status" role="status"></div></div>
 </div></section>
 <section id="profiles"><div class="container"><div class="section-head"><h2>Member Profiles</h2><p>ઉપલબ્ધ પ્રોફાઇલ્સ જુઓ.</p></div>
@@ -225,7 +225,10 @@ async function loadMyProfile() {
 }
 function setProfilePhotoPreview(url){
   const img=$("profilePhotoPreview");
-  img.src=url||"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='110' height='110'%3E%3Crect width='110' height='110' rx='55' fill='%23f8edf1'/%3E%3Ctext x='55' y='68' text-anchor='middle' font-size='48' fill='%23791b3a'%3E%E2%99%A1%3C/text%3E%3C/svg%3E";
+  const fallback="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='110' height='110'%3E%3Crect width='110' height='110' rx='55' fill='%23f8edf1'/%3E%3Ctext x='55' y='68' text-anchor='middle' font-size='48' fill='%23791b3a'%3E%E2%99%A1%3C/text%3E%3C/svg%3E";
+  img.onerror=()=>{img.onerror=null;img.src=fallback;};
+  img.alt="";
+  img.src=url||fallback;
 }
 $("profilePhotoFile").addEventListener("change",()=>{
   const file=$("profilePhotoFile").files?.[0];
