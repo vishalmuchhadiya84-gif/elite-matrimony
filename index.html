@@ -65,7 +65,12 @@ window.addEventListener("unhandledrejection",function(e){var b=document.getEleme
 </div><div><label for="aboutMe">તમારા વિશે</label><textarea id="aboutMe" maxlength="1000" placeholder="તમારા વિશે ટૂંકમાં લખો"></textarea></div>
 <button class="btn" type="submit">Save Profile</button></form><div id="profileStatus" class="status" role="status"></div></div>
 </div></section>
-<section id="profiles"><div class="container"><div class="section-head"><h2>Member Profiles</h2><p>ઉપલબ્ધ પ્રોફાઇલ્સ જુઓ.</p></div>
+
+<section id="photo-gallery"><div class="container"><div class="section-head"><h2>મારી Photo Gallery (10 ફોટા)</h2><p>Login કર્યા પછી વધુમાં વધુ 10 ફોટા Upload કરો. દરેક ફોટો 5 MB સુધી.</p></div>
+<div class="card"><label for="galleryFiles">ફોટા પસંદ કરો (એકસાથે 10 સુધી)</label><input id="galleryFiles" type="file" accept="image/*" multiple>
+<button class="btn" id="uploadGalleryBtn" type="button" style="margin-top:12px">Upload Photos</button>
+<div id="galleryStatus" class="status" role="status"></div><div id="myGallery" class="grid" style="margin-top:16px"></div></div></div></section>
+\n<section id="profiles"><div class="container"><div class="section-head"><h2>Member Profiles</h2><p>ઉપલબ્ધ પ્રોફાઇલ્સ જુઓ.</p></div>
 <div class="card" style="margin-bottom:16px">
 <div class="form-grid">
 <div><label for="searchCity">City</label><input id="searchCity" placeholder="Ahmedabad"></div>
@@ -198,13 +203,21 @@ $("logoutBtn").addEventListener("click", async () => {
   status("globalStatus","Logout સફળ થયું.","success");
 });
 
+function viewerHasPremium(profile=currentProfile){
+  if(!profile)return false;
+  const raw=String(profile.premium_status??"").trim().toLowerCase();
+  const active=["active","true","premium","paid","1"].includes(raw)||profile.premium_status===true;
+  const exp=profile.premium_expiry?new Date(profile.premium_expiry):null;
+  return active&&(!exp||(!Number.isNaN(exp.getTime())&&exp>new Date()));
+}
+
 async function loadMyProfile() {
   if (!currentUser) return;
   const {data,error} = await sbClient.from("member_profiles")
-    .select("id,user_id,full_name,gender,birth_date,city,education,occupation,community,marital_status,about_me,photo_url,premium_status,premium_plan,premium_expiry,updated_at")
+    .select("id,user_id,full_name,gender,birth_date,city,education,occupation,community,marital_status,about_me,photo_url,photo_urls,premium_status,premium_plan,premium_expiry,updated_at")
     .eq("user_id",currentUser.id).maybeSingle();
   if (error) { status("profileStatus","Profile લોડ કરવામાં ભૂલ: "+error.message,"error"); return; }
-  currentProfile = data;
+  currentProfile = data;\n  renderMyGallery();
   const { data: contact } = await sbClient.from("member_contacts")
     .select("phone_number").eq("user_id",currentUser.id).maybeSingle();
   $("phoneNumber").value = contact?.phone_number || "";
@@ -243,7 +256,57 @@ $("profileForm").addEventListener("submit", async e => {
   currentProfile=payload; status("profileStatus","તમારી Profile સફળતાપૂર્વક સાચવાઈ ગઈ!","success"); await loadProfiles();
 });
 
-async function loadProfiles() {
+
+function galleryArray(profile=currentProfile){
+  const arr=Array.isArray(profile?.photo_urls)?profile.photo_urls.filter(Boolean):[];
+  if(!arr.length&&profile?.photo_url)arr.push(profile.photo_url);
+  return [...new Set(arr)].slice(0,10);
+}
+function renderMyGallery(){
+  const box=$("myGallery"); if(!box)return;
+  const photos=galleryArray();
+  if(!photos.length){box.innerHTML='<p class="muted">હજુ ફોટા Upload કર્યા નથી.</p>';return;}
+  const premium=viewerHasPremium();
+  box.innerHTML=photos.map((url,i)=>`<div class="card" style="padding:10px"><div class="photo-lock"><img class="member-photo ${premium?"":"blurred"}" src="${esc(url)}" alt="My photo ${i+1}"><div class="lock-label" style="${premium?"display:none":""}">🔒 Premium Photos</div></div><p>Photo ${i+1} ${url===currentProfile?.photo_url?"⭐ Main Photo":""}</p><button class="btn outline" type="button" data-main-photo="${i}">Make Main</button> <button class="btn" type="button" data-delete-photo="${i}">Delete</button></div>`).join("");
+  box.querySelectorAll("[data-main-photo]").forEach(b=>b.addEventListener("click",()=>setMainPhoto(Number(b.dataset.mainPhoto))));
+  box.querySelectorAll("[data-delete-photo]").forEach(b=>b.addEventListener("click",()=>deleteGalleryPhoto(Number(b.dataset.deletePhoto))));
+}
+async function saveGallery(photos){
+  const {error}=await sbClient.from("member_profiles").update({photo_urls:photos,photo_url:photos[0]||null,updated_at:new Date().toISOString()}).eq("user_id",currentUser.id);
+  if(error)throw error;
+  currentProfile={...(currentProfile||{}),photo_urls:photos,photo_url:photos[0]||null};renderMyGallery();await loadProfiles();
+}
+$("uploadGalleryBtn").addEventListener("click",async()=>{
+  if(!currentUser)return status("galleryStatus","પહેલા Login કરો.","error");
+  const files=[...$("galleryFiles").files];if(!files.length)return status("galleryStatus","પહેલા ફોટા પસંદ કરો.","error");
+  let existing=galleryArray();if(existing.length+files.length>10)return status("galleryStatus",`હાલ ${existing.length} ફોટા છે. કુલ 10 જ રાખી શકાય.`, "error");
+  status("galleryStatus","ફોટા Upload થઈ રહ્યા છે...");
+  try{
+    for(const f of files){
+      if(!f.type.startsWith("image/"))throw new Error("ફક્ત image ફોટા પસંદ કરો.");
+      if(f.size>5*1024*1024)throw new Error(f.name+" 5 MB કરતાં મોટો છે.");
+      const ext=(f.name.split(".").pop()||"jpg").replace(/[^a-z0-9]/gi,"").toLowerCase();
+      const path=currentUser.id+"/"+Date.now()+"-"+Math.random().toString(36).slice(2)+"."+ext;
+      const {error:upErr}=await sbClient.storage.from("profile-photos").upload(path,f,{upsert:false,contentType:f.type});
+      if(upErr)throw upErr;
+      const {data}=sbClient.storage.from("profile-photos").getPublicUrl(path);
+      existing.push(data.publicUrl);
+    }
+    await saveGallery(existing);$("galleryFiles").value="";
+    status("galleryStatus","બધા ફોટા સફળતાપૂર્વક Upload થયા.","success");
+  }catch(err){status("galleryStatus","Upload ભૂલ: "+(err.message||err),"error");}
+});
+async function setMainPhoto(index){
+  const photos=galleryArray();if(!photos[index])return;
+  const url=photos.splice(index,1)[0];photos.unshift(url);
+  try{await saveGallery(photos);status("galleryStatus","Main Photo બદલાયો.","success");}catch(e){status("galleryStatus","Save ભૂલ: "+e.message,"error");}
+}
+async function deleteGalleryPhoto(index){
+  if(!confirm("આ ફોટો કાઢી નાખવો છે?"))return;
+  const photos=galleryArray();photos.splice(index,1);
+  try{await saveGallery(photos);status("galleryStatus","ફોટો Delete થયો.","success");}catch(e){status("galleryStatus","Delete ભૂલ: "+e.message,"error");}
+}
+\nasync function loadProfiles() {
   const host=$("profilesList");
   if(!currentUser){
     host.innerHTML='<div class="card">Profiles જોવા માટે Login કરો.</div>';
@@ -272,11 +335,9 @@ async function loadProfiles() {
         own?'<button class="btn" type="button" disabled>તમારી Profile</button>':
         sentMap.has(uid)?`<button class="btn interestBtn" type="button" disabled>${sentMap.get(uid)==="accepted"?"Interest Accepted":"Interest Sent"}</button>`:
         `<button class="btn interestBtn" data-user="${esc(uid)}" type="button">Express Interest</button>`;
-      const premiumRaw=String(p.premium_status||"").toLowerCase();
-      const expiry=p.premium_expiry?new Date(p.premium_expiry):null;
-      const premiumActive=(premiumRaw==="active"||premiumRaw==="true"||premiumRaw==="premium"||p.premium_status===true)&&(!expiry||!Number.isNaN(expiry.getTime())&&expiry>new Date());
-      const photo=p.photo_url?`<img class="member-photo ${premiumActive?"":"blurred"}" src="${esc(p.photo_url)}" alt="Profile photo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`:"";
-      const lock=!premiumActive?`<div class="lock-label" ${p.photo_url?"":"style='display:flex'"}><span>🔒 Premium Members Only</span><a class="btn" href="#plans">Upgrade Premium</a></div>`:"";
+      const viewerPremium=viewerHasPremium(currentProfile);
+      const photo=p.photo_url?`<img class="member-photo ${viewerPremium?"":"blurred"}" src="${esc(p.photo_url)}" alt="Profile photo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`:"";
+      const lock=!viewerPremium?`<div class="lock-label" ${p.photo_url?"":"style='display:flex'"}><span>🔒 Premium Members Only</span><a class="btn" href="#plans">Upgrade Premium</a></div>`:"";
       const photoBlock=p.photo_url?`<div class="photo-lock">${photo}${lock}<div class="lock-label" style="display:none">Photo unavailable</div></div>`:`<div class="avatar">♡</div>`;
       return `<article class="card profile-card">${photoBlock}<h3>${esc(p.full_name||"Elite Member")}</h3><span class="pill">${esc(p.gender||"")}</span><div>${esc(p.city||"")}</div><div>${esc(p.education||"")}</div><div>${esc(p.occupation||"")}</div><div>${esc(p.community||"")}</div><p>${esc(p.about_me||"")}</p>${btn}</article>`;
     }).join("");
@@ -373,6 +434,8 @@ async function startPayment(planKey) {
       }});
       if(verifyError || !verified?.success) return status("paymentStatus","Payment verification error: "+(verified?.error||verifyError?.message||"Verification નિષ્ફળ."),"error");
       status("paymentStatus","ચુકવણી સફળ! તમારું Premium Membership સક્રિય થયું.","success");
+      await loadMyProfile();
+      await loadProfiles();
     },
     modal:{ondismiss:()=>status("paymentStatus","ચુકવણી વિન્ડો બંધ થઈ.")}
   };
