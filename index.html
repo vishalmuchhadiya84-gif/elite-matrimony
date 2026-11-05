@@ -70,7 +70,8 @@ window.addEventListener("unhandledrejection",function(e){var b=document.getEleme
 <div class="card"><label for="galleryFiles">ફોટા પસંદ કરો (એકસાથે 10 સુધી)</label><input id="galleryFiles" type="file" accept="image/*" multiple>
 <button class="btn" id="uploadGalleryBtn" type="button" style="margin-top:12px">Upload Photos</button>
 <div id="galleryStatus" class="status" role="status"></div><div id="myGallery" class="grid" style="margin-top:16px"></div></div></div></section>
-\n<section id="profiles"><div class="container"><div class="section-head"><h2>Member Profiles</h2><p>ઉપલબ્ધ પ્રોફાઇલ્સ જુઓ.</p></div>
+
+<section id="profiles"><div class="container"><div class="section-head"><h2>Member Profiles</h2><p>ઉપલબ્ધ પ્રોફાઇલ્સ જુઓ.</p></div>
 <div class="card" style="margin-bottom:16px">
 <div class="form-grid">
 <div><label for="searchCity">City</label><input id="searchCity" placeholder="Ahmedabad"></div>
@@ -217,7 +218,8 @@ async function loadMyProfile() {
     .select("id,user_id,full_name,gender,birth_date,city,education,occupation,community,marital_status,about_me,photo_url,photo_urls,premium_status,premium_plan,premium_expiry,updated_at")
     .eq("user_id",currentUser.id).maybeSingle();
   if (error) { status("profileStatus","Profile લોડ કરવામાં ભૂલ: "+error.message,"error"); return; }
-  currentProfile = data;\n  renderMyGallery();
+  currentProfile = data;
+  renderMyGallery();
   const { data: contact } = await sbClient.from("member_contacts")
     .select("phone_number").eq("user_id",currentUser.id).maybeSingle();
   $("phoneNumber").value = contact?.phone_number || "";
@@ -306,7 +308,8 @@ async function deleteGalleryPhoto(index){
   const photos=galleryArray();photos.splice(index,1);
   try{await saveGallery(photos);status("galleryStatus","ફોટો Delete થયો.","success");}catch(e){status("galleryStatus","Delete ભૂલ: "+e.message,"error");}
 }
-\nasync function loadProfiles() {
+
+async function loadProfiles() {
   const host=$("profilesList");
   if(!currentUser){
     host.innerHTML='<div class="card">Profiles જોવા માટે Login કરો.</div>';
