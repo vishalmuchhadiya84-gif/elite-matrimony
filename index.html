@@ -13,6 +13,10 @@
 </style>
 </head>
 <body>
+<script>
+window.addEventListener("error",function(e){var b=document.getElementById("globalStatus");if(b){b.style.display="block";b.textContent="JavaScript error: "+(e.message||"unknown")+" (line "+e.lineno+")";}});
+window.addEventListener("unhandledrejection",function(e){var b=document.getElementById("globalStatus");if(b){b.style.display="block";b.textContent="App error: "+(e.reason&&e.reason.message||e.reason||"unknown");}});
+</script>
 <header><div class="container nav">
 <a class="brand" href="#home" aria-label="Elite Gujarati Matrimony Home">
 <svg class="brand-mark" viewBox="0 0 64 64" role="img" aria-label="Elite Gujarati Matrimony logo" xmlns="http://www.w3.org/2000/svg">
@@ -91,13 +95,13 @@
 <div class="card"><h3>Contact Views</h3><p>Contact details access tracking જરૂરી છે.</p></div>
 </div><div class="card" style="margin-top:16px"><h3>Interests</h3><p>Received / Accepted / Sent Interests</p><a class="btn" href="#interests">View Interests</a></div></div></section>
 <section id="messenger"><div class="container"><div class="section-head"><h2>Messenger</h2><p>Accepted matches સાથે વાતચીત</p></div><div class="card"><p>Chat માટે real-time messaging database table અને security policies જરૂરી છે.</p><a class="btn" href="#interests">Accepted Interests જુઓ</a></div></div></section>
-<section id="plans"><div class="container"><div class="section-head"><h2>Premium Membership Plans</h2><p>તમારી જરૂરિયાત પ્રમાણે પ્લાન પસંદ કરો.</p><p class="muted">30 દિવસની Launch Offer કિંમતો. ત્યારબાદ Regular Price લાગુ થશે. લાગુ 18% GST ચુકવણી વખતે ઉમેરાશે.</p></div>
+<section id="plans"><div class="container"><div class="section-head"><h2>Premium Membership Plans</h2><p>તમારી જરૂરિયાત પ્રમાણે પ્લાન પસંદ કરો.</p><p class="muted">બેઝ કિંમત અને 18% GST અલગ દર્શાવેલ છે.</p></div>
 <div class="grid">
-<div class="card plan"><span class="tag">1 Month</span><h3>Monthly Plan</h3><div class="price">₹599</div><div class="gst">Launch Offer Base Price: ₹599</div><div class="gst">Regular Price: ₹799</div><div class="gst">GST (18%): ₹107.82</div><div class="total">કુલ: ₹706.82</div><button class="btn choosePlan" data-plan="month_1" type="button">Choose Plan</button></div>
-<div class="card plan"><span class="tag">3 Months</span><h3>Quarterly Plan</h3><div class="price">₹1,499</div><div class="gst">Launch Offer Base Price: ₹1,499</div><div class="gst">Regular Price: ₹1,999</div><div class="gst">GST (18%): ₹269.82</div><div class="total">કુલ: ₹1,768.82</div><button class="btn choosePlan" data-plan="month_3" type="button">Choose Plan</button></div>
-<div class="card plan"><span class="tag">6 Months</span><h3>Half-Year Plan</h3><div class="price">₹2,299</div><div class="gst">Launch Offer Base Price: ₹2,299</div><div class="gst">Regular Price: ₹2,999</div><div class="gst">GST (18%): ₹413.82</div><div class="total">કુલ: ₹2,712.82</div><button class="btn choosePlan" data-plan="month_6" type="button">Choose Plan</button></div>
-<div class="card plan"><span class="tag">12 Months</span><h3>Annual Plan</h3><div class="price">₹3,999</div><div class="gst">Launch Offer Base Price: ₹3,999</div><div class="gst">Regular Price: ₹4,999</div><div class="gst">GST (18%): ₹719.82</div><div class="total">કુલ: ₹4,718.82</div><button class="btn choosePlan" data-plan="month_12" type="button">Choose Plan</button></div>
-</div><div class="notice" style="margin-top:12px">Launch Offer 30 દિવસ માટે છે. Offer પૂરી થયા પછી Regular Price લાગુ થશે. Razorpay checkoutમાં લાગુ GST સાથે અંતિમ રકમ દેખાશે.</div><div id="paymentStatus" class="status" role="status"></div></div></section>
+<div class="card plan"><span class="tag">1 Month</span><h3>Monthly Plan</h3><div class="price">₹499</div><div class="gst">Base price</div><div class="gst">GST (18%): ₹89.82</div><div class="total">કુલ: ₹588.82</div><button class="btn choosePlan" data-plan="month_1" type="button">Choose Plan</button></div>
+<div class="card plan"><span class="tag">3 Months</span><h3>Quarterly Plan</h3><div class="price">₹1,249</div><div class="gst">Base price</div><div class="gst">GST (18%): ₹224.82</div><div class="total">કુલ: ₹1,473.82</div><button class="btn choosePlan" data-plan="month_3" type="button">Choose Plan</button></div>
+<div class="card plan"><span class="tag">6 Months</span><h3>Half-Year Plan</h3><div class="price">₹1,999</div><div class="gst">Base price</div><div class="gst">GST (18%): ₹359.82</div><div class="total">કુલ: ₹2,358.82</div><button class="btn choosePlan" data-plan="month_6" type="button">Choose Plan</button></div>
+<div class="card plan"><span class="tag">12 Months</span><h3>Annual Plan</h3><div class="price">₹2,999</div><div class="gst">Base price</div><div class="gst">GST (18%): ₹539.82</div><div class="total">કુલ: ₹3,538.82</div><button class="btn choosePlan" data-plan="month_12" type="button">Choose Plan</button></div>
+</div><div id="paymentStatus" class="status" role="status"></div></div></section>
 <section id="admin"><div class="container"><div class="section-head"><h2>Admin Panel</h2><p>માત્ર અધિકૃત Admin માટે.</p></div><div class="card"><p>Admin access માટે Supabaseમાં server-side permissions અને RLS policies યોગ્ય હોવી જરૂરી છે.</p><button class="btn outline" id="adminBtn" type="button">Check Admin Access</button><div id="adminStatus" class="status" role="status"></div><div id="adminMembers" class="grid"></div></div></div></section>
 
 <section id="privacy"><div class="container policy-content">
@@ -131,25 +135,9 @@
 
 </main>
 <footer><div class="container footer-row"><div><strong>ELITE GUJARATI MATRIMONY</strong><p>તમારા જીવનસાથીની શોધમાં એક નવી શરૂઆત.</p></div><div><div class="footer-links"><a href="#privacy">Privacy Policy</a> <a href="#terms">Terms &amp; Conditions</a> <a href="#contact">Contact</a></div><p>© <span id="year"></span> Elite Gujarati Matrimony</p></div></div></footer>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
- onerror="this.onerror=null;this.src='https://unpkg.com/@supabase/supabase-js@2';"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" onerror="this.onerror=null;this.src='https://unpkg.com/@supabase/supabase-js@2';"></script>
 <script>
-<script>
-window.addEventListener("error",function(ev){
- const box=document.getElementById("globalStatus");
- if(box){box.textContent="JavaScript Error: "+(ev.message||"અજ્ઞાત ભૂલ")+" (line "+(ev.lineno||"?")+")";box.className="status error";}
-});
-window.addEventListener("unhandledrejection",function(ev){
- const box=document.getElementById("globalStatus");
- if(box){box.textContent="App Error: "+(ev.reason?.message||String(ev.reason));box.className="status error";}
-});
-</script>
-<script>
-if(!window.supabase || typeof window.supabase.createClient!=="function"){
- const box=document.getElementById("globalStatus");
- if(box){box.textContent="Supabase library લોડ નથી થઈ. Internet ચાલુ રાખીને page Reload કરો.";box.className="status error";}
- throw new Error("Supabase JS library not loaded");
-}
+if (!window.supabase || typeof window.supabase.createClient !== "function") { const st=document.getElementById("globalStatus"); if(st){st.style.display="block";st.textContent="Supabase library load ન થઈ. Internet/CDN તપાસો અને page refresh કરો.";} throw new Error("Supabase JS library unavailable"); }
 const { createClient } = window.supabase;
 
 // Public/publishable key only. Never place service-role or Razorpay secret keys here.
@@ -347,10 +335,10 @@ $("loadInterestsBtn").addEventListener("click",async()=>{
   box.appendChild(grid);
 });
 const plans = {
-  month_1:{label:"1 Month",base:599,months:1},
-  month_3:{label:"3 Months",base:1499,months:3},
-  month_6:{label:"6 Months",base:2299,months:6},
-  month_12:{label:"12 Months",base:3999,months:12}
+  month_1:{label:"1 Month",base:499,months:1},
+  month_3:{label:"3 Months",base:1249,months:3},
+  month_6:{label:"6 Months",base:1999,months:6},
+  month_12:{label:"12 Months",base:2999,months:12}
 };
 document.querySelectorAll(".choosePlan").forEach(btn=>btn.addEventListener("click",()=>startPayment(btn.dataset.plan)));
 async function startPayment(planKey) {
