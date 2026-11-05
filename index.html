@@ -351,6 +351,16 @@ async function loadProfiles() {
 
 async function sendInterest(targetUserId,button) {
   if(!currentUser)return status("profilesStatus","Interest મોકલવા માટે Login કરો.","error");
+ 
+if (!viewerHasPremium()) {
+  status(
+    "profilesStatus",
+    "Interest મોકલવા માટે Premium Membership જરૂરી છે. Premium Plan પસંદ કરો.",
+    "error"
+  );
+  $("plans").scrollIntoView({behavior:"smooth"});
+  return;
+}
   const uuidPattern=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   if(typeof targetUserId!=="string"||!uuidPattern.test(targetUserId))return status("profilesStatus","આ સભ્યની Profile ID ખોટી છે.","error");
   if(targetUserId===currentUser.id)return status("profilesStatus","તમારી પોતાની Profile માં Interest મોકલી શકાતો નથી.","error");
