@@ -405,13 +405,16 @@ async function refreshChat(){
  if(!activeChatUser||!currentUser)return;
  if(!viewerHasPremium()){$("chatCard").classList.add("hidden");return status("chatStatus","Premium expire થયું છે. Premium Plan લો.","error");}
  if(!(await acceptedMatchIds()).includes(activeChatUser)){$("chatCard").classList.add("hidden");return status("chatStatus","Accepted Interest જરૂરી છે.","error");}
- const {data,error}=await sbClient.from("messages").select("id,sender_id,receiver_id,message,created_at")
+ const {data,error}=await sbClient.from("messages").select("id,sender_id,receiver_id,message,created_at,read_at")
   .or("and(sender_id.eq."+currentUser.id+",receiver_id.eq."+activeChatUser+"),and(sender_id.eq."+activeChatUser+",receiver_id.eq."+currentUser.id+")")
   .order("created_at",{ascending:true}).limit(200);
  if(error)throw error;
+ // Mark incoming unread messages as Seen when this chat is opened/refreshed
+ const unread=(data||[]).filter(m=>m.receiver_id===currentUser.id&&!m.read_at).map(m=>m.id);
+ if(unread.length){const {error:readErr}=await sbClient.from("messages").update({read_at:new Date().toISOString()}).in("id",unread).eq("receiver_id",currentUser.id);if(readErr)throw readErr;unread.forEach(id=>{const row=data.find(m=>m.id===id);if(row)row.read_at=new Date().toISOString();});}
  const box=$("chatMessages"),bottom=box.scrollHeight-box.scrollTop-box.clientHeight<70;box.innerHTML="";
  if(!data?.length){box.innerHTML='<p class="muted">હજુ Message નથી. વાતચીત શરૂ કરો.</p>';return;}
- data.forEach(m=>{const el=document.createElement("div");el.style.cssText="max-width:85%;padding:9px 12px;border-radius:12px;overflow-wrap:anywhere;"+(m.sender_id===currentUser.id?"align-self:flex-end;background:#f8edf1;color:#501126":"align-self:flex-start;background:#f1f1f1;color:#222");el.textContent=m.message;const tm=document.createElement("small");tm.style.cssText="display:block;opacity:.65;margin-top:4px";tm.textContent=new Date(m.created_at).toLocaleString("gu-IN");el.appendChild(tm);box.appendChild(el);});if(bottom)box.scrollTop=box.scrollHeight;
+ data.forEach(m=>{const mine=m.sender_id===currentUser.id;const el=document.createElement("div");el.style.cssText="max-width:85%;padding:9px 12px;border-radius:12px;overflow-wrap:anywhere;"+(mine?"align-self:flex-end;background:#f8edf1;color:#501126":"align-self:flex-start;background:#f1f1f1;color:#222");const body=document.createElement("div");body.textContent=m.message;el.appendChild(body);const tm=document.createElement("small");tm.style.cssText="display:flex;justify-content:flex-end;gap:7px;opacity:.7;margin-top:5px;font-size:11px";const time=document.createElement("span");time.textContent=new Date(m.created_at).toLocaleString("gu-IN");tm.appendChild(time);if(mine){const tick=document.createElement("span");tick.style.fontWeight="700";tick.style.color=m.read_at?"#1687d9":"#777";tick.textContent=m.read_at?"✓✓":"✓";tick.title=m.read_at?"Seen":"Sent";tm.appendChild(tick);}el.appendChild(tm);box.appendChild(el);});if(bottom)box.scrollTop=box.scrollHeight;
 }
 $("chatForm").addEventListener("submit",async e=>{
  e.preventDefault();const msg=$("chatInput").value.trim();if(!msg)return;
