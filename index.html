@@ -338,7 +338,8 @@ async function loadMyProfile() {
   const { data: contact } = await sbClient.from("member_contacts")
     .select("phone_number").eq("user_id",currentUser.id).maybeSingle();
   $("phoneNumber").value = contact?.phone_number || "";
-  currentProfile={...(currentProfile||{}),_contact_phone:contact?.phone_number||""};\n  renderMyAccount();renderMyPremium();
+  currentProfile={...(currentProfile||{}),_contact_phone:contact?.phone_number||""};
+  renderMyAccount();renderMyPremium();
   if (data) {
     $("fullName").value = data.full_name || currentUser.user_metadata?.full_name || "";
     $("gender").value = data.gender || "";
@@ -350,7 +351,8 @@ async function loadMyProfile() {
     $("maritalStatus").value = data.marital_status || "";
     $("aboutMe").value = data.about_me || "";
     status("profileStatus","તમારી Profile લોડ થઈ ગઈ.","success"); await renderMyGallery();
-  } else if (currentUser.user_metadata?.full_name) $("fullName").value = currentUser.user_metadata.full_name;\n  renderMyAccount();renderMyPremium();
+  } else if (currentUser.user_metadata?.full_name) $("fullName").value = currentUser.user_metadata.full_name;
+  renderMyAccount();renderMyPremium();
 }
 $("profileForm").addEventListener("submit", async e => {
   e.preventDefault();
