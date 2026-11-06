@@ -380,7 +380,7 @@ function chatChannelName(uid){return "elite-chat-"+[currentUser.id,uid].sort().j
 function setupChatRealtime(uid){
  if(chatRealtimeChannel){sbClient.removeChannel(chatRealtimeChannel);chatRealtimeChannel=null;}
  const channel=sbClient.channel(chatChannelName(uid));
- channel.on("postgres_changes",{event:"*",schema:"public",table:"messages"},payload=>{const row=payload.new||payload.old;if(row&&(row.sender_id===currentUser.id||row.receiver_id===currentUser.id)&&((row.sender_id===currentUser.id&&row.receiver_id===uid)||(row.sender_id===uid&&row.receiver_id===currentUser.id))refreshChat().catch(e=>status("chatStatus",e.message,"error"));});
+ channel.on("postgres_changes",{event:"*",schema:"public",table:"messages"},payload=>{const row=payload.new||payload.old;if(row&&(row.sender_id===currentUser.id||row.receiver_id===currentUser.id)&&((row.sender_id===currentUser.id&&row.receiver_id===uid)||(row.sender_id===uid&&row.receiver_id===currentUser.id)))refreshChat().catch(e=>status("chatStatus",e.message,"error"));});
  channel.on("broadcast",{event:"typing"},payload=>{const d=payload.payload||{};if(d.user_id===uid){$("typingIndicator").textContent=d.is_typing?(activeChatName+" typing...") : "";if(typingTimeout)clearTimeout(typingTimeout);if(d.is_typing)typingTimeout=setTimeout(()=>$("typingIndicator").textContent="",2500);}});
  channel.subscribe();chatRealtimeChannel=channel;
 }
