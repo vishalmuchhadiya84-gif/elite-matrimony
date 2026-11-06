@@ -63,14 +63,10 @@ window.addEventListener("unhandledrejection",function(e){var b=document.getEleme
 <div><label for="community">સમાજ / Community</label><input id="community" maxlength="100"></div>
 <div><label for="maritalStatus">વૈવાહિક સ્થિતિ</label><select id="maritalStatus"><option value="">પસંદ કરો</option><option value="Never Married">અપરિણીત</option><option value="Divorced">છૂટાછેડા લીધેલા</option><option value="Widowed">વિધવા / વિધુર</option><option value="Other">અન્ય</option></select></div>
 </div><div><label for="aboutMe">તમારા વિશે</label><textarea id="aboutMe" maxlength="1000" placeholder="તમારા વિશે ટૂંકમાં લખો"></textarea></div>
-<button class="btn" type="submit">Save Profile</button></form><div id="profileStatus" class="status" role="status"></div></div>
+<button class="btn" type="submit">Save Profile</button></form>
+<div class="card" style="margin-top:16px"><h3>📸 Profile Photo Gallery (Maximum 10)</h3><p class="muted">એક સાથે 10 સુધી ફોટા પસંદ કરી Upload કરો. પ્રથમ ફોટો Main Profile Photo રહેશે.</p><label for="galleryFiles">ફોટા પસંદ કરો</label><input id="galleryFiles" type="file" accept="image/*" multiple><button class="btn" id="uploadGalleryBtn" type="button">Upload Selected Photos</button><div id="galleryStatus" class="status" role="status"></div><div id="myPhotoGallery" class="grid" style="margin-top:12px"></div></div>
+<div id="profileStatus" class="status" role="status"></div></div>
 </div></section>
-
-<section id="photo-gallery"><div class="container"><div class="section-head"><h2>મારી Photo Gallery (10 ફોટા)</h2><p>Login કર્યા પછી વધુમાં વધુ 10 ફોટા Upload કરો. દરેક ફોટો 5 MB સુધી.</p></div>
-<div class="card"><label for="galleryFiles">ફોટા પસંદ કરો (એકસાથે 10 સુધી)</label><input id="galleryFiles" type="file" accept="image/*" multiple>
-<button class="btn" id="uploadGalleryBtn" type="button" style="margin-top:12px">Upload Photos</button>
-<div id="galleryStatus" class="status" role="status"></div><div id="myGallery" class="grid" style="margin-top:16px"></div></div></div></section>
-
 <section id="profiles"><div class="container"><div class="section-head"><h2>Member Profiles</h2><p>ઉપલબ્ધ પ્રોફાઇલ્સ જુઓ.</p></div>
 <div class="card" style="margin-bottom:16px">
 <div class="form-grid">
@@ -100,7 +96,7 @@ window.addEventListener("unhandledrejection",function(e){var b=document.getEleme
 <div class="card"><h3>Shortlisted Profiles</h3><p>Shortlist tracking હાલ અલગથી સેટ કરવાનું બાકી છે.</p></div>
 <div class="card"><h3>Contact Views</h3><p>Contact details access tracking જરૂરી છે.</p></div>
 </div><div class="card" style="margin-top:16px"><h3>Interests</h3><p>Received / Accepted / Sent Interests</p><a class="btn" href="#interests">View Interests</a></div></div></section>
-<section id="messenger"><div class="container"><div class="section-head"><h2>Messenger</h2><p>Accepted matches સાથે વાતચીત</p></div><div class="card"><p>Chat માટે real-time messaging database table અને security policies જરૂરી છે.</p><a class="btn" href="#interests">Accepted Interests જુઓ</a></div></div></section>
+<section id="messenger"><div class="container"><div class="section-head"><h2>Messenger</h2><p>Accepted matches સાથે સુરક્ષિત વાતચીત</p></div><div class="card"><p id="messengerIntro">Login અને Premium પછી Accepted Interest સાથે Chat કરી શકો છો.</p><div id="chatList" class="grid"></div><div id="chatCard" class="hidden" style="margin-top:16px"><h3 id="chatHeading">Chat</h3><div id="chatMessages" aria-live="polite" style="height:300px;overflow:auto;border:1px solid var(--border);border-radius:10px;padding:12px;background:#fff;display:flex;flex-direction:column;gap:8px"></div><form id="chatForm" style="margin-top:12px"><label for="chatInput">તમારો Message</label><textarea id="chatInput" maxlength="2000" required placeholder="Message લખો..."></textarea><button class="btn" id="chatSendBtn" type="submit">Send Message</button></form><div id="chatStatus" class="status" role="status"></div></div><div id="messengerStatus" class="status" role="status"></div><a class="btn outline" href="#interests">Accepted Interests જુઓ</a></div></div></section>
 <section id="plans"><div class="container"><div class="section-head"><h2>Premium Membership Plans</h2><p>તમારી જરૂરિયાત પ્રમાણે પ્લાન પસંદ કરો.</p><p class="muted">🎉 Launch Offer (30 દિવસ) — 18% GST અલગથી લાગુ પડશે.</p></div>
 <div class="grid">
 <div class="card plan"><span class="tag">1 Month</span><h3>Monthly Plan</h3><div class="price">₹599</div><div class="gst">Base price</div><div class="gst">GST (18%): ₹107.82</div><div class="total">કુલ: ₹706.82</div><button class="btn choosePlan" data-plan="month_1" type="button">Choose Plan</button></div>
@@ -180,7 +176,7 @@ $("registerForm").addEventListener("submit", async e => {
   if (error) return status("registerStatus",error.message,"error");
   if (data.session) {
     currentUser = data.user; updateUI(); $("fullName").value = name;
-    status("registerStatus","Registration સફળ થયું.","success"); await loadMyProfile(); await loadProfiles();
+    status("registerStatus","Registration સફળ થયું.","success"); await loadMyProfile(); await loadProfiles(); await loadChatList();
   } else status("registerStatus","Registration request સફળ થઈ. Email verification જરૂરી હોય તો email ચેક કરો.");
 });
 $("loginForm").addEventListener("submit", async e => {
@@ -188,7 +184,7 @@ $("loginForm").addEventListener("submit", async e => {
   const {data,error} = await sbClient.auth.signInWithPassword({email:$("loginEmail").value.trim(),password:$("loginPassword").value});
   if (error) return status("loginStatus",error.message,"error");
   currentUser = data.user; updateUI(); status("loginStatus","Login સફળ થયું.","success");
-  await loadMyProfile(); await loadProfiles();
+  await loadMyProfile(); await loadProfiles(); await loadChatList();
 });
 $("forgotBtn").addEventListener("click", async () => {
   const email = $("loginEmail").value.trim();
@@ -215,11 +211,11 @@ function viewerHasPremium(profile=currentProfile){
 async function loadMyProfile() {
   if (!currentUser) return;
   const {data,error} = await sbClient.from("member_profiles")
-    .select("id,user_id,full_name,gender,birth_date,city,education,occupation,community,marital_status,about_me,photo_url,photo_urls,premium_status,premium_plan,premium_expiry,updated_at")
+    .select("id,user_id,full_name,gender,birth_date,city,education,occupation,community,marital_status,about_me,photo_url,premium_status,premium_plan,premium_expiry,updated_at")
     .eq("user_id",currentUser.id).maybeSingle();
   if (error) { status("profileStatus","Profile લોડ કરવામાં ભૂલ: "+error.message,"error"); return; }
   currentProfile = data;
-  renderMyGallery();
+  loadChatList();
   const { data: contact } = await sbClient.from("member_contacts")
     .select("phone_number").eq("user_id",currentUser.id).maybeSingle();
   $("phoneNumber").value = contact?.phone_number || "";
@@ -233,7 +229,7 @@ async function loadMyProfile() {
     $("community").value = data.community || "";
     $("maritalStatus").value = data.marital_status || "";
     $("aboutMe").value = data.about_me || "";
-    status("profileStatus","તમારી Profile લોડ થઈ ગઈ.","success");
+    status("profileStatus","તમારી Profile લોડ થઈ ગઈ.","success"); await renderMyGallery();
   } else if (currentUser.user_metadata?.full_name) $("fullName").value = currentUser.user_metadata.full_name;
 }
 $("profileForm").addEventListener("submit", async e => {
@@ -258,56 +254,28 @@ $("profileForm").addEventListener("submit", async e => {
   currentProfile=payload; status("profileStatus","તમારી Profile સફળતાપૂર્વક સાચવાઈ ગઈ!","success"); await loadProfiles();
 });
 
-
-function galleryArray(profile=currentProfile){
-  const arr=Array.isArray(profile?.photo_urls)?profile.photo_urls.filter(Boolean):[];
-  if(!arr.length&&profile?.photo_url)arr.push(profile.photo_url);
-  return [...new Set(arr)].slice(0,10);
+async function renderMyGallery(){
+ const box=$("myPhotoGallery"); if(!box)return;
+ const urls=Array.isArray(currentProfile?.photo_urls)?currentProfile.photo_urls.filter(Boolean):[];
+ if(!urls.length){box.innerHTML='<p class="muted">હજુ કોઈ ફોટો Upload નથી.</p>';return;}
+ box.innerHTML=urls.map((url,i)=>`<div class="card" style="padding:10px"><img src="${esc(url)}" style="width:100%;height:150px;object-fit:cover;border-radius:8px"><p>${i===0?'⭐ Main Photo':'Photo '+(i+1)}</p><button class="btn outline" type="button" onclick="setMainPhoto(${i})">${i===0?'Main Photo':'Make Main'}</button> <button class="btn" type="button" onclick="deleteGalleryPhoto(${i})">Delete</button></div>`).join('');
 }
-function renderMyGallery(){
-  const box=$("myGallery"); if(!box)return;
-  const photos=galleryArray();
-  if(!photos.length){box.innerHTML='<p class="muted">હજુ ફોટા Upload કર્યા નથી.</p>';return;}
-  const premium=viewerHasPremium();
-  box.innerHTML=photos.map((url,i)=>`<div class="card" style="padding:10px"><div class="photo-lock"><img class="member-photo ${premium?"":"blurred"}" src="${esc(url)}" alt="My photo ${i+1}"><div class="lock-label" style="${premium?"display:none":""}">🔒 Premium Photos</div></div><p>Photo ${i+1} ${url===currentProfile?.photo_url?"⭐ Main Photo":""}</p><button class="btn outline" type="button" data-main-photo="${i}">Make Main</button> <button class="btn" type="button" data-delete-photo="${i}">Delete</button></div>`).join("");
-  box.querySelectorAll("[data-main-photo]").forEach(b=>b.addEventListener("click",()=>setMainPhoto(Number(b.dataset.mainPhoto))));
-  box.querySelectorAll("[data-delete-photo]").forEach(b=>b.addEventListener("click",()=>deleteGalleryPhoto(Number(b.dataset.deletePhoto))));
+async function savePhotoList(urls){
+ const payload={user_id:currentUser.id,photo_urls:urls,photo_url:urls[0]||null,updated_at:new Date().toISOString()};
+ const {error}=await sbClient.from('member_profiles').upsert(payload,{onConflict:'user_id'});
+ if(error)throw error; currentProfile={...(currentProfile||{}),...payload}; await renderMyGallery(); await loadProfiles();
 }
-async function saveGallery(photos){
-  const {error}=await sbClient.from("member_profiles").update({photo_urls:photos,photo_url:photos[0]||null,updated_at:new Date().toISOString()}).eq("user_id",currentUser.id);
-  if(error)throw error;
-  currentProfile={...(currentProfile||{}),photo_urls:photos,photo_url:photos[0]||null};renderMyGallery();await loadProfiles();
-}
-$("uploadGalleryBtn").addEventListener("click",async()=>{
-  if(!currentUser)return status("galleryStatus","પહેલા Login કરો.","error");
-  const files=[...$("galleryFiles").files];if(!files.length)return status("galleryStatus","પહેલા ફોટા પસંદ કરો.","error");
-  let existing=galleryArray();if(existing.length+files.length>10)return status("galleryStatus",`હાલ ${existing.length} ફોટા છે. કુલ 10 જ રાખી શકાય.`, "error");
-  status("galleryStatus","ફોટા Upload થઈ રહ્યા છે...");
-  try{
-    for(const f of files){
-      if(!f.type.startsWith("image/"))throw new Error("ફક્ત image ફોટા પસંદ કરો.");
-      if(f.size>5*1024*1024)throw new Error(f.name+" 5 MB કરતાં મોટો છે.");
-      const ext=(f.name.split(".").pop()||"jpg").replace(/[^a-z0-9]/gi,"").toLowerCase();
-      const path=currentUser.id+"/"+Date.now()+"-"+Math.random().toString(36).slice(2)+"."+ext;
-      const {error:upErr}=await sbClient.storage.from("profile-photos").upload(path,f,{upsert:false,contentType:f.type});
-      if(upErr)throw upErr;
-      const {data}=sbClient.storage.from("profile-photos").getPublicUrl(path);
-      existing.push(data.publicUrl);
-    }
-    await saveGallery(existing);$("galleryFiles").value="";
-    status("galleryStatus","બધા ફોટા સફળતાપૂર્વક Upload થયા.","success");
-  }catch(err){status("galleryStatus","Upload ભૂલ: "+(err.message||err),"error");}
+window.setMainPhoto=async i=>{const urls=[...(currentProfile?.photo_urls||[])];if(!urls[i])return;urls.unshift(urls.splice(i,1)[0]);try{await savePhotoList(urls);status('galleryStatus','Main Photo બદલાઈ ગયો.','success')}catch(e){status('galleryStatus','Error: '+e.message,'error')}};
+window.deleteGalleryPhoto=async i=>{if(!confirm('આ ફોટો Delete કરવો છે?'))return;const urls=[...(currentProfile?.photo_urls||[])];const url=urls[i];try{const path=url.split('/profile-photos/')[1];if(path)await sbClient.storage.from('profile-photos').remove([decodeURIComponent(path)]);urls.splice(i,1);await savePhotoList(urls);status('galleryStatus','ફોટો Delete થયો.','success')}catch(e){status('galleryStatus','Delete Error: '+e.message,'error')}};
+$('uploadGalleryBtn').addEventListener('click',async()=>{
+ if(!currentUser)return status('galleryStatus','પહેલા Login કરો.','error');
+ const files=[...$('galleryFiles').files];if(!files.length)return status('galleryStatus','પહેલા ફોટા પસંદ કરો.','error');
+ const existing=[...(currentProfile?.photo_urls||[])];if(existing.length+files.length>10)return status('galleryStatus','કુલ 10 ફોટાની મર્યાદા છે. હાલ '+existing.length+' છે.','error');
+ status('galleryStatus','ફોટા Upload થઈ રહ્યા છે...');const added=[];
+ try{for(const f of files){if(!f.type.startsWith('image/'))throw new Error('માત્ર image files પસંદ કરો');if(f.size>5*1024*1024)throw new Error('દરેક ફોટો 5 MBથી નાનો હોવો જોઈએ');const ext=(f.name.split('.').pop()||'jpg').replace(/[^a-zA-Z0-9]/g,'');const path=currentUser.id+'/'+Date.now()+'_'+Math.random().toString(36).slice(2)+'.'+ext;const {error}=await sbClient.storage.from('profile-photos').upload(path,f,{upsert:false,contentType:f.type});if(error)throw error;const {data}=sbClient.storage.from('profile-photos').getPublicUrl(path);added.push(data.publicUrl)}
+ await savePhotoList([...existing,...added]);$('galleryFiles').value='';status('galleryStatus',added.length+' ફોટા સફળતાપૂર્વક Upload થયા.','success');
+ }catch(e){status('galleryStatus','Upload Error: '+e.message,'error')}
 });
-async function setMainPhoto(index){
-  const photos=galleryArray();if(!photos[index])return;
-  const url=photos.splice(index,1)[0];photos.unshift(url);
-  try{await saveGallery(photos);status("galleryStatus","Main Photo બદલાયો.","success");}catch(e){status("galleryStatus","Save ભૂલ: "+e.message,"error");}
-}
-async function deleteGalleryPhoto(index){
-  if(!confirm("આ ફોટો કાઢી નાખવો છે?"))return;
-  const photos=galleryArray();photos.splice(index,1);
-  try{await saveGallery(photos);status("galleryStatus","ફોટો Delete થયો.","success");}catch(e){status("galleryStatus","Delete ભૂલ: "+e.message,"error");}
-}
 
 async function loadProfiles() {
   const host=$("profilesList");
@@ -351,16 +319,6 @@ async function loadProfiles() {
 
 async function sendInterest(targetUserId,button) {
   if(!currentUser)return status("profilesStatus","Interest મોકલવા માટે Login કરો.","error");
- 
-if (!viewerHasPremium()) {
-  status(
-    "profilesStatus",
-    "Interest મોકલવા માટે Premium Membership જરૂરી છે. Premium Plan પસંદ કરો.",
-    "error"
-  );
-  $("plans").scrollIntoView({behavior:"smooth"});
-  return;
-}
   const uuidPattern=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   if(typeof targetUserId!=="string"||!uuidPattern.test(targetUserId))return status("profilesStatus","આ સભ્યની Profile ID ખોટી છે.","error");
   if(targetUserId===currentUser.id)return status("profilesStatus","તમારી પોતાની Profile માં Interest મોકલી શકાતો નથી.","error");
@@ -406,7 +364,7 @@ $("loadInterestsBtn").addEventListener("click",async()=>{
     if((item.status||"pending")==="pending"){
       const accept=document.createElement("button");accept.className="btn";accept.textContent="Accept Interest";accept.style.marginTop="8px";
       accept.onclick=async()=>{accept.disabled=true;const {error:ue}=await sbClient.from("interests").update({status:"accepted"}).eq("id",item.id).eq("receiver_id",currentUser.id).eq("status","pending");
-        if(ue){accept.disabled=false;alert("Accept error: "+ue.message);return;}item.status="accepted";st.textContent="Status: accepted";accept.remove();alert("Interest accepted!");};
+        if(ue){accept.disabled=false;alert("Accept error: "+ue.message);return;}item.status="accepted";st.textContent="Status: accepted";accept.remove();loadChatList();alert("Interest accepted!");};
       card.appendChild(accept);
     }
     grid.appendChild(card);
@@ -414,6 +372,58 @@ $("loadInterestsBtn").addEventListener("click",async()=>{
   box.appendChild(document.createTextNode("તમને "+data.length+" Interest મળ્યા છે."));
   box.appendChild(grid);
 });
+
+// ===== Elite Matrimony Messenger =====
+let activeChatUser=null,activeChatName="";
+const chatTimers={};
+async function acceptedMatchIds(){
+ if(!currentUser)return [];
+ const {data,error}=await sbClient.from("interests").select("sender_id,receiver_id,status")
+  .or("sender_id.eq."+currentUser.id+",receiver_id.eq."+currentUser.id).eq("status","accepted");
+ if(error)throw error;
+ return (data||[]).map(i=>i.sender_id===currentUser.id?i.receiver_id:i.sender_id).filter(x=>x!==currentUser.id);
+}
+async function loadChatList(){
+ const box=$("chatList");if(!box)return;box.innerHTML="";
+ if(!currentUser){box.innerHTML="<p>Messenger માટે Login કરો.</p>";return;}
+ if(!viewerHasPremium()){box.innerHTML='<div class="notice">Chat માટે Premium Membership જરૂરી છે. <a href="#plans">Premium Plan લો</a></div>';return;}
+ try{
+  const ids=await acceptedMatchIds();
+  if(!ids.length){box.innerHTML='<p class="muted">Accepted Interest પછી Chat અહીં દેખાશે.</p>';return;}
+  const {data,error}=await sbClient.from("member_profiles").select("user_id,full_name,city").in("user_id",ids);
+  if(error)throw error;
+  (data||[]).forEach(p=>{const b=document.createElement("button");b.type="button";b.className="btn outline";b.style.textAlign="left";b.textContent=(p.full_name||"Elite Member")+" — "+(p.city||"")+" · Chat";b.onclick=()=>openChat(p.user_id,p.full_name||"Elite Member");box.appendChild(b);});
+ }catch(e){status("messengerStatus","Chat List Error: "+e.message,"error");}
+}
+async function openChat(uid,name){
+ if(!currentUser)return status("messengerStatus","પહેલા Login કરો.","error");
+ if(!viewerHasPremium()){status("messengerStatus","Chat માટે Premium જરૂરી છે.","error");$("plans").scrollIntoView({behavior:"smooth"});return;}
+ activeChatUser=uid;activeChatName=name;$("chatHeading").textContent="Chat: "+name;$("chatCard").classList.remove("hidden");$("chatMessages").innerHTML="<p>Messages લોડ થઈ રહ્યા છે...</p>";$("messenger").scrollIntoView({behavior:"smooth"});
+ try{await refreshChat();if(chatTimers[uid])clearInterval(chatTimers[uid]);chatTimers[uid]=setInterval(()=>{if(activeChatUser===uid)refreshChat().catch(e=>status("chatStatus",e.message,"error"));},10000);}catch(e){status("chatStatus","Chat Error: "+e.message,"error");}
+}
+async function refreshChat(){
+ if(!activeChatUser||!currentUser)return;
+ if(!viewerHasPremium()){$("chatCard").classList.add("hidden");return status("chatStatus","Premium expire થયું છે. Premium Plan લો.","error");}
+ if(!(await acceptedMatchIds()).includes(activeChatUser)){$("chatCard").classList.add("hidden");return status("chatStatus","Accepted Interest જરૂરી છે.","error");}
+ const {data,error}=await sbClient.from("messages").select("id,sender_id,receiver_id,message,created_at")
+  .or("and(sender_id.eq."+currentUser.id+",receiver_id.eq."+activeChatUser+"),and(sender_id.eq."+activeChatUser+",receiver_id.eq."+currentUser.id+")")
+  .order("created_at",{ascending:true}).limit(200);
+ if(error)throw error;
+ const box=$("chatMessages"),bottom=box.scrollHeight-box.scrollTop-box.clientHeight<70;box.innerHTML="";
+ if(!data?.length){box.innerHTML='<p class="muted">હજુ Message નથી. વાતચીત શરૂ કરો.</p>';return;}
+ data.forEach(m=>{const el=document.createElement("div");el.style.cssText="max-width:85%;padding:9px 12px;border-radius:12px;overflow-wrap:anywhere;"+(m.sender_id===currentUser.id?"align-self:flex-end;background:#f8edf1;color:#501126":"align-self:flex-start;background:#f1f1f1;color:#222");el.textContent=m.message;const tm=document.createElement("small");tm.style.cssText="display:block;opacity:.65;margin-top:4px";tm.textContent=new Date(m.created_at).toLocaleString("gu-IN");el.appendChild(tm);box.appendChild(el);});if(bottom)box.scrollTop=box.scrollHeight;
+}
+$("chatForm").addEventListener("submit",async e=>{
+ e.preventDefault();const msg=$("chatInput").value.trim();if(!msg)return;
+ if(!currentUser||!activeChatUser)return status("chatStatus","Chat પસંદ કરો અને Login કરો.","error");
+ if(!viewerHasPremium())return status("chatStatus","Message માટે Premium જરૂરી છે.","error");
+ $("chatSendBtn").disabled=true;status("chatStatus","Message મોકલાઈ રહ્યો છે...");
+ try{if(!(await acceptedMatchIds()).includes(activeChatUser))throw new Error("Accepted Interest જરૂરી છે.");
+  const {error}=await sbClient.from("messages").insert({sender_id:currentUser.id,receiver_id:activeChatUser,message:msg});if(error)throw error;
+  $("chatInput").value="";await refreshChat();status("chatStatus","Message મોકલાયો.","success");
+ }catch(err){status("chatStatus","Message Error: "+err.message,"error");}finally{$("chatSendBtn").disabled=false;}
+});
+
 const plans = {
   month_1:{label:"1 Month",base:599,months:1},
   month_3:{label:"3 Months",base:1499,months:3},
@@ -469,7 +479,7 @@ $("adminBtn").addEventListener("click",async()=>{
 
 sbClient.auth.onAuthStateChange((_event,session)=>{
   currentUser=session?.user||null; updateUI();
-  if(currentUser) setTimeout(()=>{loadMyProfile();loadProfiles();},0);
+  if(currentUser) setTimeout(()=>{loadMyProfile();loadProfiles();loadChatList();},0); else loadChatList();
 });
 async function init(){
   const {data,error}=await sbClient.auth.getSession();
