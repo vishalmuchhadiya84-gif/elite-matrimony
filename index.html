@@ -337,7 +337,8 @@ async function loadMyProfile() {
   loadChatList();
   const { data: contact } = await sbClient.from("member_contacts")
     .select("phone_number").eq("user_id",currentUser.id).maybeSingle();
-  $("phoneNumber").value = contact?.phone_number || "";\n  currentProfile={...(currentProfile||{}),_contact_phone:contact?.phone_number||""};\n  renderMyAccount();renderMyPremium();
+  $("phoneNumber").value = contact?.phone_number || "";
+  currentProfile={...(currentProfile||{}),_contact_phone:contact?.phone_number||""};\n  renderMyAccount();renderMyPremium();
   if (data) {
     $("fullName").value = data.full_name || currentUser.user_metadata?.full_name || "";
     $("gender").value = data.gender || "";
