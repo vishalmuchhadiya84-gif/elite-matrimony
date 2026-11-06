@@ -10,6 +10,7 @@
 <style>
 :root{--wine:#791b3a;--dark:#501126;--gold:#d5ad62;--cream:#fffaf4;--text:#29232a;--muted:#706873;--border:#eadfe2}
 *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:90px}body{margin:0;font-family:Arial,"Noto Sans Gujarati",sans-serif;color:var(--text);background:var(--cream);line-height:1.6}button,input,select,textarea{font:inherit}button,a{cursor:pointer}a{text-decoration:none;color:inherit}.container{width:min(1120px,92%);margin:auto}header{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--border)}.nav{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 0}.brand{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--wine);font-size:20px;line-height:1.15;flex-shrink:0}.brand-mark{width:48px;height:48px;display:block;flex-shrink:0}.brand-copy{display:block}.brand small{display:block;color:var(--muted);font-size:10px;letter-spacing:2px;margin-top:5px;font-weight:600}.brand .brand-name{display:block;letter-spacing:.2px}.brand:hover{opacity:.92}@media(max-width:760px){.brand{font-size:16px}.brand-mark{width:40px;height:40px}.brand small{font-size:8px;letter-spacing:1.2px}.nav{align-items:center}}.nav-links{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.nav-links a{font-size:14px}.btn{display:inline-block;border:0;border-radius:8px;padding:11px 16px;background:var(--wine);color:#fff;font-weight:700;text-align:center}.btn:hover{background:var(--dark)}.outline{background:#fff;color:var(--wine);border:1px solid var(--wine)}.hero{background:linear-gradient(130deg,var(--dark),var(--wine) 60%,#9b5261);color:#fff;padding:58px 0}.hero-inner{display:grid;grid-template-columns:1.4fr 1fr;gap:28px;align-items:center}.eyebrow{color:#f2d8a4;font-weight:700;letter-spacing:1px}.hero h1{font-size:clamp(32px,5vw,52px);line-height:1.15;margin:12px 0}.hero p{color:#fff1f4}.hero-panel,.card{background:#fff;color:var(--text);border:1px solid var(--border);border-radius:14px;padding:20px;box-shadow:0 4px 16px #4c14200a}.hero-panel h3,.card h3{color:var(--wine);margin-top:0}section{padding:38px 0}.section-head{text-align:center;margin-bottom:22px}.section-head p,.muted{color:var(--muted);font-size:14px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}form{display:grid;gap:12px}label{display:block;font-weight:700;font-size:14px;margin-bottom:4px}input,select,textarea{width:100%;border:1px solid #d9cbd0;border-radius:8px;padding:11px;background:#fff;color:var(--text)}textarea{min-height:90px}input:focus,select:focus,textarea:focus{outline:2px solid #d5ad6288;border-color:var(--gold)}.status{margin-top:12px;padding:10px;border-radius:8px;background:#fff4f7;overflow-wrap:anywhere;font-size:14px;white-space:pre-wrap}.success{color:#176b37}.error{color:#b42318}.hidden{display:none!important}.plan .price{font-size:29px;font-weight:800;color:var(--wine)}.tag,.pill{display:inline-block;background:#f8edf1;color:var(--wine);border-radius:20px;padding:4px 9px;font-size:12px;font-weight:700}.gst{color:var(--muted);font-size:13px}.total{font-weight:800;margin:8px 0 14px}.profile-card{display:flex;flex-direction:column;gap:7px}.avatar{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:#f8edf1;color:var(--wine);font-size:24px}.member-photo{width:100%;height:220px;object-fit:cover;border-radius:12px;background:#f8edf1}.photo-lock{position:relative;overflow:hidden;border-radius:12px}.photo-lock img.blurred{filter:blur(14px);transform:scale(1.08)}.photo-lock .lock-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#fff;text-align:center;background:#32101d55;font-weight:700;text-shadow:0 1px 4px #000;padding:12px}.photo-lock .lock-label .btn{margin-top:8px}footer{background:#32101d;color:white;padding:28px 0}footer p{color:#e8dce0;font-size:14px}.footer-row{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}.notice{background:#fff5d9;border:1px solid #eed99c;padding:12px;border-radius:8px}@media(max-width:760px){.hero-inner,.grid{grid-template-columns:1fr}.hero{padding:38px 0}.nav{align-items:flex-start}.nav-links{gap:9px}.form-grid{grid-template-columns:1fr}}
+.notification-card{border:1px solid var(--border);border-radius:12px;background:#fff;padding:16px;margin:12px 0}.notification-card h3{margin:0 0 8px;color:var(--wine)}
 </style>
 </head>
 <body>
@@ -50,6 +51,14 @@ window.addEventListener("unhandledrejection",function(e){var b=document.getEleme
 <button class="btn" type="submit">Login</button><button class="btn outline" id="forgotBtn" type="button">Forgot Password?</button>
 </form><div id="loginStatus" class="status" role="status"></div></div>
 </div><div id="accountInfo" class="card hidden" style="margin-top:16px"><h3>તમારું એકાઉન્ટ</h3><p id="accountEmail"></p></div>
+<!-- NEW: push notification controls -->
+<div class="notification-card" id="pushNotificationCard">
+<h3>🔔 Mobile Notifications</h3>
+<p class="muted">Message અને Interest જેવી સૂચનાઓ મેળવવા Notifications ચાલુ કરો.</p>
+<button class="btn" id="enableNotificationsBtn" type="button">Enable Notifications</button>
+<button class="btn outline hidden" id="disableNotificationsInfo" type="button" disabled>Notifications Enabled</button>
+<div id="pushStatus" class="status" role="status">Notification માટે Login જરૂરી છે.</div>
+</div>
 </div></section>
 <section id="profile-form"><div class="container"><div class="section-head"><h2>તમારી Matrimony Profile</h2><p>પ્રોફાઇલ સાચવવા માટે પહેલા Login કરો.</p></div>
 <div class="card"><form id="profileForm"><div class="form-grid">
@@ -138,10 +147,12 @@ window.addEventListener("unhandledrejection",function(e){var b=document.getEleme
 </main>
 <footer><div class="container footer-row"><div><strong>ELITE GUJARATI MATRIMONY</strong><p>તમારા જીવનસાથીની શોધમાં એક નવી શરૂઆત.</p></div><div><div class="footer-links"><a href="#privacy">Privacy Policy</a> <a href="#terms">Terms &amp; Conditions</a> <a href="#contact">Contact</a></div><p>© <span id="year"></span> Elite Gujarati Matrimony</p></div></div></footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" onerror="this.onerror=null;this.src='https://unpkg.com/@supabase/supabase-js@2';"></script>
+<!-- Firebase Messaging SDK (compat) -->
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js"></script>
 <script>
 if (!window.supabase || typeof window.supabase.createClient !== "function") { const st=document.getElementById("globalStatus"); if(st){st.style.display="block";st.textContent="Supabase library load ન થઈ. Internet/CDN તપાસો અને page refresh કરો.";} throw new Error("Supabase JS library unavailable"); }
 const createSupabaseClient = window.supabase.createClient;
-
 // Public/publishable key only. Never place service-role or Razorpay secret keys here.
 const SUPABASE_URL = "https://zwgdqsskwskgthytdahl.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_4z4DovXpyPVCZkqXxfLpMw_tCQtiWAp";
@@ -150,6 +161,61 @@ const $ = id => document.getElementById(id);
 $("year").textContent = new Date().getFullYear();
 let currentUser = null;
 let currentProfile = null;
+
+// Firebase Web Push configuration (public Firebase web config + VAPID public key)
+const firebaseConfig = {
+  apiKey: "AIzaSyDZcm3-jPx_NtgC0eyMOTHd7tH9XJn8ibA",
+  authDomain: "elite-matrimony.firebaseapp.com",
+  projectId: "elite-matrimony",
+  storageBucket: "elite-matrimony.firebasestorage.app",
+  messagingSenderId: "654942927998",
+  appId: "1:654942927998:web:d6505e03c7ec367e6d2c2f",
+  measurementId: "G-WQWR48CLQ1"
+};
+const FCM_VAPID_PUBLIC_KEY = "BCN7Jy7aMUDXxlU4bBUmIP7BKkmrHRgVvlr9YwIwuYiz4TXPGZVTdc_1_hWSli4BZCL3IZvE00hvRnChWs9_NAQ";
+let firebaseMessaging = null;
+let pushServiceWorkerRegistration = null;
+function pushStatus(message,type=""){status("pushStatus",message,type);}
+async function setupFirebaseMessaging(){
+  if(!("serviceWorker" in navigator)||!("Notification" in window)){
+    pushStatus("આ Browserમાં Push Notification સપોર્ટ નથી. Chromeમાં સાઇટ ખોલો.","error");return false;
+  }
+  if(!window.firebase||!firebase.messaging){
+    pushStatus("Firebase SDK લોડ થયું નથી. Internet તપાસો અને Refresh કરો.","error");return false;
+  }
+  try{
+    if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);
+    firebaseMessaging=firebase.messaging();
+    pushServiceWorkerRegistration=await navigator.serviceWorker.register("/firebase-messaging-sw.js");
+    return true;
+  }catch(e){pushStatus("Firebase Setup Error: "+(e.message||e),"error");return false;}
+}
+async function enablePushNotifications(){
+  if(!currentUser){pushStatus("Notifications ચાલુ કરવા પહેલાં Login કરો.","error");$("login").scrollIntoView({behavior:"smooth"});return;}
+  const ok=await setupFirebaseMessaging();if(!ok)return;
+  try{
+    const permission=await Notification.requestPermission();
+    if(permission!=="granted"){pushStatus("Notification permission મંજૂર નથી. Browser Settingsમાં Allow કરો.","error");return;}
+    pushStatus("FCM Token મેળવાઈ રહ્યો છે...");
+    const token=await firebaseMessaging.getToken({vapidKey:FCM_VAPID_PUBLIC_KEY,serviceWorkerRegistration:pushServiceWorkerRegistration});
+    if(!token){pushStatus("FCM Token મળ્યો નથી. Firebase Cloud Messaging Web Push તપાસો.","error");return;}
+    const {error}=await sbClient.from("push_tokens").upsert({
+      user_id:currentUser.id,token,platform:"web",updated_at:new Date().toISOString()
+    },{onConflict:"user_id,token"});
+    if(error){pushStatus("Token Supabaseમાં Save error: "+error.message,"error");return;}
+    $("enableNotificationsBtn").classList.add("hidden");
+    $("disableNotificationsInfo").classList.remove("hidden");
+    pushStatus("Notifications સફળતાપૂર્વક ચાલુ થઈ ગઈ! આ Device પર સૂચનાઓ મળશે.","success");
+  }catch(e){pushStatus("Notification Error: "+(e.message||e),"error");}
+}
+$("enableNotificationsBtn").addEventListener("click",enablePushNotifications);
+async function refreshPushUI(){
+  $("enableNotificationsBtn").classList.remove("hidden");$("disableNotificationsInfo").classList.add("hidden");
+  if(!currentUser){pushStatus("Notification માટે Login જરૂરી છે.");return;}
+  if(Notification.permission==="granted"){
+    pushStatus("Browser Permission Allow છે. Button દબાવી Token Save/Refresh કરો.","success");
+  }else pushStatus("Notifications ચાલુ કરવા Enable Notifications દબાવો.");
+}
 
 function status(id, message, type="") {
   const el = $(id); if (!el) return;
@@ -163,6 +229,7 @@ function updateUI() {
   $("accountInfo").classList.toggle("hidden", !currentUser);
   $("loginNav").textContent = currentUser ? "My Account" : "Login";
   $("accountEmail").textContent = currentUser ? "Login: " + currentUser.email : "";
+  refreshPushUI();
 }
 $("loginNav").addEventListener("click", () => {
   (currentUser ? $("profile-form") : $("login")).scrollIntoView({behavior:"smooth"});
@@ -294,18 +361,13 @@ async function loadProfiles() {
     const {data,error}=await q;
     if(error){host.innerHTML="";return status("profilesStatus","Profiles લોડ કરવામાં ભૂલ: "+error.message,"error");}
     if(!data||data.length===0){host.innerHTML='<div class="card">હાલ કોઈ પ્રોફાઇલ મળી નથી.</div>';return status("profilesStatus","કુલ પ્રોફાઇલ: 0");}
-
-    const {data:sentInterests,error:sentError}=await sbClient.from("interests")
-      .select("receiver_id,status").eq("sender_id",currentUser.id);
+    const {data:sentInterests,error:sentError}=await sbClient.from("interests").select("receiver_id,status").eq("sender_id",currentUser.id);
     if(sentError){host.innerHTML="";return status("profilesStatus","Interest તપાસવામાં ભૂલ: "+sentError.message,"error");}
     const sentMap=new Map((sentInterests||[]).map(x=>[x.receiver_id,x.status||"pending"]));
     const uuidPattern=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     host.innerHTML=data.map(p=>{
       const uid=p.user_id||p.id||"",valid=typeof uid==="string"&&uuidPattern.test(uid),own=uid===currentUser.id;
-      const btn=!valid?'<p class="muted">સભ્યની ID ઉપલબ્ધ નથી.</p>':
-        own?'<button class="btn" type="button" disabled>તમારી Profile</button>':
-        sentMap.has(uid)?`<button class="btn interestBtn" type="button" disabled>${sentMap.get(uid)==="accepted"?"Interest Accepted":"Interest Sent"}</button>`:
-        `<button class="btn interestBtn" data-user="${esc(uid)}" type="button">Express Interest</button>`;
+      const btn=!valid?'<p class="muted">સભ્યની ID ઉપલબ્ધ નથી.</p>':own?'<button class="btn" type="button" disabled>તમારી Profile</button>':sentMap.has(uid)?`<button class="btn interestBtn" type="button" disabled>${sentMap.get(uid)==="accepted"?"Interest Accepted":"Interest Sent"}</button>`:`<button class="btn interestBtn" data-user="${esc(uid)}" type="button">Express Interest</button>`;
       const viewerPremium=viewerHasPremium(currentProfile);
       const photo=p.photo_url?`<img class="member-photo ${viewerPremium?"":"blurred"}" src="${esc(p.photo_url)}" alt="Profile photo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`:"";
       const lock=!viewerPremium?`<div class="lock-label" ${p.photo_url?"":"style='display:flex'"}><span>🔒 Premium Members Only</span><a class="btn" href="#plans">Upgrade Premium</a></div>`:"";
@@ -316,7 +378,6 @@ async function loadProfiles() {
     host.querySelectorAll(".interestBtn:not([disabled])").forEach(btn=>btn.addEventListener("click",()=>sendInterest(btn.dataset.user,btn)));
   }catch(e){host.innerHTML="";status("profilesStatus","ભૂલ: "+(e.message||"Profiles લોડ થઈ શકી નથી."),"error");}
 }
-
 async function sendInterest(targetUserId,button) {
   if(!currentUser)return status("profilesStatus","Interest મોકલવા માટે Login કરો.","error");
   const uuidPattern=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -333,23 +394,15 @@ async function sendInterest(targetUserId,button) {
   if(button){button.disabled=false;button.textContent="Express Interest";}
   status("profilesStatus","Interest મોકલવામાં ભૂલ: "+error.message,"error");
 }
-
 $("searchBtn").addEventListener("click",loadProfiles);
-
-
 $("loadInterestsBtn").addEventListener("click",async()=>{
   if(!currentUser)return status("interestStatus","Received Interest જોવા માટે Login કરો.","error");
-  const {data,error}=await sbClient.from("interests")
-    .select("id,sender_id,created_at,status")
-    .eq("receiver_id",currentUser.id).order("created_at",{ascending:false});
+  const {data,error}=await sbClient.from("interests").select("id,sender_id,created_at,status").eq("receiver_id",currentUser.id).order("created_at",{ascending:false});
   if(error)return status("interestStatus","Interest લોડ કરવામાં ભૂલ: "+error.message,"error");
-  const box=$("interestStatus");
-  box.innerHTML="";
+  const box=$("interestStatus");box.innerHTML="";
   if(!data?.length){box.textContent="હજુ કોઈ Interest મળ્યો નથી.";return;}
   const ids=[...new Set(data.map(x=>x.sender_id))];
-  const {data:profiles,error:pe}=await sbClient.from("member_profiles")
-    .select("user_id,full_name,gender,birth_date,city,education,occupation,community,marital_status,about_me")
-    .in("user_id",ids);
+  const {data:profiles,error:pe}=await sbClient.from("member_profiles").select("user_id,full_name,gender,birth_date,city,education,occupation,community,marital_status,about_me").in("user_id",ids);
   if(pe)return status("interestStatus","Profiles લોડ કરવામાં ભૂલ: "+pe.message,"error");
   const map=new Map((profiles||[]).map(p=>[p.user_id,p]));
   const grid=document.createElement("div");grid.className="grid";
@@ -363,14 +416,11 @@ $("loadInterestsBtn").addEventListener("click",async()=>{
     const st=document.createElement("p");st.textContent="Status: "+(item.status||"pending");card.appendChild(st);
     if((item.status||"pending")==="pending"){
       const accept=document.createElement("button");accept.className="btn";accept.textContent="Accept Interest";accept.style.marginTop="8px";
-      accept.onclick=async()=>{accept.disabled=true;const {error:ue}=await sbClient.from("interests").update({status:"accepted"}).eq("id",item.id).eq("receiver_id",currentUser.id).eq("status","pending");
-        if(ue){accept.disabled=false;alert("Accept error: "+ue.message);return;}item.status="accepted";st.textContent="Status: accepted";accept.remove();loadChatList();alert("Interest accepted!");};
+      accept.onclick=async()=>{accept.disabled=true;const {error:ue}=await sbClient.from("interests").update({status:"accepted"}).eq("id",item.id).eq("receiver_id",currentUser.id).eq("status","pending");if(ue){accept.disabled=false;alert("Accept error: "+ue.message);return;}item.status="accepted";st.textContent="Status: accepted";accept.remove();loadChatList();alert("Interest accepted!");};
       card.appendChild(accept);
-    }
-    grid.appendChild(card);
+    }grid.appendChild(card);
   });
-  box.appendChild(document.createTextNode("તમને "+data.length+" Interest મળ્યા છે."));
-  box.appendChild(grid);
+  box.appendChild(document.createTextNode("તમને "+data.length+" Interest મળ્યા છે."));box.appendChild(grid);
 });
 
 // ===== Elite Matrimony Messenger =====
@@ -387,8 +437,7 @@ function setupChatRealtime(uid){
 function broadcastTyping(isTyping){if(!chatRealtimeChannel||!currentUser||!activeChatUser)return;chatRealtimeChannel.send({type:"broadcast",event:"typing",payload:{user_id:currentUser.id,is_typing:isTyping}});}
 async function acceptedMatchIds(){
  if(!currentUser)return [];
- const {data,error}=await sbClient.from("interests").select("sender_id,receiver_id,status")
-  .or("sender_id.eq."+currentUser.id+",receiver_id.eq."+currentUser.id).eq("status","accepted");
+ const {data,error}=await sbClient.from("interests").select("sender_id,receiver_id,status").or("sender_id.eq."+currentUser.id+",receiver_id.eq."+currentUser.id).eq("status","accepted");
  if(error)throw error;
  return (data||[]).map(i=>i.sender_id===currentUser.id?i.receiver_id:i.sender_id).filter(x=>x!==currentUser.id);
 }
@@ -396,12 +445,9 @@ async function loadChatList(){
  const box=$("chatList");if(!box)return;box.innerHTML="";
  if(!currentUser){box.innerHTML="<p>Messenger માટે Login કરો.</p>";return;}
  if(!viewerHasPremium()){box.innerHTML='<div class="notice">Chat માટે Premium Membership જરૂરી છે. <a href="#plans">Premium Plan લો</a></div>';return;}
- try{
-  const ids=await acceptedMatchIds();
-  if(!ids.length){box.innerHTML='<p class="muted">Accepted Interest પછી Chat અહીં દેખાશે.</p>';return;}
-  const {data,error}=await sbClient.from("member_profiles").select("user_id,full_name,city").in("user_id",ids);
-  if(error)throw error;
-  (data||[]).forEach(p=>{const b=document.createElement("button");b.type="button";b.className="btn outline";b.style.textAlign="left";b.textContent=(p.full_name||"Elite Member")+" — "+(p.city||"")+" · Chat";b.onclick=()=>openChat(p.user_id,p.full_name||"Elite Member");box.appendChild(b);});
+ try{const ids=await acceptedMatchIds();if(!ids.length){box.innerHTML='<p class="muted">Accepted Interest પછી Chat અહીં દેખાશે.</p>';return;}
+ const {data,error}=await sbClient.from("member_profiles").select("user_id,full_name,city").in("user_id",ids);if(error)throw error;
+ (data||[]).forEach(p=>{const b=document.createElement("button");b.type="button";b.className="btn outline";b.style.textAlign="left";b.textContent=(p.full_name||"Elite Member")+" — "+(p.city||"")+" · Chat";b.onclick=()=>openChat(p.user_id,p.full_name||"Elite Member");box.appendChild(b);});
  }catch(e){status("messengerStatus","Chat List Error: "+e.message,"error");}
 }
 async function openChat(uid,name){
@@ -411,96 +457,48 @@ async function openChat(uid,name){
  try{setupChatRealtime(uid);await refreshChat();if(chatTimers[uid])clearInterval(chatTimers[uid]);chatTimers[uid]=setInterval(()=>{if(activeChatUser===uid)refreshChat().catch(e=>status("chatStatus",e.message,"error"));},10000);}catch(e){status("chatStatus","Chat Error: "+e.message,"error");}
 }
 async function refreshChat(){
- if(!activeChatUser||!currentUser)return;
- if(!viewerHasPremium()){$("chatCard").classList.add("hidden");return status("chatStatus","Premium expire થયું છે. Premium Plan લો.","error");}
+ if(!activeChatUser||!currentUser)return;if(!viewerHasPremium()){$("chatCard").classList.add("hidden");return status("chatStatus","Premium expire થયું છે. Premium Plan લો.","error");}
  if(!(await acceptedMatchIds()).includes(activeChatUser)){$("chatCard").classList.add("hidden");return status("chatStatus","Accepted Interest જરૂરી છે.","error");}
- const {data,error}=await sbClient.from("messages").select("id,sender_id,receiver_id,message,created_at,read_at")
-  .or("and(sender_id.eq."+currentUser.id+",receiver_id.eq."+activeChatUser+"),and(sender_id.eq."+activeChatUser+",receiver_id.eq."+currentUser.id+")")
-  .order("created_at",{ascending:true}).limit(200);
- if(error)throw error;
- // Mark incoming unread messages as Seen when this chat is opened/refreshed
+ const {data,error}=await sbClient.from("messages").select("id,sender_id,receiver_id,message,created_at,read_at").or("and(sender_id.eq."+currentUser.id+",receiver_id.eq."+activeChatUser+"),and(sender_id.eq."+activeChatUser+",receiver_id.eq."+currentUser.id+")").order("created_at",{ascending:true}).limit(200);if(error)throw error;
  const unread=(data||[]).filter(m=>m.receiver_id===currentUser.id&&!m.read_at).map(m=>m.id);
  if(unread.length){const {error:readErr}=await sbClient.from("messages").update({read_at:new Date().toISOString()}).in("id",unread).eq("receiver_id",currentUser.id);if(readErr)throw readErr;unread.forEach(id=>{const row=data.find(m=>m.id===id);if(row)row.read_at=new Date().toISOString();});}
  const box=$("chatMessages"),bottom=box.scrollHeight-box.scrollTop-box.clientHeight<70;box.innerHTML="";
  if(!data?.length){box.innerHTML='<p class="muted">હજુ Message નથી. વાતચીત શરૂ કરો.</p>';return;}
- data.forEach(m=>{const mine=m.sender_id===currentUser.id;const el=document.createElement("div");el.style.cssText="max-width:85%;padding:9px 12px;border-radius:12px;overflow-wrap:anywhere;"+(mine?"align-self:flex-end;background:#f8edf1;color:#501126":"align-self:flex-start;background:#f1f1f1;color:#222");const body=document.createElement("div");body.textContent=m.message;el.appendChild(body);const tm=document.createElement("small");tm.style.cssText="display:flex;justify-content:flex-end;gap:7px;opacity:.7;margin-top:5px;font-size:11px";const time=document.createElement("span");time.textContent=new Date(m.created_at).toLocaleString("gu-IN");tm.appendChild(time);if(mine){const tick=document.createElement("span");tick.style.fontWeight="700";tick.style.color=m.read_at?"#1687d9":"#777";tick.textContent=m.read_at?"✓✓":"✓";tick.title=m.read_at?"Seen":"Sent";tm.appendChild(tick);}el.appendChild(tm);box.appendChild(el);});if(bottom)box.scrollTop=box.scrollHeight;
+ data.forEach(m=>{const mine=m.sender_id===currentUser.id,el=document.createElement("div");el.style.cssText="max-width:85%;padding:9px 12px;border-radius:12px;overflow-wrap:anywhere;"+(mine?"align-self:flex-end;background:#f8edf1;color:#501126":"align-self:flex-start;background:#f1f1f1;color:#222");const body=document.createElement("div");body.textContent=m.message;el.appendChild(body);const tm=document.createElement("small");tm.style.cssText="display:flex;justify-content:flex-end;gap:7px;opacity:.7;margin-top:5px;font-size:11px";const time=document.createElement("span");time.textContent=new Date(m.created_at).toLocaleString("gu-IN");tm.appendChild(time);if(mine){const tick=document.createElement("span");tick.style.fontWeight="700";tick.style.color=m.read_at?"#1687d9":"#777";tick.textContent=m.read_at?"✓✓":"✓";tick.title=m.read_at?"Seen":"Sent";tm.appendChild(tick);}el.appendChild(tm);box.appendChild(el);});if(bottom)box.scrollTop=box.scrollHeight;
 }
 $("chatInput").addEventListener("input",()=>{if(!activeChatUser||!chatRealtimeChannel)return;if(typingSendTimeout)clearTimeout(typingSendTimeout);broadcastTyping(true);typingSendTimeout=setTimeout(()=>broadcastTyping(false),1800);});
 $("chatForm").addEventListener("submit",async e=>{
- e.preventDefault();const msg=$("chatInput").value.trim();if(!msg)return;
- if(!currentUser||!activeChatUser)return status("chatStatus","Chat પસંદ કરો અને Login કરો.","error");
- if(!viewerHasPremium())return status("chatStatus","Message માટે Premium જરૂરી છે.","error");
+ e.preventDefault();const msg=$("chatInput").value.trim();if(!msg)return;if(!currentUser||!activeChatUser)return status("chatStatus","Chat પસંદ કરો અને Login કરો.","error");if(!viewerHasPremium())return status("chatStatus","Message માટે Premium જરૂરી છે.","error");
  $("chatSendBtn").disabled=true;status("chatStatus","Message મોકલાઈ રહ્યો છે...");
- try{if(!(await acceptedMatchIds()).includes(activeChatUser))throw new Error("Accepted Interest જરૂરી છે.");
-  const {error}=await sbClient.from("messages").insert({sender_id:currentUser.id,receiver_id:activeChatUser,message:msg});if(error)throw error;
-  $("chatInput").value="";broadcastTyping(false);await refreshChat();status("chatStatus","Message મોકલાયો.","success");
- }catch(err){status("chatStatus","Message Error: "+err.message,"error");}finally{$("chatSendBtn").disabled=false;}
+ try{if(!(await acceptedMatchIds()).includes(activeChatUser))throw new Error("Accepted Interest જરૂરી છે.");const {error}=await sbClient.from("messages").insert({sender_id:currentUser.id,receiver_id:activeChatUser,message:msg});if(error)throw error;$("chatInput").value="";broadcastTyping(false);await refreshChat();status("chatStatus","Message મોકલાયો.","success");}
+ catch(err){status("chatStatus","Message Error: "+err.message,"error");}finally{$("chatSendBtn").disabled=false;}
 });
-
-const plans = {
-  month_1:{label:"1 Month",base:599,months:1},
-  month_3:{label:"3 Months",base:1499,months:3},
-  month_6:{label:"6 Months",base:2299,months:6},
-  month_12:{label:"12 Months",base:3999,months:12}
-};
+const plans={month_1:{label:"1 Month",base:599,months:1},month_3:{label:"3 Months",base:1499,months:3},month_6:{label:"6 Months",base:2299,months:6},month_12:{label:"12 Months",base:3999,months:12}};
 document.querySelectorAll(".choosePlan").forEach(btn=>btn.addEventListener("click",()=>startPayment(btn.dataset.plan)));
-async function startPayment(planKey) {
-  if (!currentUser) { status("paymentStatus","Premium લેવા પહેલાં Login કરો.","error"); $("login").scrollIntoView({behavior:"smooth"}); return; }
-  if (!plans[planKey]) return status("paymentStatus","પ્લાન મળ્યો નથી.","error");
-  if (typeof window.Razorpay !== "function") return status("paymentStatus","Razorpay checkout લોડ થયું નથી. Internet ચકાસો.","error");
-  const plan=plans[planKey], total=Math.round(plan.base*1.18*100)/100;
-  status("paymentStatus","સુરક્ષિત payment order બનાવાઈ રહ્યો છે...");
-  // The Edge Function must validate plan prices on the server; never trust the browser amount.
-  const {data,error}=await sbClient.functions.invoke("bright-api",{body:{action:"create_order",plan:planKey}});
-  if(error || !data?.success || !data?.order?.id) return status("paymentStatus","Payment order error: "+(data?.error||error?.message||"Order create ન થયો."),"error");
-  const options={
-    key:data.key_id,
-    amount:data.order.amount,
-    currency:data.order.currency||"INR",
-    name:"Elite Gujarati Matrimony",
-    description:plan.label+" Premium Membership",
-    order_id:data.order.id,
-    prefill:{email:currentUser.email||""},
-    notes:{plan:planKey,user_id:currentUser.id},
-    handler:async response=>{
-      status("paymentStatus","ચુકવણી verify થઈ રહી છે...");
-      const {data:verified,error:verifyError}=await sbClient.functions.invoke("bright-api",{body:{
-        action:"verify_payment",plan:planKey,order_id:response.razorpay_order_id,
-        payment_id:response.razorpay_payment_id,razorpay_signature:response.razorpay_signature
-      }});
-      if(verifyError || !verified?.success) return status("paymentStatus","Payment verification error: "+(verified?.error||verifyError?.message||"Verification નિષ્ફળ."),"error");
-      status("paymentStatus","ચુકવણી સફળ! તમારું Premium Membership સક્રિય થયું.","success");
-      await loadMyProfile();
-      await loadProfiles();
-    },
-    modal:{ondismiss:()=>status("paymentStatus","ચુકવણી વિન્ડો બંધ થઈ.")}
-  };
-  try { new window.Razorpay(options).open(); }
-  catch(e) { status("paymentStatus","Payment Error: "+e.message,"error"); }
+async function startPayment(planKey){
+ if(!currentUser){status("paymentStatus","Premium લેવા પહેલાં Login કરો.","error");$("login").scrollIntoView({behavior:"smooth"});return;}
+ if(!plans[planKey])return status("paymentStatus","પ્લાન મળ્યો નથી.","error");
+ if(typeof window.Razorpay!=="function")return status("paymentStatus","Razorpay checkout લોડ થયું નથી. Internet ચકાસો.","error");
+ const plan=plans[planKey];status("paymentStatus","સુરક્ષિત payment order બનાવાઈ રહ્યો છે...");
+ const {data,error}=await sbClient.functions.invoke("bright-api",{body:{action:"create_order",plan:planKey}});
+ if(error||!data?.success||!data?.order?.id)return status("paymentStatus","Payment order error: "+(data?.error||error?.message||"Order create ન થયો."),"error");
+ const options={key:data.key_id,amount:data.order.amount,currency:data.order.currency||"INR",name:"Elite Gujarati Matrimony",description:plan.label+" Premium Membership",order_id:data.order.id,prefill:{email:currentUser.email||""},notes:{plan:planKey,user_id:currentUser.id},
+ handler:async response=>{status("paymentStatus","ચુકવણી verify થઈ રહી છે...");const {data:verified,error:verifyError}=await sbClient.functions.invoke("bright-api",{body:{action:"verify_payment",plan:planKey,order_id:response.razorpay_order_id,payment_id:response.razorpay_payment_id,razorpay_signature:response.razorpay_signature}});if(verifyError||!verified?.success)return status("paymentStatus","Payment verification error: "+(verified?.error||verifyError?.message||"Verification નિષ્ફળ."),"error");status("paymentStatus","ચુકવણી સફળ! તમારું Premium Membership સક્રિય થયું.","success");await loadMyProfile();await loadProfiles();},
+ modal:{ondismiss:()=>status("paymentStatus","ચુકવણી વિન્ડો બંધ થઈ.")}};
+ try{new window.Razorpay(options).open();}catch(e){status("paymentStatus","Payment Error: "+e.message,"error");}
 }
-
 $("adminBtn").addEventListener("click",async()=>{
-  if(!currentUser) return status("adminStatus","Admin access તપાસવા પહેલાં Login કરો.","error");
-  const {data,error}=await sbClient.from("admin_users").select("user_id").eq("user_id",currentUser.id).maybeSingle();
-  if(error) return status("adminStatus","Admin ચકાસણીમાં ભૂલ: "+error.message,"error");
-  if(!data) return status("adminStatus","આ એકાઉન્ટને Admin પરવાનગી નથી.","error");
-  const {data:members,error:memberError}=await sbClient.from("member_profiles").select("full_name,city,gender,updated_at").order("updated_at",{ascending:false}).limit(100);
-  if(memberError) return status("adminStatus","સભ્યો લોડ કરવામાં ભૂલ: "+memberError.message,"error");
-  $("adminMembers").innerHTML=(members||[]).map(m=>`<div class="card"><strong>${esc(m.full_name||"")}</strong><div>${esc(m.city||"")} • ${esc(m.gender||"")}</div></div>`).join("");
-  status("adminStatus","Admin access સફળ. સભ્યો: "+(members?.length||0),"success");
+ if(!currentUser)return status("adminStatus","Admin access તપાસવા પહેલાં Login કરો.","error");
+ const {data,error}=await sbClient.from("admin_users").select("user_id").eq("user_id",currentUser.id).maybeSingle();
+ if(error)return status("adminStatus","Admin ચકાસણીમાં ભૂલ: "+error.message,"error");
+ if(!data)return status("adminStatus","આ એકાઉન્ટને Admin પરવાનગી નથી.","error");
+ const {data:members,error:memberError}=await sbClient.from("member_profiles").select("full_name,city,gender,updated_at").order("updated_at",{ascending:false}).limit(100);
+ if(memberError)return status("adminStatus","સભ્યો લોડ કરવામાં ભૂલ: "+memberError.message,"error");
+ $("adminMembers").innerHTML=(members||[]).map(m=>`<div class="card"><strong>${esc(m.full_name||"")}</strong><div>${esc(m.city||"")} • ${esc(m.gender||"")}</div></div>`).join("");
+ status("adminStatus","Admin access સફળ. સભ્યો: "+(members?.length||0),"success");
 });
-
-sbClient.auth.onAuthStateChange((_event,session)=>{
-  currentUser=session?.user||null; updateUI();
-  if(currentUser) setTimeout(()=>{loadMyProfile();loadProfiles();loadChatList();},0); else loadChatList();
-});
-async function init(){
-  const {data,error}=await sbClient.auth.getSession();
-  if(error) status("globalStatus","Supabase session error: "+error.message,"error");
-  currentUser=data?.session?.user||null; updateUI();
-  if(currentUser){await loadMyProfile();await loadProfiles();}
-  else { $("profilesList").innerHTML='<div class="card">Profiles જોવા માટે Login કરો.</div>'; status("globalStatus","વેબસાઇટ તૈયાર છે. Register અથવા Login કરો.","success"); }
-}
+sbClient.auth.onAuthStateChange((_event,session)=>{currentUser=session?.user||null;updateUI();if(currentUser)setTimeout(()=>{loadMyProfile();loadProfiles();loadChatList();},0);else loadChatList();});
+async function init(){const {data,error}=await sbClient.auth.getSession();if(error)status("globalStatus","Supabase session error: "+error.message,"error");currentUser=data?.session?.user||null;updateUI();if(currentUser){await loadMyProfile();await loadProfiles();}else{$("profilesList").innerHTML='<div class="card">Profiles જોવા માટે Login કરો.</div>';status("globalStatus","વેબસાઇટ તૈયાર છે. Register અથવા Login કરો.","success");}}
 init();
 </script>
 <nav class="mobile-bottom-nav" aria-label="Mobile navigation">
@@ -508,17 +506,10 @@ init();
 </nav>
 <style>
 .mobile-bottom-nav{display:none}
-@media(max-width:700px){.mobile-bottom-nav{position:sticky;bottom:0;z-index:50;background:#fff;border-top:1px solid #eee;display:flex;justify-content:space-around;padding:12px 4px;box-shadow:0 -4px 18px #00000008}.mobile-bottom-nav a{font-size:13px;color:#791b3a;text-decoration:none;font-weight:600}.form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.mobile-bottom-nav{position:sticky;bottom:0;z-index:50;background:#fff;border-top:1px solid #eee;display:flex;justify-content:space-around;padding:12px 4px;box-shadow:0 -4px 18px #00000008}.mobile-bottom-nav a{font-size:13px;color:#791b3a;text-decoration:none;font-weight:600}.form-grid{grid-template-columns:repeat(2,minmax(0,1fr)}}
 </style>
 <script>
-(function(){
-const clear=document.getElementById("clearFiltersBtn");
-if(clear) clear.addEventListener("click",()=>{
-["searchCity","filterAgeMin","filterAgeMax","filterHeight","filterEducation","filterOccupation","filterCommunity"].forEach(id=>{const e=document.getElementById(id);if(e)e.value=""});
-["searchGender","filterMarital"].forEach(id=>{const e=document.getElementById(id);if(e)e.value=""});
-const b=document.getElementById("searchBtn");if(b)b.click();
-});
-})();
+(function(){const clear=document.getElementById("clearFiltersBtn");if(clear)clear.addEventListener("click",()=>{["searchCity","filterAgeMin","filterAgeMax","filterHeight","filterEducation","filterOccupation","filterCommunity"].forEach(id=>{const e=document.getElementById(id);if(e)e.value=""});["searchGender","filterMarital"].forEach(id=>{const e=document.getElementById(id);if(e)e.value=""});const b=document.getElementById("searchBtn");if(b)b.click();});})();
 </script>
 </body>
 </html>
