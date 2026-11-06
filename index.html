@@ -50,20 +50,30 @@ window.addEventListener("unhandledrejection",function(e){var b=document.getEleme
 <div><label for="loginPassword">Password</label><input id="loginPassword" type="password" required autocomplete="current-password"></div>
 <button class="btn" type="submit">Login</button><button class="btn outline" id="forgotBtn" type="button">Forgot Password?</button>
 </form><div id="loginStatus" class="status" role="status"></div></div>
+</div><div id="accountInfo" class="card hidden" style="margin-top:16px">
+<h3>તમારું એકાઉન્ટ</h3><p id="accountEmail"></p>
+<div class="card" style="margin-top:12px;background:#fffaf4">
+<h3>👤 Profile Details</h3>
+<div class="form-grid">
+<p><strong>નામ:</strong> <span id="accountFullName">—</span></p>
+<p><strong>Gender:</strong> <span id="accountGender">—</span></p>
+<p><strong>જન્મ તારીખ:</strong> <span id="accountBirthDate">—</span></p>
+<p><strong>શહેર:</strong> <span id="accountCity">—</span></p>
+<p><strong>Mobile:</strong> <span id="accountPhone">—</span></p>
+<p><strong>અભ્યાસ:</strong> <span id="accountEducation">—</span></p>
+<p><strong>વ્યવસાય:</strong> <span id="accountOccupation">—</span></p>
+<p><strong>Community:</strong> <span id="accountCommunity">—</span></p>
+<p><strong>વૈવાહિક સ્થિતિ:</strong> <span id="accountMarital">—</span></p></div>
+<p><strong>About Me:</strong><br><span id="accountAbout">—</span></p>
+<a class="btn" href="#profile-form">Edit Profile</a>
 </div>
-<div id="accountInfo" class="card hidden" style="margin-top:16px">
-<h3>તમારું એકાઉન્ટ</h3>
-<p id="accountEmail"></p>
-
-<div id="myPremiumCard" class="card" style="margin-top:12px;background:#fffaf4">
+<div class="card" style="margin-top:12px;background:#fffaf4">
 <h3>👑 Premium Membership</h3>
 <p id="myPremiumStatus">Status: તપાસ થઈ રહી છે...</p>
 <p id="myPremiumPlan">Plan: —</p>
 <p id="myPremiumExpiry">Expiry Date: —</p>
 <a class="btn" href="#plans">Premium Plans</a>
-</div>
-</div>
-
+</div></div>
 <!-- NEW: push notification controls -->
 <div class="notification-card" id="pushNotificationCard">
 <h3>🔔 Mobile Notifications</h3>
@@ -248,35 +258,29 @@ function status(id, message, type="") {
 function esc(v="") {
   return String(v).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
-function renderMyPremium(){
-  const p=currentProfile;
-  if(!currentUser||!p){
-    $("myPremiumStatus").textContent="Status: Profile ઉપલબ્ધ નથી";
-    $("myPremiumPlan").textContent="Plan: —";
-    $("myPremiumExpiry").textContent="Expiry Date: —";
-    return;
-  }
-
-  const active=viewerHasPremium(p);
-  $("myPremiumStatus").textContent=
-    "Status: "+(active?"Premium Active ✅":"Premium Inactive");
-
-  $("myPremiumPlan").textContent=
-    "Plan: "+(p.premium_plan||"—");
-
-  const expiry=p.premium_expiry
-    ?new Date(p.premium_expiry).toLocaleDateString("en-IN")
-    :"—";
-
-  $("myPremiumExpiry").textContent="Expiry Date: "+expiry;
+function renderMyAccount(){
+ const p=currentProfile||{};
+ const put=(id,value)=>{const el=$(id);if(el)el.textContent=value||"—";};
+ put("accountFullName",p.full_name||currentUser?.user_metadata?.full_name);
+ put("accountGender",p.gender==="Male"?"પુરુષ":p.gender==="Female"?"સ્ત્રી":p.gender);
+ put("accountBirthDate",p.birth_date?new Date(p.birth_date+"T00:00:00").toLocaleDateString("en-IN"):"—");
+ put("accountCity",p.city);put("accountPhone",p._contact_phone);put("accountEducation",p.education);
+ put("accountOccupation",p.occupation);put("accountCommunity",p.community);
+ put("accountMarital",({"Never Married":"અપરિણીત","Divorced":"છૂટાછેડા લીધેલા","Widowed":"વિધવા / વિધુર","Other":"અન્ય"})[p.marital_status]||p.marital_status);
+ put("accountAbout",p.about_me);
 }
- 
+function renderMyPremium(){
+ const p=currentProfile;
+ const active=viewerHasPremium(p);
+ $("myPremiumStatus").textContent="Status: "+(active?"Premium Active ✅":"Premium Inactive");
+ $("myPremiumPlan").textContent="Plan: "+(p?.premium_plan||"—");
+ $("myPremiumExpiry").textContent="Expiry Date: "+(p?.premium_expiry?new Date(p.premium_expiry).toLocaleDateString("en-IN"):"—");
+}
 function updateUI() {
   $("logoutBtn").classList.toggle("hidden", !currentUser);
   $("accountInfo").classList.toggle("hidden", !currentUser);
   $("loginNav").textContent = currentUser ? "My Account" : "Login";
   $("accountEmail").textContent = currentUser ? "Login: " + currentUser.email : "";
- renderMyPremium();
   refreshPushUI();
 }
 $("loginNav").addEventListener("click", () => {
@@ -330,11 +334,10 @@ async function loadMyProfile() {
     .eq("user_id",currentUser.id).maybeSingle();
   if (error) { status("profileStatus","Profile લોડ કરવામાં ભૂલ: "+error.message,"error"); return; }
   currentProfile = data;
- renderMyPremium();
   loadChatList();
   const { data: contact } = await sbClient.from("member_contacts")
     .select("phone_number").eq("user_id",currentUser.id).maybeSingle();
-  $("phoneNumber").value = contact?.phone_number || "";
+  $("phoneNumber").value = contact?.phone_number || "";\n  currentProfile={...(currentProfile||{}),_contact_phone:contact?.phone_number||""};\n  renderMyAccount();renderMyPremium();
   if (data) {
     $("fullName").value = data.full_name || currentUser.user_metadata?.full_name || "";
     $("gender").value = data.gender || "";
@@ -346,7 +349,7 @@ async function loadMyProfile() {
     $("maritalStatus").value = data.marital_status || "";
     $("aboutMe").value = data.about_me || "";
     status("profileStatus","તમારી Profile લોડ થઈ ગઈ.","success"); await renderMyGallery();
-  } else if (currentUser.user_metadata?.full_name) $("fullName").value = currentUser.user_metadata.full_name;
+  } else if (currentUser.user_metadata?.full_name) $("fullName").value = currentUser.user_metadata.full_name;\n  renderMyAccount();renderMyPremium();
 }
 $("profileForm").addEventListener("submit", async e => {
   e.preventDefault();
@@ -367,7 +370,7 @@ $("profileForm").addEventListener("submit", async e => {
     user_id:currentUser.id, phone_number:phone, updated_at:new Date().toISOString()
   },{onConflict:"user_id"});
   if(contactError) return status("profileStatus","Phone Save error: "+contactError.message,"error");
-  currentProfile=payload; status("profileStatus","તમારી Profile સફળતાપૂર્વક સાચવાઈ ગઈ!","success"); await loadProfiles();
+  currentProfile={...payload,_contact_phone:phone};renderMyAccount();renderMyPremium(); status("profileStatus","તમારી Profile સફળતાપૂર્વક સાચવાઈ ગઈ!","success"); await loadProfiles();
 });
 
 async function renderMyGallery(){
