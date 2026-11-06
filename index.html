@@ -50,7 +50,20 @@ window.addEventListener("unhandledrejection",function(e){var b=document.getEleme
 <div><label for="loginPassword">Password</label><input id="loginPassword" type="password" required autocomplete="current-password"></div>
 <button class="btn" type="submit">Login</button><button class="btn outline" id="forgotBtn" type="button">Forgot Password?</button>
 </form><div id="loginStatus" class="status" role="status"></div></div>
-</div><div id="accountInfo" class="card hidden" style="margin-top:16px"><h3>તમારું એકાઉન્ટ</h3><p id="accountEmail"></p></div>
+</div>
+<div id="accountInfo" class="card hidden" style="margin-top:16px">
+<h3>તમારું એકાઉન્ટ</h3>
+<p id="accountEmail"></p>
+
+<div id="myPremiumCard" class="card" style="margin-top:12px;background:#fffaf4">
+<h3>👑 Premium Membership</h3>
+<p id="myPremiumStatus">Status: તપાસ થઈ રહી છે...</p>
+<p id="myPremiumPlan">Plan: —</p>
+<p id="myPremiumExpiry">Expiry Date: —</p>
+<a class="btn" href="#plans">Premium Plans</a>
+</div>
+</div>
+
 <!-- NEW: push notification controls -->
 <div class="notification-card" id="pushNotificationCard">
 <h3>🔔 Mobile Notifications</h3>
