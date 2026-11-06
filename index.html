@@ -476,6 +476,9 @@ $("loadInterestsBtn").addEventListener("click",async()=>{
       const accept=document.createElement("button");accept.className="btn";accept.textContent="Accept Interest";accept.style.marginTop="8px";
       accept.onclick=async()=>{accept.disabled=true;const {error:ue}=await sbClient.from("interests").update({status:"accepted"}).eq("id",item.id).eq("receiver_id",currentUser.id).eq("status","pending");if(ue){accept.disabled=false;alert("Accept error: "+ue.message);return;}await sendMemberPushNotification(item.sender_id,"Elite Matrimony","તમારો Interest સ્વીકારવામાં આવ્યો છે.");item.status="accepted";st.textContent="Status: accepted";accept.remove();loadChatList();alert("Interest accepted!");};
       card.appendChild(accept);
+      const reject=document.createElement("button");reject.className="btn outline";reject.textContent="Reject Interest";reject.style.marginTop="8px";reject.style.marginLeft="8px";
+      reject.onclick=async()=>{if(!confirm("શું તમે આ Interest Reject કરવા માંગો છો?"))return;accept.disabled=true;reject.disabled=true;const {error:re}=await sbClient.from("interests").update({status:"rejected"}).eq("id",item.id).eq("receiver_id",currentUser.id).eq("status","pending");if(re){accept.disabled=false;reject.disabled=false;alert("Reject error: "+re.message);return;}item.status="rejected";st.textContent="Status: rejected";accept.remove();reject.remove();await sendMemberPushNotification(item.sender_id,"Elite Matrimony","તમારો Interest સ્વીકારાયો નથી.");alert("Interest Reject થયો.");};
+      card.appendChild(reject);
     }grid.appendChild(card);
   });
   box.appendChild(document.createTextNode("તમને "+data.length+" Interest મળ્યા છે."));box.appendChild(grid);
