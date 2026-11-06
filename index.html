@@ -276,6 +276,7 @@ function updateUI() {
   $("accountInfo").classList.toggle("hidden", !currentUser);
   $("loginNav").textContent = currentUser ? "My Account" : "Login";
   $("accountEmail").textContent = currentUser ? "Login: " + currentUser.email : "";
+ renderMyPremium();
   refreshPushUI();
 }
 $("loginNav").addEventListener("click", () => {
