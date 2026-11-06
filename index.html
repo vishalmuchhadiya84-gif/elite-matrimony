@@ -248,6 +248,29 @@ function status(id, message, type="") {
 function esc(v="") {
   return String(v).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
+function renderMyPremium(){
+  const p=currentProfile;
+  if(!currentUser||!p){
+    $("myPremiumStatus").textContent="Status: Profile ઉપલબ્ધ નથી";
+    $("myPremiumPlan").textContent="Plan: —";
+    $("myPremiumExpiry").textContent="Expiry Date: —";
+    return;
+  }
+
+  const active=viewerHasPremium(p);
+  $("myPremiumStatus").textContent=
+    "Status: "+(active?"Premium Active ✅":"Premium Inactive");
+
+  $("myPremiumPlan").textContent=
+    "Plan: "+(p.premium_plan||"—");
+
+  const expiry=p.premium_expiry
+    ?new Date(p.premium_expiry).toLocaleDateString("en-IN")
+    :"—";
+
+  $("myPremiumExpiry").textContent="Expiry Date: "+expiry;
+}
+ 
 function updateUI() {
   $("logoutBtn").classList.toggle("hidden", !currentUser);
   $("accountInfo").classList.toggle("hidden", !currentUser);
