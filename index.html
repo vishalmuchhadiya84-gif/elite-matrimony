@@ -176,6 +176,17 @@ const FCM_VAPID_PUBLIC_KEY = "BCN7Jy7aMUDXxlU4bBUmIP7BKkmrHRgVvlr9YwIwuYiz4TXPGZ
 let firebaseMessaging = null;
 let pushServiceWorkerRegistration = null;
 function pushStatus(message,type=""){status("pushStatus",message,type);}
+// Securely call the Supabase Edge Function using the current logged-in session.
+async function sendMemberPushNotification(userId,title,body){
+  if(!currentUser||!userId||userId===currentUser.id)return;
+  try{
+    const {data,error}=await sbClient.functions.invoke("send-push-notification",{
+      body:{user_id:userId,title,body}
+    });
+    if(error)console.warn("Push notification invoke error:",error.message||error);
+    else if(data?.error)console.warn("Push notification response:",data.error);
+  }catch(e){console.warn("Push notification failed:",e.message||e);}
+}
 async function setupFirebaseMessaging(){
   if(!("serviceWorker" in navigator)||!("Notification" in window)){
     pushStatus("આ Browserમાં Push Notification સપોર્ટ નથી. Chromeમાં સાઇટ ખોલો.","error");return false;
@@ -186,7 +197,7 @@ async function setupFirebaseMessaging(){
   try{
     if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);
     firebaseMessaging=firebase.messaging();
-    pushServiceWorkerRegistration=await navigator.serviceWorker.register("/elite-matrimony/firebase-messaging-sw.js");
+    pushServiceWorkerRegistration=await navigator.serviceWorker.register("/firebase-messaging-sw.js");
     return true;
   }catch(e){pushStatus("Firebase Setup Error: "+(e.message||e),"error");return false;}
 }
@@ -385,7 +396,10 @@ async function sendInterest(targetUserId,button) {
   if(targetUserId===currentUser.id)return status("profilesStatus","તમારી પોતાની Profile માં Interest મોકલી શકાતો નથી.","error");
   if(button){button.disabled=true;button.textContent="Sending...";}
   const {error}=await sbClient.from("interests").insert({sender_id:currentUser.id,receiver_id:targetUserId,status:"pending"});
-  if(!error){if(button)button.textContent="Interest Sent";return status("profilesStatus","Interest સફળતાપૂર્વક મોકલાયો.","success");}
+  if(!error){
+    await sendMemberPushNotification(targetUserId,"Elite Matrimony","તમને નવો Interest મળ્યો છે.");
+    if(button)button.textContent="Interest Sent";return status("profilesStatus","Interest સફળતાપૂર્વક મોકલાયો.","success");
+  }
   if(error.code==="23505"){
     const {data:existing}=await sbClient.from("interests").select("status").eq("sender_id",currentUser.id).eq("receiver_id",targetUserId).maybeSingle();
     if(button){button.textContent=existing?.status==="accepted"?"Interest Accepted":"Interest Sent";button.disabled=true;}
@@ -416,7 +430,7 @@ $("loadInterestsBtn").addEventListener("click",async()=>{
     const st=document.createElement("p");st.textContent="Status: "+(item.status||"pending");card.appendChild(st);
     if((item.status||"pending")==="pending"){
       const accept=document.createElement("button");accept.className="btn";accept.textContent="Accept Interest";accept.style.marginTop="8px";
-      accept.onclick=async()=>{accept.disabled=true;const {error:ue}=await sbClient.from("interests").update({status:"accepted"}).eq("id",item.id).eq("receiver_id",currentUser.id).eq("status","pending");if(ue){accept.disabled=false;alert("Accept error: "+ue.message);return;}item.status="accepted";st.textContent="Status: accepted";accept.remove();loadChatList();alert("Interest accepted!");};
+      accept.onclick=async()=>{accept.disabled=true;const {error:ue}=await sbClient.from("interests").update({status:"accepted"}).eq("id",item.id).eq("receiver_id",currentUser.id).eq("status","pending");if(ue){accept.disabled=false;alert("Accept error: "+ue.message);return;}await sendMemberPushNotification(item.sender_id,"Elite Matrimony","તમારો Interest સ્વીકારવામાં આવ્યો છે.");item.status="accepted";st.textContent="Status: accepted";accept.remove();loadChatList();alert("Interest accepted!");};
       card.appendChild(accept);
     }grid.appendChild(card);
   });
@@ -470,7 +484,7 @@ $("chatInput").addEventListener("input",()=>{if(!activeChatUser||!chatRealtimeCh
 $("chatForm").addEventListener("submit",async e=>{
  e.preventDefault();const msg=$("chatInput").value.trim();if(!msg)return;if(!currentUser||!activeChatUser)return status("chatStatus","Chat પસંદ કરો અને Login કરો.","error");if(!viewerHasPremium())return status("chatStatus","Message માટે Premium જરૂરી છે.","error");
  $("chatSendBtn").disabled=true;status("chatStatus","Message મોકલાઈ રહ્યો છે...");
- try{if(!(await acceptedMatchIds()).includes(activeChatUser))throw new Error("Accepted Interest જરૂરી છે.");const {error}=await sbClient.from("messages").insert({sender_id:currentUser.id,receiver_id:activeChatUser,message:msg});if(error)throw error;$("chatInput").value="";broadcastTyping(false);await refreshChat();status("chatStatus","Message મોકલાયો.","success");}
+ try{if(!(await acceptedMatchIds()).includes(activeChatUser))throw new Error("Accepted Interest જરૂરી છે.");const {error}=await sbClient.from("messages").insert({sender_id:currentUser.id,receiver_id:activeChatUser,message:msg});if(error)throw error;await sendMemberPushNotification(activeChatUser,"Elite Matrimony","તમને નવો Message મળ્યો છે.");$("chatInput").value="";broadcastTyping(false);await refreshChat();status("chatStatus","Message મોકલાયો.","success");}
  catch(err){status("chatStatus","Message Error: "+err.message,"error");}finally{$("chatSendBtn").disabled=false;}
 });
 const plans={month_1:{label:"1 Month",base:599,months:1},month_3:{label:"3 Months",base:1499,months:3},month_6:{label:"6 Months",base:2299,months:6},month_12:{label:"12 Months",base:3999,months:12}};
