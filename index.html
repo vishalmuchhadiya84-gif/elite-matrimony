@@ -96,7 +96,7 @@ window.addEventListener("unhandledrejection",function(e){var b=document.getEleme
 <div class="card"><h3>Shortlisted Profiles</h3><p>Shortlist tracking હાલ અલગથી સેટ કરવાનું બાકી છે.</p></div>
 <div class="card"><h3>Contact Views</h3><p>Contact details access tracking જરૂરી છે.</p></div>
 </div><div class="card" style="margin-top:16px"><h3>Interests</h3><p>Received / Accepted / Sent Interests</p><a class="btn" href="#interests">View Interests</a></div></div></section>
-<section id="messenger"><div class="container"><div class="section-head"><h2>Messenger</h2><p>Accepted matches સાથે સુરક્ષિત વાતચીત</p></div><div class="card"><p id="messengerIntro">Login અને Premium પછી Accepted Interest સાથે Chat કરી શકો છો.</p><div id="chatList" class="grid"></div><div id="chatCard" class="hidden" style="margin-top:16px"><h3 id="chatHeading">Chat</h3><div id="chatMessages" aria-live="polite" style="height:300px;overflow:auto;border:1px solid var(--border);border-radius:10px;padding:12px;background:#fff;display:flex;flex-direction:column;gap:8px"></div><form id="chatForm" style="margin-top:12px"><label for="chatInput">તમારો Message</label><textarea id="chatInput" maxlength="2000" required placeholder="Message લખો..."></textarea><button class="btn" id="chatSendBtn" type="submit">Send Message</button></form><div id="chatStatus" class="status" role="status"></div></div><div id="messengerStatus" class="status" role="status"></div><a class="btn outline" href="#interests">Accepted Interests જુઓ</a></div></div></section>
+<section id="messenger"><div class="container"><div class="section-head"><h2>Messenger</h2><p>Accepted matches સાથે સુરક્ષિત વાતચીત</p></div><div class="card"><p id="messengerIntro">Login અને Premium પછી Accepted Interest સાથે Chat કરી શકો છો.</p><div id="chatList" class="grid"></div><div id="chatCard" class="hidden" style="margin-top:16px"><h3 id="chatHeading">Chat</h3><div id="typingIndicator" class="muted" style="min-height:20px;font-size:13px;margin:4px 0" aria-live="polite"></div><div id="chatMessages" aria-live="polite" style="height:300px;overflow:auto;border:1px solid var(--border);border-radius:10px;padding:12px;background:#fff;display:flex;flex-direction:column;gap:8px"></div><form id="chatForm" style="margin-top:12px"><label for="chatInput">તમારો Message</label><textarea id="chatInput" maxlength="2000" required placeholder="Message લખો..."></textarea><button class="btn" id="chatSendBtn" type="submit">Send Message</button></form><div id="chatStatus" class="status" role="status"></div></div><div id="messengerStatus" class="status" role="status"></div><a class="btn outline" href="#interests">Accepted Interests જુઓ</a></div></div></section>
 <section id="plans"><div class="container"><div class="section-head"><h2>Premium Membership Plans</h2><p>તમારી જરૂરિયાત પ્રમાણે પ્લાન પસંદ કરો.</p><p class="muted">🎉 Launch Offer (30 દિવસ) — 18% GST અલગથી લાગુ પડશે.</p></div>
 <div class="grid">
 <div class="card plan"><span class="tag">1 Month</span><h3>Monthly Plan</h3><div class="price">₹599</div><div class="gst">Base price</div><div class="gst">GST (18%): ₹107.82</div><div class="total">કુલ: ₹706.82</div><button class="btn choosePlan" data-plan="month_1" type="button">Choose Plan</button></div>
@@ -374,8 +374,17 @@ $("loadInterestsBtn").addEventListener("click",async()=>{
 });
 
 // ===== Elite Matrimony Messenger =====
-let activeChatUser=null,activeChatName="";
+let activeChatUser=null,activeChatName="",chatRealtimeChannel=null,typingTimeout=null,typingSendTimeout=null;
 const chatTimers={};
+function chatChannelName(uid){return "elite-chat-"+[currentUser.id,uid].sort().join("-");}
+function setupChatRealtime(uid){
+ if(chatRealtimeChannel){sbClient.removeChannel(chatRealtimeChannel);chatRealtimeChannel=null;}
+ const channel=sbClient.channel(chatChannelName(uid));
+ channel.on("postgres_changes",{event:"*",schema:"public",table:"messages"},payload=>{const row=payload.new||payload.old;if(row&&(row.sender_id===currentUser.id||row.receiver_id===currentUser.id)&&((row.sender_id===currentUser.id&&row.receiver_id===uid)||(row.sender_id===uid&&row.receiver_id===currentUser.id))refreshChat().catch(e=>status("chatStatus",e.message,"error"));});
+ channel.on("broadcast",{event:"typing"},payload=>{const d=payload.payload||{};if(d.user_id===uid){$("typingIndicator").textContent=d.is_typing?(activeChatName+" typing...") : "";if(typingTimeout)clearTimeout(typingTimeout);if(d.is_typing)typingTimeout=setTimeout(()=>$("typingIndicator").textContent="",2500);}});
+ channel.subscribe();chatRealtimeChannel=channel;
+}
+function broadcastTyping(isTyping){if(!chatRealtimeChannel||!currentUser||!activeChatUser)return;chatRealtimeChannel.send({type:"broadcast",event:"typing",payload:{user_id:currentUser.id,is_typing:isTyping}});}
 async function acceptedMatchIds(){
  if(!currentUser)return [];
  const {data,error}=await sbClient.from("interests").select("sender_id,receiver_id,status")
@@ -399,7 +408,7 @@ async function openChat(uid,name){
  if(!currentUser)return status("messengerStatus","પહેલા Login કરો.","error");
  if(!viewerHasPremium()){status("messengerStatus","Chat માટે Premium જરૂરી છે.","error");$("plans").scrollIntoView({behavior:"smooth"});return;}
  activeChatUser=uid;activeChatName=name;$("chatHeading").textContent="Chat: "+name;$("chatCard").classList.remove("hidden");$("chatMessages").innerHTML="<p>Messages લોડ થઈ રહ્યા છે...</p>";$("messenger").scrollIntoView({behavior:"smooth"});
- try{await refreshChat();if(chatTimers[uid])clearInterval(chatTimers[uid]);chatTimers[uid]=setInterval(()=>{if(activeChatUser===uid)refreshChat().catch(e=>status("chatStatus",e.message,"error"));},10000);}catch(e){status("chatStatus","Chat Error: "+e.message,"error");}
+ try{setupChatRealtime(uid);await refreshChat();if(chatTimers[uid])clearInterval(chatTimers[uid]);chatTimers[uid]=setInterval(()=>{if(activeChatUser===uid)refreshChat().catch(e=>status("chatStatus",e.message,"error"));},10000);}catch(e){status("chatStatus","Chat Error: "+e.message,"error");}
 }
 async function refreshChat(){
  if(!activeChatUser||!currentUser)return;
@@ -416,6 +425,7 @@ async function refreshChat(){
  if(!data?.length){box.innerHTML='<p class="muted">હજુ Message નથી. વાતચીત શરૂ કરો.</p>';return;}
  data.forEach(m=>{const mine=m.sender_id===currentUser.id;const el=document.createElement("div");el.style.cssText="max-width:85%;padding:9px 12px;border-radius:12px;overflow-wrap:anywhere;"+(mine?"align-self:flex-end;background:#f8edf1;color:#501126":"align-self:flex-start;background:#f1f1f1;color:#222");const body=document.createElement("div");body.textContent=m.message;el.appendChild(body);const tm=document.createElement("small");tm.style.cssText="display:flex;justify-content:flex-end;gap:7px;opacity:.7;margin-top:5px;font-size:11px";const time=document.createElement("span");time.textContent=new Date(m.created_at).toLocaleString("gu-IN");tm.appendChild(time);if(mine){const tick=document.createElement("span");tick.style.fontWeight="700";tick.style.color=m.read_at?"#1687d9":"#777";tick.textContent=m.read_at?"✓✓":"✓";tick.title=m.read_at?"Seen":"Sent";tm.appendChild(tick);}el.appendChild(tm);box.appendChild(el);});if(bottom)box.scrollTop=box.scrollHeight;
 }
+$("chatInput").addEventListener("input",()=>{if(!activeChatUser||!chatRealtimeChannel)return;if(typingSendTimeout)clearTimeout(typingSendTimeout);broadcastTyping(true);typingSendTimeout=setTimeout(()=>broadcastTyping(false),1800);});
 $("chatForm").addEventListener("submit",async e=>{
  e.preventDefault();const msg=$("chatInput").value.trim();if(!msg)return;
  if(!currentUser||!activeChatUser)return status("chatStatus","Chat પસંદ કરો અને Login કરો.","error");
@@ -423,7 +433,7 @@ $("chatForm").addEventListener("submit",async e=>{
  $("chatSendBtn").disabled=true;status("chatStatus","Message મોકલાઈ રહ્યો છે...");
  try{if(!(await acceptedMatchIds()).includes(activeChatUser))throw new Error("Accepted Interest જરૂરી છે.");
   const {error}=await sbClient.from("messages").insert({sender_id:currentUser.id,receiver_id:activeChatUser,message:msg});if(error)throw error;
-  $("chatInput").value="";await refreshChat();status("chatStatus","Message મોકલાયો.","success");
+  $("chatInput").value="";broadcastTyping(false);await refreshChat();status("chatStatus","Message મોકલાયો.","success");
  }catch(err){status("chatStatus","Message Error: "+err.message,"error");}finally{$("chatSendBtn").disabled=false;}
 });
 
