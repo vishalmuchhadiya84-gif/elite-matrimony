@@ -1,6 +1,5 @@
-
-importScripts('https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js');
-importScripts('https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js');
 
 firebase.initializeApp({
   apiKey: "AIzaSyDZcm3-jPx_NtgC0eyMOTHd7tH9XJn8ibA",
@@ -16,7 +15,6 @@ const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
   const title = payload.notification?.title || "Elite Matrimony";
-
   const options = {
     body: payload.notification?.body || "તમને નવો સંદેશ મળ્યો છે.",
     icon: "/favicon.ico"
