@@ -687,5 +687,13 @@ init();
 <script>
 (function(){const clear=document.getElementById("clearFiltersBtn");if(clear)clear.addEventListener("click",()=>{["searchCity","filterAgeMin","filterAgeMax","filterHeight","filterEducation","filterOccupation","filterCommunity"].forEach(id=>{const e=document.getElementById(id);if(e)e.value=""});["searchGender","filterMarital"].forEach(id=>{const e=document.getElementById(id);if(e)e.value=""});const b=document.getElementById("searchBtn");if(b)b.click();});})();
 </script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/elite-matrimony/service-worker.js")
+      .catch(error => console.error(error));
+  });
+}
+</script>
 </body>
 </html>
