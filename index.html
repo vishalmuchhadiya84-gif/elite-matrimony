@@ -122,6 +122,12 @@ window.addEventListener("unhandledrejection",function(e){var b=document.getEleme
 </div></section>
 <section id="interests"><div class="container"><div class="section-head"><h2>Received Interest</h2><p>તમારી પ્રોફાઇલમાં રસ દર્શાવનાર સભ્યો.</p></div>
 <div class="card"><p>Interest સુવિધા માટે databaseમાં interests ટેબલ અને યોગ્ય access rules જરૂરી છે.</p><button class="btn" id="loadInterestsBtn" type="button">View Received Interest</button><div id="interestStatus" class="status" role="status"></div></div></div></section>
+<section id="privacy"><div class="container"><div class="section-head"><h2>Profile Privacy & Security</h2><p>તમારી Profile અને સુરક્ષા સેટિંગ્સ</p></div>
+<div class="card"><h3>Privacy Settings</h3><label style="display:block;margin:10px 0"><input type="checkbox" id="privacyProfileVisible" checked> Member Search માં મારી Profile દેખાય</label>
+<label style="display:block;margin:10px 0"><input type="checkbox" id="privacyPhotoVisible" checked> મારી Profile Photos દેખાય</label>
+<button class="btn" id="savePrivacyBtn" type="button">Save Privacy Settings</button><div id="privacyStatus" class="status"></div></div>
+<div class="grid" style="margin-top:16px"><div class="card"><h3>Blocked Members</h3><button class="btn outline" id="loadBlocksBtn" type="button">View Block List</button><div id="blocksList" class="grid"></div><div id="blocksStatus" class="status"></div></div>
+<div class="card"><h3>Safety</h3><p>અયોગ્ય Profile અથવા સભ્યની ફરિયાદ કરો. Admin દ્વારા તપાસ કરવામાં આવશે.</p><p class="muted">Report કરતી વખતે યોગ્ય કારણ આપો.</p></div></div></div></section>
 <section id="activity"><div class="container"><div class="section-head"><h2>Activity</h2><p>તમારી Profile અને Interest Activity</p></div>
 <div class="grid">
 <div class="card"><h3>Profile Visits</h3><p>તમારી Profile કોણે જોઈ તે જોવા.</p><button class="btn" id="loadVisitsBtn" type="button">View Profile Visitors</button><div id="visitsList" class="grid"></div><div id="visitsStatus" class="status"></div></div>
@@ -282,6 +288,7 @@ function updateUI() {
   $("loginNav").textContent = currentUser ? "My Account" : "Login";
   $("accountEmail").textContent = currentUser ? "Login: " + currentUser.email : "";
   refreshPushUI();
+  if(currentUser && typeof loadPrivacySettings==="function") loadPrivacySettings();
 }
 $("loginNav").addEventListener("click", () => {
   (currentUser ? $("profile-form") : $("login")).scrollIntoView({behavior:"smooth"});
@@ -433,14 +440,60 @@ async function loadProfiles() {
       const favLabel=shortlistSet.has(uid)?"♥ Shortlisted":"♡ Add Shortlist";
       const fav=valid&&!own?`<button class="btn outline shortlistBtn" data-user="${esc(uid)}" type="button">${favLabel}</button>`:"";
       const detail=valid&&!own?`<button class="btn outline viewProfileBtn" data-user="${esc(uid)}" type="button">View Profile</button>`:"";
-      return `<article class="card profile-card" data-profile-card="${esc(uid)}">${photoBlock}<h3>${esc(p.full_name||"Elite Member")}</h3><span class="pill">${esc(p.gender||"")}</span><div>${esc(p.city||"")}</div><div>${esc(p.education||"")}</div><div>${esc(p.occupation||"")}</div><div>${esc(p.community||"")}</div><p>${esc(p.about_me||"")}</p>${btn}${fav}${detail}<div class="profileDetail hidden" id="profileDetail-${esc(uid)}"><p>Birth Date: ${esc(p.birth_date||"Not provided")}</p><p>Marital Status: ${esc(p.marital_status||"")}</p><p>Occupation: ${esc(p.occupation||"")}</p></div></article>`;
+      const safety=valid&&!own?`<button class="btn outline blockMemberBtn" data-user="${esc(uid)}" type="button">Block</button><button class="btn outline reportMemberBtn" data-user="${esc(uid)}" data-name="${esc(p.full_name||"Member")}" type="button">Report</button>`:"";
+      return `<article class="card profile-card" data-profile-card="${esc(uid)}">${photoBlock}<h3>${esc(p.full_name||"Elite Member")}</h3><span class="pill">${esc(p.gender||"")}</span><div>${esc(p.city||"")}</div><div>${esc(p.education||"")}</div><div>${esc(p.occupation||"")}</div><div>${esc(p.community||"")}</div><p>${esc(p.about_me||"")}</p>${btn}${fav}${detail}${safety}<div class="profileDetail hidden" id="profileDetail-${esc(uid)}"><p>Birth Date: ${esc(p.birth_date||"Not provided")}</p><p>Marital Status: ${esc(p.marital_status||"")}</p><p>Occupation: ${esc(p.occupation||"")}</p></div></article>`;
     }).join("");
     status("profilesStatus","કુલ પ્રોફાઇલ: "+data.length);
     host.querySelectorAll(".interestBtn:not([disabled])").forEach(btn=>btn.addEventListener("click",()=>sendInterest(btn.dataset.user,btn)));
     host.querySelectorAll(".shortlistBtn").forEach(btn=>btn.addEventListener("click",()=>toggleShortlist(btn.dataset.user,btn)));
     host.querySelectorAll(".viewProfileBtn").forEach(btn=>btn.addEventListener("click",()=>recordProfileVisit(btn.dataset.user,btn)));
+    host.querySelectorAll(".blockMemberBtn").forEach(btn=>btn.addEventListener("click",()=>blockMember(btn.dataset.user,btn)));
+    host.querySelectorAll(".reportMemberBtn").forEach(btn=>btn.addEventListener("click",()=>reportMember(btn.dataset.user,btn.dataset.name)));
   }catch(e){host.innerHTML="";status("profilesStatus","ભૂલ: "+(e.message||"Profiles લોડ થઈ શકી નથી."),"error");}
 }
+async function blockMember(targetUserId,button){
+ if(!currentUser)return status("profilesStatus","Block કરવા Login કરો.","error");
+ if(!confirm("આ સભ્યને Block કરવો છે? તે તમારી Profile સાથે સંપર્ક કરી શકશે નહીં."))return;
+ button.disabled=true;
+ const {error}=await sbClient.from("member_blocks").insert({blocker_user_id:currentUser.id,blocked_user_id:targetUserId});
+ if(error){button.disabled=false;return status("profilesStatus","Block error: "+error.message,"error");}
+ const card=button.closest("[data-profile-card]");if(card)card.remove();
+ status("profilesStatus","સભ્ય Block થયો.","success");
+}
+async function reportMember(targetUserId,memberName){
+ if(!currentUser)return status("profilesStatus","Report કરવા Login કરો.","error");
+ const reason=prompt(memberName+" માટે ફરિયાદનું કારણ લખો:");
+ if(!reason||!reason.trim())return;
+ const {error}=await sbClient.from("member_reports").insert({reporter_user_id:currentUser.id,reported_user_id:targetUserId,reason:reason.trim()});
+ if(error)return status("profilesStatus","Report error: "+error.message,"error");
+ status("profilesStatus","Report Admin ને મોકલાઈ.","success");
+}
+async function loadPrivacySettings(){
+ if(!currentUser)return status("privacyStatus","Login કર્યા પછી Privacy Settings મળશે.","error");
+ const {data,error}=await sbClient.from("privacy_settings").select("profile_visible,photos_visible").eq("user_id",currentUser.id).maybeSingle();
+ if(error)return status("privacyStatus","Settings load error: "+error.message,"error");
+ $("privacyProfileVisible").checked=data?.profile_visible??true;
+ $("privacyPhotoVisible").checked=data?.photos_visible??true;
+}
+$("savePrivacyBtn").addEventListener("click",async()=>{
+ if(!currentUser)return status("privacyStatus","Login કરો.","error");
+ const payload={user_id:currentUser.id,profile_visible:$("privacyProfileVisible").checked,photos_visible:$("privacyPhotoVisible").checked,updated_at:new Date().toISOString()};
+ const {error}=await sbClient.from("privacy_settings").upsert(payload,{onConflict:"user_id"});
+ if(error)return status("privacyStatus","Save error: "+error.message,"error");
+ status("privacyStatus","Privacy Settings Save થઈ.","success");
+});
+$("loadBlocksBtn").addEventListener("click",async()=>{
+ if(!currentUser)return status("blocksStatus","Login કરો.","error");
+ const box=$("blocksList");box.innerHTML="Loading...";
+ const {data:rows,error}=await sbClient.from("member_blocks").select("id,blocked_user_id,created_at").eq("blocker_user_id",currentUser.id).order("created_at",{ascending:false});
+ if(error)return status("blocksStatus","Error: "+error.message,"error");
+ if(!rows?.length){box.innerHTML="<p>Block List ખાલી છે.</p>";return;}
+ const ids=rows.map(r=>r.blocked_user_id);const {data:ps,error:pe}=await sbClient.from("member_profiles").select("user_id,full_name,city").in("user_id",ids);
+ if(pe)return status("blocksStatus","Profiles error: "+pe.message,"error");
+ const mp=new Map((ps||[]).map(p=>[p.user_id,p]));
+ box.innerHTML=rows.map(r=>`<div class="card"><strong>${esc(mp.get(r.blocked_user_id)?.full_name||"Member")}</strong><div>${esc(mp.get(r.blocked_user_id)?.city||"")}</div><button class="btn outline" data-unblock="${esc(r.blocked_user_id)}">Unblock</button></div>`).join("");
+ box.querySelectorAll("[data-unblock]").forEach(b=>b.onclick=async()=>{const {error}=await sbClient.from("member_blocks").delete().eq("blocker_user_id",currentUser.id).eq("blocked_user_id",b.dataset.unblock);if(error)alert(error.message);else b.closest(".card").remove();});
+});
 async function toggleShortlist(profileUserId,button){
  if(!currentUser)return status("profilesStatus","Shortlist માટે Login કરો.","error");
  button.disabled=true;
