@@ -19,13 +19,28 @@ window.addEventListener("error",function(e){var b=document.getElementById("globa
 window.addEventListener("unhandledrejection",function(e){var b=document.getElementById("globalStatus");if(b){b.style.display="block";b.textContent="App error: "+(e.reason&&e.reason.message||e.reason||"unknown");}});
 </script>
 <header><div class="container nav">
-<a class="brand" href="#home" aria-label="Elite Gujarati Matrimony Home">
-<svg class="brand-mark" viewBox="0 0 64 64" role="img" aria-label="Elite Gujarati Matrimony logo" xmlns="http://www.w3.org/2000/svg">
- <defs><linearGradient id="logoGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f2d38a"/><stop offset="1" stop-color="#b9852e"/></linearGradient></defs>
- <circle cx="21" cy="10" r="6" fill="url(#logoGold)"/><circle cx="43" cy="10" r="6" fill="url(#logoGold)"/>
- <path d="M21 19c-9 0-16 7-16 16 0 10 13 20 27 28 14-8 27-18 27-28 0-9-7-16-16-16-5 0-9 3-11 7-2-4-6-7-11-7Z" fill="none" stroke="url(#logoGold)" stroke-width="3.5" stroke-linejoin="round"/>
- <path d="M21 27c-5 0-9 4-9 9 0 6 9 13 20 20 11-7 20-14 20-20 0-5-4-9-9-9-5 0-8 4-11 8-3-4-6-8-11-8Z" fill="none" stroke="url(#logoGold)" stroke-width="2.5" stroke-linejoin="round"/>
-</svg><span class="brand-copy"><span class="brand-name">ELITE GUJARATI<br> MATRIMONY</span><small>YOUR PERFECT MATCH</small></span></a>
+
+<svg class="brand-mark" viewBox="0 0 64 64" role="img" aria-label="Elite Gujarati Matrimony Logo" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="eliteGold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFE8A3"/>
+      <stop offset="50%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#9B7020"/>
+    </linearGradient>
+  </defs>
+
+  <path d="M32 58 C24 51 5 37 5 23 C5 10 21 4 32 16 C43 4 59 10 59 23 C59 37 40 51 32 58Z"
+        fill="#65172C" stroke="url(#eliteGold)" stroke-width="2.5"/>
+
+  <circle cx="25" cy="24" r="6" fill="url(#eliteGold)"/>
+  <circle cx="39" cy="24" r="6" fill="url(#eliteGold)"/>
+
+  <path d="M16 43 C16 32 24 30 32 37 C40 30 48 32 48 43"
+        fill="none" stroke="url(#eliteGold)" stroke-width="3.5" stroke-linecap="round"/>
+
+  <path d="M32 44 L36 48 L32 52 L28 48 Z" fill="url(#eliteGold)"/>
+</svg>
+
 <nav class="nav-links" aria-label="Main navigation">
 <a href="#home">Home</a><a href="#profiles">Profiles</a><a href="#plans">Premium</a><a href="#profile-form">My Profile</a>
 <button class="btn outline" id="loginNav" type="button">Login</button><button class="btn hidden" id="logoutBtn" type="button">Logout</button>
