@@ -1,4 +1,4 @@
-const CACHE_NAME = "elite-matrimony-v1";
+const CACHE_NAME = "elite-matrimony-v2";
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
