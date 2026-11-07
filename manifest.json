@@ -1,0 +1,17 @@
+{
+  "id": "/elite-matrimony/",
+  "name": "Elite Gujarati Matrimony | Your Perfect Match",
+  "short_name": "Elite Matrimony",
+  "description": "Elite Gujarati Matrimony - Find your perfect life partner in Gujarat.",
+  "start_url": "/elite-matrimony/",
+  "scope": "/elite-matrimony/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fffaf4",
+  "theme_color": "#791b3b",
+  "lang": "gu",
+  "categories": [
+    "social",
+    "lifestyle"
+  ]
+}
