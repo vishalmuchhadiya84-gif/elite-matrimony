@@ -1,57 +1,61 @@
-ELITE MATRIMONY SCREEN NAVIGATION PATCH
-
-CSS (inside existing <style>):
-
-/* Screen navigation */
-body.em-screen-mode main > section.em-screen-hidden { display:none !important; }
-body.em-screen-mode main > section.em-screen-active { display:block; min-height:calc(100vh - 80px); }
-body.em-screen-mode main > section.em-screen-active { scroll-margin-top:0; }
-body.em-screen-mode main > section.em-screen-active > .container { padding-bottom:24px; }
-
-JavaScript (before </body>):
-
-<script>
+/* Elite Matrimony Screen Navigation */
 (function () {
+  "use strict";
+
   const main = document.querySelector("main");
   if (!main) return;
+
   const sections = Array.from(main.querySelectorAll(":scope > section[id]"));
-  const navLinks = Array.from(document.querySelectorAll('a[href^="#"]'));
-  const known = new Set(sections.map(s => s.id));
+  const ids = new Set(sections.map(s => s.id));
+
+  const style = document.createElement("style");
+  style.textContent = `
+    body.em-screen-mode main > section.em-screen-hidden {
+      display: none !important;
+    }
+    body.em-screen-mode main > section.em-screen-active {
+      display: block;
+      min-height: calc(100vh - 80px);
+    }
+    body.em-screen-mode main > section.em-screen-active > .container {
+      padding-bottom: 24px;
+    }
+  `;
+  document.head.appendChild(style);
 
   function showScreen(id, push) {
-    if (!known.has(id)) return false;
+    if (!ids.has(id)) id = "home";
+
     document.body.classList.add("em-screen-mode");
-    sections.forEach(section => {
-      const active = section.id === id;
-      section.classList.toggle("em-screen-active", active);
-      section.classList.toggle("em-screen-hidden", !active);
-      section.setAttribute("aria-hidden", active ? "false" : "true");
+
+    sections.forEach(function (s) {
+      const active = s.id === id;
+      s.classList.toggle("em-screen-active", active);
+      s.classList.toggle("em-screen-hidden", !active);
+      s.setAttribute("aria-hidden", active ? "false" : "true");
     });
-    navLinks.forEach(link => {
-      const active = link.getAttribute("href") === "#" + id;
-      if (active) link.setAttribute("aria-current", "page");
-      else link.removeAttribute("aria-current");
-    });
-    window.scrollTo({top: 0, behavior: "instant"});
-    if (push && location.hash !== "#" + id) history.pushState({emScreen:id}, "", "#" + id);
-    return true;
+
+    window.scrollTo(0, 0);
+
+    if (push && location.hash !== "#" + id) {
+      history.pushState({ screen: id }, "", "#" + id);
+    }
   }
 
-  document.addEventListener("click", function (event) {
-    const link = event.target.closest('a[href^="#"]');
+  document.addEventListener("click", function (e) {
+    const link = e.target.closest('a[href^="#"]');
     if (!link) return;
+
     const id = link.getAttribute("href").slice(1);
-    if (!known.has(id)) return;
-    event.preventDefault();
+    if (!ids.has(id)) return;
+
+    e.preventDefault();
     showScreen(id, true);
   });
 
   window.addEventListener("popstate", function () {
-    const id = location.hash.slice(1);
-    showScreen(known.has(id) ? id : "home", false);
+    showScreen(location.hash.slice(1), false);
   });
 
-  const initial = location.hash.slice(1);
-  showScreen(known.has(initial) ? initial : "home", false);
+  showScreen(ids.has(location.hash.slice(1)) ? location.hash.slice(1) : "home", false);
 })();
-</script>
