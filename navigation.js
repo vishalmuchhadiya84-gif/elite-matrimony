@@ -1,61 +1,43 @@
-/* Elite Matrimony Screen Navigation */
+
+/* Elite Matrimony Navigation Fix */
 (function () {
   "use strict";
 
-  const main = document.querySelector("main");
-  if (!main) return;
+  // બધા Sections દેખાતા રાખો
+  document.body.classList.remove("em-screen-mode");
 
-  const sections = Array.from(main.querySelectorAll(":scope > section[id]"));
-  const ids = new Set(sections.map(s => s.id));
+  document.querySelectorAll("main > section[id]").forEach(function (section) {
+    section.classList.remove("em-screen-active", "em-screen-hidden");
+    section.removeAttribute("aria-hidden");
+    section.style.removeProperty("display");
+  });
 
-  const style = document.createElement("style");
-  style.textContent = `
-    body.em-screen-mode main > section.em-screen-hidden {
-      display: none !important;
-    }
-    body.em-screen-mode main > section.em-screen-active {
-      display: block;
-      min-height: calc(100vh - 80px);
-    }
-    body.em-screen-mode main > section.em-screen-active > .container {
-      padding-bottom: 24px;
-    }
-  `;
-  document.head.appendChild(style);
-
-  function showScreen(id, push) {
-    if (!ids.has(id)) id = "home";
-
-    document.body.classList.add("em-screen-mode");
-
-    sections.forEach(function (s) {
-      const active = s.id === id;
-      s.classList.toggle("em-screen-active", active);
-      s.classList.toggle("em-screen-hidden", !active);
-      s.setAttribute("aria-hidden", active ? "false" : "true");
-    });
-
-    window.scrollTo(0, 0);
-
-    if (push && location.hash !== "#" + id) {
-      history.pushState({ screen: id }, "", "#" + id);
-    }
-  }
-
-  document.addEventListener("click", function (e) {
-    const link = e.target.closest('a[href^="#"]');
+  // Navigation Links
+  document.addEventListener("click", function (event) {
+    const link = event.target.closest('a[href^="#"]');
     if (!link) return;
 
     const id = link.getAttribute("href").slice(1);
-    if (!ids.has(id)) return;
+    const target = document.getElementById(id);
 
-    e.preventDefault();
-    showScreen(id, true);
+    if (!target) return;
+
+    event.preventDefault();
+    history.pushState(null, "", "#" + id);
+    target.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
   });
 
+  // Back Button
   window.addEventListener("popstate", function () {
-    showScreen(location.hash.slice(1), false);
-  });
+    const target = document.getElementById(location.hash.slice(1));
 
-  showScreen(ids.has(location.hash.slice(1)) ? location.hash.slice(1) : "home", false);
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth" });
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  });
 })();
