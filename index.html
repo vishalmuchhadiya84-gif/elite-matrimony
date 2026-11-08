@@ -339,9 +339,33 @@ function updateUI() {
   refreshPushUI();
   if(currentUser && typeof loadPrivacySettings==="function") loadPrivacySettings();
 }
+
 $("loginNav").addEventListener("click", () => {
-  (currentUser ? $("profile-form") : $("login")).scrollIntoView({behavior:"smooth"});
+  if (currentUser) {
+    $("profile-form").scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+    return;
+  }
+
+  $("register").scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+
+  setTimeout(() => {
+    $("login").scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+
+    $("loginEmail").focus({
+      preventScroll: true
+    });
+  }, 350);
 });
+
 
 $("registerForm").addEventListener("submit", async e => {
   e.preventDefault();
