@@ -275,7 +275,9 @@ async function setupFirebaseMessaging(){
   try{
     if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);
     firebaseMessaging=firebase.messaging();
-    pushServiceWorkerRegistration=await navigator.serviceWorker.register("/firebase-messaging-sw.js");
+    pushServiceWorkerRegistration=await navigator.serviceWorker.register(
+  "/elite-matrimony/firebase-messaging-sw.js"
+);
     return true;
   }catch(e){pushStatus("Firebase Setup Error: "+(e.message||e),"error");return false;}
 }
