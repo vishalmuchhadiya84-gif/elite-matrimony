@@ -90,12 +90,8 @@ window.addEventListener("unhandledrejection",function(e){var b=document.getEleme
 <div><label for="birthDate">જન્મ તારીખ *</label><input id="birthDate" type="date" required></div>
 <div><label for="city">શહેર *</label><input id="city" required maxlength="100" placeholder="ઉદાહરણ: Ahmedabad"></div>
 <div><label for="phoneNumber">Mobile Number *</label><input id="phoneNumber" type="tel" inputmode="numeric" maxlength="10" required></div>
-<div><label for="height">Height (ફૂટ/ઇંચ)</label><input id="height" maxlength="30" placeholder="ઉદાહરણ: 5 ft 4 in"></div>
 <div><label for="education">અભ્યાસ</label><input id="education" maxlength="150"></div>
 <div><label for="occupation">વ્યવસાય</label><input id="occupation" maxlength="150"></div>
-<div><label for="employmentType">Employment Type (નોકરીનો પ્રકાર)</label><select id="employmentType"><option value="">પસંદ કરો</option><option value="Job">Job / નોકરી</option><option value="Business">Business / ધંધો</option><option value="Self Employed">Self Employed / સ્વરોજગાર</option><option value="Other">Other / અન્ય</option></select></div>
-<div><label for="businessName">Company / Business Name</label><input id="businessName" maxlength="150" placeholder="કંપની અથવા ધંધાનું નામ"></div>
-<div><label for="annualIncome">Annual Income (વાર્ષિક આવક)</label><select id="annualIncome"><option value="">પસંદ કરો</option><option value="Below ₹2 lakh">₹2 લાખથી ઓછી</option><option value="₹2-5 lakh">₹2–5 લાખ</option><option value="₹5-10 lakh">₹5–10 લાખ</option><option value="₹10-20 lakh">₹10–20 લાખ</option><option value="₹20-50 lakh">₹20–50 લાખ</option><option value="Above ₹50 lakh">₹50 લાખથી વધુ</option><option value="Prefer not to say">જણાવવું નથી</option></select></div>
 <div><label for="community">સમાજ / Community</label><input id="community" maxlength="100"></div>
 <div><label for="maritalStatus">વૈવાહિક સ્થિતિ</label><select id="maritalStatus"><option value="">પસંદ કરો</option><option value="Never Married">અપરિણીત</option><option value="Divorced">છૂટાછેડા લીધેલા</option><option value="Widowed">વિધવા / વિધુર</option><option value="Other">અન્ય</option></select></div>
 </div><div><label for="aboutMe">તમારા વિશે</label><textarea id="aboutMe" maxlength="1000" placeholder="તમારા વિશે ટૂંકમાં લખો"></textarea></div>
@@ -113,8 +109,6 @@ window.addEventListener("unhandledrejection",function(e){var b=document.getEleme
 <div><label for="filterHeight">Height</label><input id="filterHeight" placeholder="5 ft 4 in"></div>
 <div><label for="filterEducation">Education</label><input id="filterEducation" placeholder="Graduate"></div>
 <div><label for="filterOccupation">Occupation</label><input id="filterOccupation" placeholder="Business / Job"></div>
-<div><label for="filterEmploymentType">Employment Type</label><select id="filterEmploymentType"><option value="">બધા</option><option value="Job">Job</option><option value="Business">Business</option><option value="Self Employed">Self Employed</option><option value="Other">Other</option></select></div>
-<div><label for="filterIncome">Annual Income</label><select id="filterIncome"><option value="">બધા</option><option value="Below ₹2 lakh">₹2 લાખથી ઓછી</option><option value="₹2-5 lakh">₹2–5 લાખ</option><option value="₹5-10 lakh">₹5–10 લાખ</option><option value="₹10-20 lakh">₹10–20 લાખ</option><option value="₹20-50 lakh">₹20–50 લાખ</option><option value="Above ₹50 lakh">₹50 લાખથી વધુ</option></select></div>
 <div><label for="filterCommunity">Community / Caste</label><input id="filterCommunity" placeholder="Community"></div>
 <div><label for="filterMarital">Marital Status</label><select id="filterMarital"><option value="">બધા</option><option value="Never Married">અપરિણીત</option><option value="Divorced">Divorced</option><option value="Widowed">Widowed</option></select></div>
 </div>
@@ -135,12 +129,12 @@ window.addEventListener("unhandledrejection",function(e){var b=document.getEleme
 <div class="card"><h3>Contact Views</h3><p>Contact details access tracking જરૂરી છે.</p></div>
 </div><div class="card" style="margin-top:16px"><h3>Interests</h3><p>Received / Accepted / Sent Interests</p><a class="btn" href="#interests">View Interests</a></div></div></section>
 <section id="messenger"><div class="container"><div class="section-head"><h2>Messenger</h2><p>Accepted matches સાથે સુરક્ષિત વાતચીત</p></div><div class="card"><p id="messengerIntro">Login અને Premium પછી Accepted Interest સાથે Chat કરી શકો છો.</p><div id="chatList" class="grid"></div><div id="chatCard" class="hidden" style="margin-top:16px"><h3 id="chatHeading">Chat</h3><div id="typingIndicator" class="muted" style="min-height:20px;font-size:13px;margin:4px 0" aria-live="polite"></div><div id="chatMessages" aria-live="polite" style="height:300px;overflow:auto;border:1px solid var(--border);border-radius:10px;padding:12px;background:#fff;display:flex;flex-direction:column;gap:8px"></div><form id="chatForm" style="margin-top:12px"><label for="chatInput">તમારો Message</label><textarea id="chatInput" maxlength="2000" required placeholder="Message લખો..."></textarea><button class="btn" id="chatSendBtn" type="submit">Send Message</button></form><div id="chatStatus" class="status" role="status"></div></div><div id="messengerStatus" class="status" role="status"></div><a class="btn outline" href="#interests">Accepted Interests જુઓ</a></div></div></section>
-<section id="plans"><div class="container"><div class="section-head"><h2>Premium Membership Plans</h2><p>તમારી જરૂરિયાત પ્રમાણે પ્લાન પસંદ કરો.</p><p class="muted">🎉 🎉 80% Discount Launch Offer — 18% GST અલગથી લાગુ પડશે.</p></div>
+<section id="plans"><div class="container"><div class="section-head"><h2>Premium Membership Plans</h2><p>તમારી જરૂરિયાત પ્રમાણે પ્લાન પસંદ કરો.</p><p class="muted">🎉 Launch Offer (30 દિવસ) — 18% GST અલગથી લાગુ પડશે.</p></div>
 <div class="grid">
-<div class="card plan"><span class="tag">80% Discount</span><h3>1 Month Plan</h3><div class="price">₹499</div><div class="gst">Base price: ₹499</div><div class="gst">GST (18%): ₹89.82</div><div class="total">કુલ: ₹588.82</div><button class="btn choosePlan" data-plan="month_1" type="button">Choose Plan</button></div>
-<div class="card plan"><span class="tag">80% Discount</span><h3>3 Months Plan</h3><div class="price">₹1,249</div><div class="gst">Base price: ₹1,249</div><div class="gst">GST (18%): ₹224.82</div><div class="total">કુલ: ₹1,473.82</div><button class="btn choosePlan" data-plan="month_3" type="button">Choose Plan</button></div>
-<div class="card plan"><span class="tag">80% Discount</span><h3>6 Months Plan</h3><div class="price">₹1,999</div><div class="gst">Base price: ₹1,999</div><div class="gst">GST (18%): ₹359.82</div><div class="total">કુલ: ₹2,358.82</div><button class="btn choosePlan" data-plan="month_6" type="button">Choose Plan</button></div>
-<div class="card plan"><span class="tag">80% Discount</span><h3>12 Months Plan</h3><div class="price">₹2,999</div><div class="gst">Base price: ₹2,999</div><div class="gst">GST (18%): ₹539.82</div><div class="total">કુલ: ₹3,538.82</div><button class="btn choosePlan" data-plan="month_12" type="button">Choose Plan</button></div>
+<div class="card plan"><span class="tag">1 Month</span><h3>Monthly Plan</h3><div class="price">₹599</div><div class="gst">Base price</div><div class="gst">GST (18%): ₹107.82</div><div class="total">કુલ: ₹706.82</div><button class="btn choosePlan" data-plan="month_1" type="button">Choose Plan</button></div>
+<div class="card plan"><span class="tag">3 Months</span><h3>Quarterly Plan</h3><div class="price">₹1,499</div><div class="gst">Base price</div><div class="gst">GST (18%): ₹269.82</div><div class="total">કુલ: ₹1,768.82</div><button class="btn choosePlan" data-plan="month_3" type="button">Choose Plan</button></div>
+<div class="card plan"><span class="tag">6 Months</span><h3>Half-Year Plan</h3><div class="price">₹2,299</div><div class="gst">Base price</div><div class="gst">GST (18%): ₹413.82</div><div class="total">કુલ: ₹2,712.82</div><button class="btn choosePlan" data-plan="month_6" type="button">Choose Plan</button></div>
+<div class="card plan"><span class="tag">12 Months</span><h3>Annual Plan</h3><div class="price">₹3,999</div><div class="gst">Base price</div><div class="gst">GST (18%): ₹719.82</div><div class="total">કુલ: ₹4,718.82</div><button class="btn choosePlan" data-plan="month_12" type="button">Choose Plan</button></div>
 </div><div id="paymentStatus" class="status" role="status"></div></div></section>
 <section id="admin"><div class="container"><div class="section-head"><h2>Admin Panel</h2><p>માત્ર અધિકૃત Admin માટે.</p></div><div class="card"><p>Admin access માટે Supabaseમાં server-side permissions અને RLS policies યોગ્ય હોવી જરૂરી છે.</p><button class="btn outline" id="adminBtn" type="button">Check Admin Access</button><div id="adminStatus" class="status" role="status"></div><div id="adminMembers" class="grid"></div></div></div></section>
 
@@ -336,7 +330,7 @@ function viewerHasPremium(profile=currentProfile){
 async function loadMyProfile() {
   if (!currentUser) return;
   const {data,error} = await sbClient.from("member_profiles")
-    .select("id,user_id,full_name,gender,birth_date,height,city,education,occupation,employment_type,business_name,annual_income,community,marital_status,about_me,photo_url,premium_status,premium_plan,premium_expiry,updated_at")
+    .select("id,user_id,full_name,gender,birth_date,city,education,occupation,community,marital_status,about_me,photo_url,premium_status,premium_plan,premium_expiry,updated_at")
     .eq("user_id",currentUser.id).maybeSingle();
   if (error) { status("profileStatus","Profile લોડ કરવામાં ભૂલ: "+error.message,"error"); return; }
   currentProfile = data;
@@ -351,12 +345,8 @@ async function loadMyProfile() {
     $("gender").value = data.gender || "";
     $("birthDate").value = data.birth_date || "";
     $("city").value = data.city || "";
-    $("height").value = data.height || "";
     $("education").value = data.education || "";
     $("occupation").value = data.occupation || "";
-    $("employmentType").value = data.employment_type || "";
-    $("businessName").value = data.business_name || "";
-    $("annualIncome").value = data.annual_income || "";
     $("community").value = data.community || "";
     $("maritalStatus").value = data.marital_status || "";
     $("aboutMe").value = data.about_me || "";
@@ -369,9 +359,9 @@ $("profileForm").addEventListener("submit", async e => {
   if (!currentUser) { status("profileStatus","Profile Save કરવા પહેલાં Login કરો.","error"); $("login").scrollIntoView({behavior:"smooth"}); return; }
   const payload = {
     id: currentUser.id, user_id: currentUser.id, full_name:$("fullName").value.trim(),
-    gender:$("gender").value, birth_date:$("birthDate").value || null, height:$("height").value.trim(),
+    gender:$("gender").value, birth_date:$("birthDate").value || null,
     city:$("city").value.trim(), education:$("education").value.trim(),
-    occupation:$("occupation").value.trim(), employment_type:$("employmentType").value, business_name:$("businessName").value.trim(), annual_income:$("annualIncome").value, community:$("community").value.trim(),
+    occupation:$("occupation").value.trim(), community:$("community").value.trim(),
     marital_status:$("maritalStatus").value, about_me:$("aboutMe").value.trim(),
     updated_at:new Date().toISOString()
   };
@@ -418,24 +408,14 @@ async function loadProfiles() {
   host.innerHTML='<div class="card">Profiles લોડ થઈ રહી છે...</div>';
   try{
     let q=sbClient.from("member_profiles")
-      .select("id,user_id,full_name,gender,birth_date,height,city,education,occupation,employment_type,business_name,annual_income,community,marital_status,about_me,photo_url,premium_status,premium_expiry")
+      .select("id,user_id,full_name,gender,birth_date,city,education,occupation,community,marital_status,about_me,photo_url,premium_status,premium_expiry")
       .order("updated_at",{ascending:false}).limit(100);
     const city=$("searchCity").value.trim(),gender=$("searchGender").value;
     if(city)q=q.ilike("city","%"+city+"%");
     if(gender)q=q.eq("gender",gender);
-    const marital=$("filterMarital").value, education=$("filterEducation").value.trim(), occupation=$("filterOccupation").value.trim(), community=$("filterCommunity").value.trim(), height=$("filterHeight").value.trim(), employment=$("filterEmploymentType").value, income=$("filterIncome").value;
-    if(marital)q=q.eq("marital_status",marital);
-    if(education)q=q.ilike("education","%"+education+"%");
-    if(occupation)q=q.ilike("occupation","%"+occupation+"%");
-    if(community)q=q.ilike("community","%"+community+"%");
-    if(height)q=q.ilike("height","%"+height+"%");
-    if(employment)q=q.eq("employment_type",employment);
-    if(income)q=q.eq("annual_income",income);
     const {data,error}=await q;
     if(error){host.innerHTML="";return status("profilesStatus","Profiles લોડ કરવામાં ભૂલ: "+error.message,"error");}
-    const minAge=Number($("filterAgeMin").value||18),maxAge=Number($("filterAgeMax").value||100),today=new Date();
-    const filtered=(data||[]).filter(p=>{if(!p.birth_date)return !$("filterAgeMin").value&&!$("filterAgeMax").value;const b=new Date(p.birth_date+"T00:00:00");let age=today.getFullYear()-b.getFullYear();if(today.getMonth()<b.getMonth()||(today.getMonth()===b.getMonth()&&today.getDate()<b.getDate()))age--;return age>=minAge&&age<=maxAge;});
-    if(!filtered||filtered.length===0){host.innerHTML='<div class="card">હાલ કોઈ પ્રોફાઇલ મળી નથી.</div>';return status("profilesStatus","કુલ પ્રોફાઇલ: 0");}
+    if(!data||data.length===0){host.innerHTML='<div class="card">હાલ કોઈ પ્રોફાઇલ મળી નથી.</div>';return status("profilesStatus","કુલ પ્રોફાઇલ: 0");}
     const {data:shortRows,error:shortErr}=await sbClient.from("shortlists").select("profile_user_id").eq("user_id",currentUser.id);
     if(shortErr){host.innerHTML="";return status("profilesStatus","Shortlist તપાસવામાં ભૂલ: "+shortErr.message,"error");}
     const shortlistSet=new Set((shortRows||[]).map(x=>x.profile_user_id));
@@ -443,7 +423,7 @@ async function loadProfiles() {
     if(sentError){host.innerHTML="";return status("profilesStatus","Interest તપાસવામાં ભૂલ: "+sentError.message,"error");}
     const sentMap=new Map((sentInterests||[]).map(x=>[x.receiver_id,x.status||"pending"]));
     const uuidPattern=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-    host.innerHTML=filtered.map(p=>{
+    host.innerHTML=data.map(p=>{
       const uid=p.user_id||p.id||"",valid=typeof uid==="string"&&uuidPattern.test(uid),own=uid===currentUser.id;
       const btn=!valid?'<p class="muted">સભ્યની ID ઉપલબ્ધ નથી.</p>':own?'<button class="btn" type="button" disabled>તમારી Profile</button>':sentMap.has(uid)?`<button class="btn interestBtn" type="button" disabled>${sentMap.get(uid)==="accepted"?"Interest Accepted":"Interest Sent"}</button>`:`<button class="btn interestBtn" data-user="${esc(uid)}" type="button">Express Interest</button>`;
       const viewerPremium=viewerHasPremium(currentProfile);
@@ -453,9 +433,9 @@ async function loadProfiles() {
       const favLabel=shortlistSet.has(uid)?"♥ Shortlisted":"♡ Add Shortlist";
       const fav=valid&&!own?`<button class="btn outline shortlistBtn" data-user="${esc(uid)}" type="button">${favLabel}</button>`:"";
       const detail=valid&&!own?`<button class="btn outline viewProfileBtn" data-user="${esc(uid)}" type="button">View Profile</button>`:"";
-      return `<article class="card profile-card" data-profile-card="${esc(uid)}">${photoBlock}<h3>${esc(p.full_name||"Elite Member")}</h3><span class="pill">${esc(p.gender||"")}</span><div>${esc(p.city||"")}</div><div>${esc(p.height||"")}</div><div>${esc(p.education||"")}</div><div>${esc(p.occupation||"")}</div><div>${esc(p.community||"")}</div><p>${esc(p.about_me||"")}</p>${btn}${fav}${detail}<div class="profileDetail hidden" id="profileDetail-${esc(uid)}"><p>Birth Date: ${esc(p.birth_date||"Not provided")}</p><p>Height: ${esc(p.height||"Not provided")}</p><p>Marital Status: ${esc(p.marital_status||"")}</p><p>Occupation: ${esc(p.occupation||"")}</p></div></article>`;
+      return `<article class="card profile-card" data-profile-card="${esc(uid)}">${photoBlock}<h3>${esc(p.full_name||"Elite Member")}</h3><span class="pill">${esc(p.gender||"")}</span><div>${esc(p.city||"")}</div><div>${esc(p.education||"")}</div><div>${esc(p.occupation||"")}</div><div>${esc(p.community||"")}</div><p>${esc(p.about_me||"")}</p>${btn}${fav}${detail}<div class="profileDetail hidden" id="profileDetail-${esc(uid)}"><p>Birth Date: ${esc(p.birth_date||"Not provided")}</p><p>Marital Status: ${esc(p.marital_status||"")}</p><p>Occupation: ${esc(p.occupation||"")}</p></div></article>`;
     }).join("");
-    status("profilesStatus","કુલ પ્રોફાઇલ: "+filtered.length);
+    status("profilesStatus","કુલ પ્રોફાઇલ: "+data.length);
     host.querySelectorAll(".interestBtn:not([disabled])").forEach(btn=>btn.addEventListener("click",()=>sendInterest(btn.dataset.user,btn)));
     host.querySelectorAll(".shortlistBtn").forEach(btn=>btn.addEventListener("click",()=>toggleShortlist(btn.dataset.user,btn)));
     host.querySelectorAll(".viewProfileBtn").forEach(btn=>btn.addEventListener("click",()=>recordProfileVisit(btn.dataset.user,btn)));
@@ -600,7 +580,7 @@ $("chatForm").addEventListener("submit",async e=>{
  try{if(!(await acceptedMatchIds()).includes(activeChatUser))throw new Error("Accepted Interest જરૂરી છે.");const {error}=await sbClient.from("messages").insert({sender_id:currentUser.id,receiver_id:activeChatUser,message:msg});if(error)throw error;await sendMemberPushNotification(activeChatUser,"Elite Matrimony","તમને નવો Message મળ્યો છે.");$("chatInput").value="";broadcastTyping(false);await refreshChat();status("chatStatus","Message મોકલાયો.","success");}
  catch(err){status("chatStatus","Message Error: "+err.message,"error");}finally{$("chatSendBtn").disabled=false;}
 });
-const plans={month_1:{label:"1 Month",base:499,months:1},month_3:{label:"3 Months",base:1249,months:3},month_6:{label:"6 Months",base:1999,months:6},month_12:{label:"12 Months",base:2999,months:12}};
+const plans={month_1:{label:"1 Month",base:599,months:1},month_3:{label:"3 Months",base:1499,months:3},month_6:{label:"6 Months",base:2299,months:6},month_12:{label:"12 Months",base:3999,months:12}};
 document.querySelectorAll(".choosePlan").forEach(btn=>btn.addEventListener("click",()=>startPayment(btn.dataset.plan)));
 async function startPayment(planKey){
  if(!currentUser){status("paymentStatus","Premium લેવા પહેલાં Login કરો.","error");$("login").scrollIntoView({behavior:"smooth"});return;}
