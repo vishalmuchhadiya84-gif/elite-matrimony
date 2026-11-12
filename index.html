@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#791b3a">
-<link rel="manifest" href="/elite-matrimony/manifest.json">
 <title>Elite Gujarati Matrimony | Your Perfect Match</title>
 <meta name="description" content="Elite Gujarati Matrimony - Find your life partner in Gujarat.">
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
@@ -20,36 +19,19 @@ window.addEventListener("error",function(e){var b=document.getElementById("globa
 window.addEventListener("unhandledrejection",function(e){var b=document.getElementById("globalStatus");if(b){b.style.display="block";b.textContent="App error: "+(e.reason&&e.reason.message||e.reason||"unknown");}});
 </script>
 <header><div class="container nav">
-
-<svg class="brand-mark" viewBox="0 0 64 64" role="img" aria-label="Elite Gujarati Matrimony Logo" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="eliteGold" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#FFE8A3"/>
-      <stop offset="50%" stop-color="#D4AF37"/>
-      <stop offset="100%" stop-color="#9B7020"/>
-    </linearGradient>
-  </defs>
-
-  <path d="M32 58 C24 51 5 37 5 23 C5 10 21 4 32 16 C43 4 59 10 59 23 C59 37 40 51 32 58Z"
-        fill="#65172C" stroke="url(#eliteGold)" stroke-width="2.5"/>
-
-  <circle cx="25" cy="24" r="6" fill="url(#eliteGold)"/>
-  <circle cx="39" cy="24" r="6" fill="url(#eliteGold)"/>
-
-  <path d="M16 43 C16 32 24 30 32 37 C40 30 48 32 48 43"
-        fill="none" stroke="url(#eliteGold)" stroke-width="3.5" stroke-linecap="round"/>
-
-  <path d="M32 44 L36 48 L32 52 L28 48 Z" fill="url(#eliteGold)"/>
-</svg>
-
+<a class="brand" href="#home" aria-label="Elite Gujarati Matrimony Home">
+<svg class="brand-mark" viewBox="0 0 64 64" role="img" aria-label="Elite Gujarati Matrimony logo" xmlns="http://www.w3.org/2000/svg">
+ <defs><linearGradient id="logoGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f2d38a"/><stop offset="1" stop-color="#b9852e"/></linearGradient></defs>
+ <circle cx="21" cy="10" r="6" fill="url(#logoGold)"/><circle cx="43" cy="10" r="6" fill="url(#logoGold)"/>
+ <path d="M21 19c-9 0-16 7-16 16 0 10 13 20 27 28 14-8 27-18 27-28 0-9-7-16-16-16-5 0-9 3-11 7-2-4-6-7-11-7Z" fill="none" stroke="url(#logoGold)" stroke-width="3.5" stroke-linejoin="round"/>
+ <path d="M21 27c-5 0-9 4-9 9 0 6 9 13 20 20 11-7 20-14 20-20 0-5-4-9-9-9-5 0-8 4-11 8-3-4-6-8-11-8Z" fill="none" stroke="url(#logoGold)" stroke-width="2.5" stroke-linejoin="round"/>
+</svg><span class="brand-copy"><span class="brand-name">ELITE GUJARATI<br> MATRIMONY</span><small>YOUR PERFECT MATCH</small></span></a>
 <nav class="nav-links" aria-label="Main navigation">
-<a href="#home">Home</a><a href="#profiles">Profiles</a><a href="#plans">Premium</a><a href="#profile-form">My Profile</a><a href="#help">Help</a>
+<a href="#home">Home</a><a href="#profiles">Profiles</a><a href="#plans">Premium</a><a href="#profile-form">My Profile</a>
 <button class="btn outline" id="loginNav" type="button">Login</button><button class="btn hidden" id="logoutBtn" type="button">Logout</button>
 </nav></div></header>
 <main>
-<div class="container">
-  <div id="globalStatus" class="status hidden"></div>
-</div>
+<div class="container"><div id="globalStatus" class="status">વેબસાઇટ શરૂ થઈ રહી છે...</div></div>
 <section class="hero" id="home"><div class="container hero-inner">
 <div><div class="eyebrow">WELCOME TO ELITE GUJARATI MATRIMONY</div><h1>તમારા જીવનસાથીની નવી શરૂઆત અહીંથી કરો</h1>
 <p>ગુજરાતમાં તમારા માટે યોગ્ય જીવનસાથી શોધવાની સફર. તમારી પ્રોફાઇલ બનાવો, સભ્યોને જાણો અને સમજદારીથી આગળ વધો.</p>
@@ -108,59 +90,12 @@ window.addEventListener("unhandledrejection",function(e){var b=document.getEleme
 <div><label for="birthDate">જન્મ તારીખ *</label><input id="birthDate" type="date" required></div>
 <div><label for="city">શહેર *</label><input id="city" required maxlength="100" placeholder="ઉદાહરણ: Ahmedabad"></div>
 <div><label for="phoneNumber">Mobile Number *</label><input id="phoneNumber" type="tel" inputmode="numeric" maxlength="10" required></div>
+<div><label for="height">Height (ફૂટ/ઇંચ)</label><input id="height" maxlength="30" placeholder="ઉદાહરણ: 5 ft 4 in"></div>
 <div><label for="education">અભ્યાસ</label><input id="education" maxlength="150"></div>
 <div><label for="occupation">વ્યવસાય</label><input id="occupation" maxlength="150"></div>
 <div><label for="community">સમાજ / Community</label><input id="community" maxlength="100"></div>
 <div><label for="maritalStatus">વૈવાહિક સ્થિતિ</label><select id="maritalStatus"><option value="">પસંદ કરો</option><option value="Never Married">અપરિણીત</option><option value="Divorced">છૂટાછેડા લીધેલા</option><option value="Widowed">વિધવા / વિધુર</option><option value="Other">અન્ય</option></select></div>
-</div><div><label for="aboutMe">તમારા વિશે</label><textarea id="aboutMe" maxlength="1000" placeholder="તમારા વિશે ટૂંકમાં લખો"></textarea><h3>Profile Created By</h3>
-
-<select id="profileCreatedBy">
-  <option value="">Select</option>
-  <option>Self</option>
-  <option>Father</option>
-  <option>Mother</option>
-  <option>Brother</option>
-  <option>Sister</option>
-  <option>Relative</option>
-  <option>Friend</option>
-</select>
-
-<h3>Parents Details</h3>
-
-<input id="fatherName" placeholder="Father Name">
-<input id="motherName" placeholder="Mother Name">
-<input id="fatherOccupation" placeholder="Father Occupation">
-<input id="motherOccupation" placeholder="Mother Occupation">
-<h3>Income Details</h3>
-
-<label>Annual Income</label>
-<select id="annualIncome">
-  <option value="">Select Annual Income</option>
-  <option>Below ₹2 Lakh</option>
-  <option>₹2–5 Lakh</option>
-  <option>₹5–10 Lakh</option>
-  <option>₹10–20 Lakh</option>
-  <option>₹20–50 Lakh</option>
-  <option>₹50 Lakh+</option>
-</select>
-
-<label>Family Annual Income</label>
-<select id="familyAnnualIncome">
-  <option value="">Select Family Annual Income</option>
-  <option>Below ₹2 Lakh</option>
-  <option>₹2–5 Lakh</option>
-  <option>₹5–10 Lakh</option>
-  <option>₹10–20 Lakh</option>
-  <option>₹20–50 Lakh</option>
-  <option>₹50 Lakh+</option>
-</select>
-<h3>Siblings Details</h3>
-
-<input id="brothersCount" type="number" min="0" placeholder="Total Brothers">
-<input id="brothersMarried" type="number" min="0" placeholder="Married Brothers">
-
-<input id="sistersCount" type="number" min="0" placeholder="Total Sisters">
-<input id="sistersMarried" type="number" min="0" placeholder="Married Sisters"></div>
+</div><div><label for="aboutMe">તમારા વિશે</label><textarea id="aboutMe" maxlength="1000" placeholder="તમારા વિશે ટૂંકમાં લખો"></textarea></div>
 <button class="btn" type="submit">Save Profile</button></form>
 <div class="card" style="margin-top:16px"><h3>📸 Profile Photo Gallery (Maximum 10)</h3><p class="muted">એક સાથે 10 સુધી ફોટા પસંદ કરી Upload કરો. પ્રથમ ફોટો Main Profile Photo રહેશે.</p><label for="galleryFiles">ફોટા પસંદ કરો</label><input id="galleryFiles" type="file" accept="image/*" multiple><button class="btn" id="uploadGalleryBtn" type="button">Upload Selected Photos</button><div id="galleryStatus" class="status" role="status"></div><div id="myPhotoGallery" class="grid" style="margin-top:12px"></div></div>
 <div id="profileStatus" class="status" role="status"></div></div>
@@ -188,12 +123,6 @@ window.addEventListener("unhandledrejection",function(e){var b=document.getEleme
 </div></section>
 <section id="interests"><div class="container"><div class="section-head"><h2>Received Interest</h2><p>તમારી પ્રોફાઇલમાં રસ દર્શાવનાર સભ્યો.</p></div>
 <div class="card"><p>Interest સુવિધા માટે databaseમાં interests ટેબલ અને યોગ્ય access rules જરૂરી છે.</p><button class="btn" id="loadInterestsBtn" type="button">View Received Interest</button><div id="interestStatus" class="status" role="status"></div></div></div></section>
-<section id="privacy"><div class="container"><div class="section-head"><h2>Profile Privacy & Security</h2><p>તમારી Profile અને સુરક્ષા સેટિંગ્સ</p></div>
-<div class="card"><h3>Privacy Settings</h3><label style="display:block;margin:10px 0"><input type="checkbox" id="privacyProfileVisible" checked> Member Search માં મારી Profile દેખાય</label>
-<label style="display:block;margin:10px 0"><input type="checkbox" id="privacyPhotoVisible" checked> મારી Profile Photos દેખાય</label>
-<button class="btn" id="savePrivacyBtn" type="button">Save Privacy Settings</button><div id="privacyStatus" class="status"></div></div>
-<div class="grid" style="margin-top:16px"><div class="card"><h3>Blocked Members</h3><button class="btn outline" id="loadBlocksBtn" type="button">View Block List</button><div id="blocksList" class="grid"></div><div id="blocksStatus" class="status"></div></div>
-<div class="card"><h3>Safety</h3><p>અયોગ્ય Profile અથવા સભ્યની ફરિયાદ કરો. Admin દ્વારા તપાસ કરવામાં આવશે.</p><p class="muted">Report કરતી વખતે યોગ્ય કારણ આપો.</p></div></div></div></section>
 <section id="activity"><div class="container"><div class="section-head"><h2>Activity</h2><p>તમારી Profile અને Interest Activity</p></div>
 <div class="grid">
 <div class="card"><h3>Profile Visits</h3><p>તમારી Profile કોણે જોઈ તે જોવા.</p><button class="btn" id="loadVisitsBtn" type="button">View Profile Visitors</button><div id="visitsList" class="grid"></div><div id="visitsStatus" class="status"></div></div>
@@ -201,12 +130,12 @@ window.addEventListener("unhandledrejection",function(e){var b=document.getEleme
 <div class="card"><h3>Contact Views</h3><p>Contact details access tracking જરૂરી છે.</p></div>
 </div><div class="card" style="margin-top:16px"><h3>Interests</h3><p>Received / Accepted / Sent Interests</p><a class="btn" href="#interests">View Interests</a></div></div></section>
 <section id="messenger"><div class="container"><div class="section-head"><h2>Messenger</h2><p>Accepted matches સાથે સુરક્ષિત વાતચીત</p></div><div class="card"><p id="messengerIntro">Login અને Premium પછી Accepted Interest સાથે Chat કરી શકો છો.</p><div id="chatList" class="grid"></div><div id="chatCard" class="hidden" style="margin-top:16px"><h3 id="chatHeading">Chat</h3><div id="typingIndicator" class="muted" style="min-height:20px;font-size:13px;margin:4px 0" aria-live="polite"></div><div id="chatMessages" aria-live="polite" style="height:300px;overflow:auto;border:1px solid var(--border);border-radius:10px;padding:12px;background:#fff;display:flex;flex-direction:column;gap:8px"></div><form id="chatForm" style="margin-top:12px"><label for="chatInput">તમારો Message</label><textarea id="chatInput" maxlength="2000" required placeholder="Message લખો..."></textarea><button class="btn" id="chatSendBtn" type="submit">Send Message</button></form><div id="chatStatus" class="status" role="status"></div></div><div id="messengerStatus" class="status" role="status"></div><a class="btn outline" href="#interests">Accepted Interests જુઓ</a></div></div></section>
-<section id="plans"><div class="container"><div class="section-head"><h2>Premium Membership Plans</h2><p>તમારી જરૂરિયાત પ્રમાણે પ્લાન પસંદ કરો.</p><p class="muted">🎉 Launch Offer (30 દિવસ) — 18% GST અલગથી લાગુ પડશે.</p></div>
+<section id="plans"><div class="container"><div class="section-head"><h2>Premium Membership Plans</h2><p>તમારી જરૂરિયાત પ્રમાણે પ્લાન પસંદ કરો.</p><p class="muted">🎉 🎉 80% Discount Launch Offer — 18% GST અલગથી લાગુ પડશે.</p></div>
 <div class="grid">
-<div class="card plan"><span class="tag">1 Month</span><h3>Monthly Plan</h3><div class="price">₹599</div><div class="gst">Base price</div><div class="gst">GST (18%): ₹107.82</div><div class="total">કુલ: ₹706.82</div><button class="btn choosePlan" data-plan="month_1" type="button">Choose Plan</button></div>
-<div class="card plan"><span class="tag">3 Months</span><h3>Quarterly Plan</h3><div class="price">₹1,499</div><div class="gst">Base price</div><div class="gst">GST (18%): ₹269.82</div><div class="total">કુલ: ₹1,768.82</div><button class="btn choosePlan" data-plan="month_3" type="button">Choose Plan</button></div>
-<div class="card plan"><span class="tag">6 Months</span><h3>Half-Year Plan</h3><div class="price">₹2,299</div><div class="gst">Base price</div><div class="gst">GST (18%): ₹413.82</div><div class="total">કુલ: ₹2,712.82</div><button class="btn choosePlan" data-plan="month_6" type="button">Choose Plan</button></div>
-<div class="card plan"><span class="tag">12 Months</span><h3>Annual Plan</h3><div class="price">₹3,999</div><div class="gst">Base price</div><div class="gst">GST (18%): ₹719.82</div><div class="total">કુલ: ₹4,718.82</div><button class="btn choosePlan" data-plan="month_12" type="button">Choose Plan</button></div>
+<div class="card plan"><span class="tag">80% Discount</span><h3>1 Month Plan</h3><div class="price">₹499</div><div class="gst">Base price: ₹499</div><div class="gst">GST (18%): ₹89.82</div><div class="total">કુલ: ₹588.82</div><button class="btn choosePlan" data-plan="month_1" type="button">Choose Plan</button></div>
+<div class="card plan"><span class="tag">80% Discount</span><h3>3 Months Plan</h3><div class="price">₹1,249</div><div class="gst">Base price: ₹1,249</div><div class="gst">GST (18%): ₹224.82</div><div class="total">કુલ: ₹1,473.82</div><button class="btn choosePlan" data-plan="month_3" type="button">Choose Plan</button></div>
+<div class="card plan"><span class="tag">80% Discount</span><h3>6 Months Plan</h3><div class="price">₹1,999</div><div class="gst">Base price: ₹1,999</div><div class="gst">GST (18%): ₹359.82</div><div class="total">કુલ: ₹2,358.82</div><button class="btn choosePlan" data-plan="month_6" type="button">Choose Plan</button></div>
+<div class="card plan"><span class="tag">80% Discount</span><h3>12 Months Plan</h3><div class="price">₹2,999</div><div class="gst">Base price: ₹2,999</div><div class="gst">GST (18%): ₹539.82</div><div class="total">કુલ: ₹3,538.82</div><button class="btn choosePlan" data-plan="month_12" type="button">Choose Plan</button></div>
 </div><div id="paymentStatus" class="status" role="status"></div></div></section>
 <section id="admin"><div class="container"><div class="section-head"><h2>Admin Panel</h2><p>માત્ર અધિકૃત Admin માટે.</p></div><div class="card"><p>Admin access માટે Supabaseમાં server-side permissions અને RLS policies યોગ્ય હોવી જરૂરી છે.</p><button class="btn outline" id="adminBtn" type="button">Check Admin Access</button><div id="adminStatus" class="status" role="status"></div><div id="adminMembers" class="grid"></div></div></div></section>
 
@@ -239,39 +168,6 @@ window.addEventListener("unhandledrejection",function(e){var b=document.getEleme
 </div></div></section>
 <section id="contact"><div class="container"><div class="card"><h2>Contact Us</h2><p>Customer Support:</p><p><a href="mailto:elitematrimony1508@gmail.com"><strong>elitematrimony1508@gmail.com</strong></a></p></div></div></section>
 
-<section id="help">
-<div class="container">
-<div class="section-head">
-<h2>Help &amp; Support</h2>
-<p>Elite Matrimony મદદ કેન્દ્ર</p>
-</div>
-
-<div class="grid">
-<div class="card">
-<h3>Login / Registration</h3>
-<p>નવું Account બનાવવા Register કરો. પહેલેથી Account હોય તો Login કરો.</p>
-</div>
-
-<div class="card">
-<h3>Profile Help</h3>
-<p>My Profile માં તમારી વિગતો ભરો અને Save Profile દબાવો.</p>
-</div>
-
-<div class="card">
-<h3>Premium / Payment</h3>
-<p>Premium Plan પસંદ કરો. ચુકવણી પછી Premium Status તપાસો.</p>
-</div>
-</div>
-
-<div class="card" style="margin-top:16px">
-<h3>Contact Support</h3>
-<p>મદદ માટે Email કરો:</p>
-<a class="btn" href="mailto:elitematrimony1508@gmail.com">Email Support</a>
-<p>elitematrimony1508@gmail.com</p>
-</div>
-</div>
-</section>
-  
 </main>
 <footer><div class="container footer-row"><div><strong>ELITE GUJARATI MATRIMONY</strong><p>તમારા જીવનસાથીની શોધમાં એક નવી શરૂઆત.</p></div><div><div class="footer-links"><a href="#privacy">Privacy Policy</a> <a href="#terms">Terms &amp; Conditions</a> <a href="#contact">Contact</a></div><p>© <span id="year"></span> Elite Gujarati Matrimony</p></div></div></footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" onerror="this.onerror=null;this.src='https://unpkg.com/@supabase/supabase-js@2';"></script>
@@ -325,9 +221,7 @@ async function setupFirebaseMessaging(){
   try{
     if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);
     firebaseMessaging=firebase.messaging();
-    pushServiceWorkerRegistration=await navigator.serviceWorker.register(
-  "/elite-matrimony/firebase-messaging-sw.js"
-);
+    pushServiceWorkerRegistration=await navigator.serviceWorker.register("/firebase-messaging-sw.js");
     return true;
   }catch(e){pushStatus("Firebase Setup Error: "+(e.message||e),"error");return false;}
 }
@@ -389,35 +283,10 @@ function updateUI() {
   $("loginNav").textContent = currentUser ? "My Account" : "Login";
   $("accountEmail").textContent = currentUser ? "Login: " + currentUser.email : "";
   refreshPushUI();
-  if(currentUser && typeof loadPrivacySettings==="function") loadPrivacySettings();
 }
-
 $("loginNav").addEventListener("click", () => {
-  if (currentUser) {
-    $("profile-form").scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
-    return;
-  }
-
-  $("register").scrollIntoView({
-    behavior: "smooth",
-    block: "start"
-  });
-
-  setTimeout(() => {
-    $("login").scrollIntoView({
-      behavior: "smooth",
-      block: "center"
-    });
-
-    $("loginEmail").focus({
-      preventScroll: true
-    });
-  }, 350);
+  (currentUser ? $("profile-form") : $("login")).scrollIntoView({behavior:"smooth"});
 });
-
 
 $("registerForm").addEventListener("submit", async e => {
   e.preventDefault();
@@ -462,7 +331,7 @@ function viewerHasPremium(profile=currentProfile){
 async function loadMyProfile() {
   if (!currentUser) return;
   const {data,error} = await sbClient.from("member_profiles")
-    .select("id,user_id,full_name,gender,birth_date,city,education,occupation,community,marital_status,about_me,photo_url,premium_status,premium_plan,premium_expiry,updated_at")
+    .select("id,user_id,full_name,gender,birth_date,height,city,education,occupation,community,marital_status,about_me,photo_url,premium_status,premium_plan,premium_expiry,updated_at")
     .eq("user_id",currentUser.id).maybeSingle();
   if (error) { status("profileStatus","Profile લોડ કરવામાં ભૂલ: "+error.message,"error"); return; }
   currentProfile = data;
@@ -477,6 +346,7 @@ async function loadMyProfile() {
     $("gender").value = data.gender || "";
     $("birthDate").value = data.birth_date || "";
     $("city").value = data.city || "";
+    $("height").value = data.height || "";
     $("education").value = data.education || "";
     $("occupation").value = data.occupation || "";
     $("community").value = data.community || "";
@@ -491,7 +361,7 @@ $("profileForm").addEventListener("submit", async e => {
   if (!currentUser) { status("profileStatus","Profile Save કરવા પહેલાં Login કરો.","error"); $("login").scrollIntoView({behavior:"smooth"}); return; }
   const payload = {
     id: currentUser.id, user_id: currentUser.id, full_name:$("fullName").value.trim(),
-    gender:$("gender").value, birth_date:$("birthDate").value || null,
+    gender:$("gender").value, birth_date:$("birthDate").value || null, height:$("height").value.trim(),
     city:$("city").value.trim(), education:$("education").value.trim(),
     occupation:$("occupation").value.trim(), community:$("community").value.trim(),
     marital_status:$("maritalStatus").value, about_me:$("aboutMe").value.trim(),
@@ -540,14 +410,22 @@ async function loadProfiles() {
   host.innerHTML='<div class="card">Profiles લોડ થઈ રહી છે...</div>';
   try{
     let q=sbClient.from("member_profiles")
-      .select("id,user_id,full_name,gender,birth_date,city,education,occupation,community,marital_status,about_me,photo_url,premium_status,premium_expiry")
+      .select("id,user_id,full_name,gender,birth_date,height,city,education,occupation,community,marital_status,about_me,photo_url,premium_status,premium_expiry")
       .order("updated_at",{ascending:false}).limit(100);
     const city=$("searchCity").value.trim(),gender=$("searchGender").value;
     if(city)q=q.ilike("city","%"+city+"%");
     if(gender)q=q.eq("gender",gender);
+    const marital=$("filterMarital").value, education=$("filterEducation").value.trim(), occupation=$("filterOccupation").value.trim(), community=$("filterCommunity").value.trim(), height=$("filterHeight").value.trim();
+    if(marital)q=q.eq("marital_status",marital);
+    if(education)q=q.ilike("education","%"+education+"%");
+    if(occupation)q=q.ilike("occupation","%"+occupation+"%");
+    if(community)q=q.ilike("community","%"+community+"%");
+    if(height)q=q.ilike("height","%"+height+"%");
     const {data,error}=await q;
     if(error){host.innerHTML="";return status("profilesStatus","Profiles લોડ કરવામાં ભૂલ: "+error.message,"error");}
-    if(!data||data.length===0){host.innerHTML='<div class="card">હાલ કોઈ પ્રોફાઇલ મળી નથી.</div>';return status("profilesStatus","કુલ પ્રોફાઇલ: 0");}
+    const minAge=Number($("filterAgeMin").value||18),maxAge=Number($("filterAgeMax").value||100),today=new Date();
+    const filtered=(data||[]).filter(p=>{if(!p.birth_date)return !$("filterAgeMin").value&&!$("filterAgeMax").value;const b=new Date(p.birth_date+"T00:00:00");let age=today.getFullYear()-b.getFullYear();if(today.getMonth()<b.getMonth()||(today.getMonth()===b.getMonth()&&today.getDate()<b.getDate()))age--;return age>=minAge&&age<=maxAge;});
+    if(!filtered||filtered.length===0){host.innerHTML='<div class="card">હાલ કોઈ પ્રોફાઇલ મળી નથી.</div>';return status("profilesStatus","કુલ પ્રોફાઇલ: 0");}
     const {data:shortRows,error:shortErr}=await sbClient.from("shortlists").select("profile_user_id").eq("user_id",currentUser.id);
     if(shortErr){host.innerHTML="";return status("profilesStatus","Shortlist તપાસવામાં ભૂલ: "+shortErr.message,"error");}
     const shortlistSet=new Set((shortRows||[]).map(x=>x.profile_user_id));
@@ -555,7 +433,7 @@ async function loadProfiles() {
     if(sentError){host.innerHTML="";return status("profilesStatus","Interest તપાસવામાં ભૂલ: "+sentError.message,"error");}
     const sentMap=new Map((sentInterests||[]).map(x=>[x.receiver_id,x.status||"pending"]));
     const uuidPattern=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-    host.innerHTML=data.map(p=>{
+    host.innerHTML=filtered.map(p=>{
       const uid=p.user_id||p.id||"",valid=typeof uid==="string"&&uuidPattern.test(uid),own=uid===currentUser.id;
       const btn=!valid?'<p class="muted">સભ્યની ID ઉપલબ્ધ નથી.</p>':own?'<button class="btn" type="button" disabled>તમારી Profile</button>':sentMap.has(uid)?`<button class="btn interestBtn" type="button" disabled>${sentMap.get(uid)==="accepted"?"Interest Accepted":"Interest Sent"}</button>`:`<button class="btn interestBtn" data-user="${esc(uid)}" type="button">Express Interest</button>`;
       const viewerPremium=viewerHasPremium(currentProfile);
@@ -565,60 +443,14 @@ async function loadProfiles() {
       const favLabel=shortlistSet.has(uid)?"♥ Shortlisted":"♡ Add Shortlist";
       const fav=valid&&!own?`<button class="btn outline shortlistBtn" data-user="${esc(uid)}" type="button">${favLabel}</button>`:"";
       const detail=valid&&!own?`<button class="btn outline viewProfileBtn" data-user="${esc(uid)}" type="button">View Profile</button>`:"";
-      const safety=valid&&!own?`<button class="btn outline blockMemberBtn" data-user="${esc(uid)}" type="button">Block</button><button class="btn outline reportMemberBtn" data-user="${esc(uid)}" data-name="${esc(p.full_name||"Member")}" type="button">Report</button>`:"";
-      return `<article class="card profile-card" data-profile-card="${esc(uid)}">${photoBlock}<h3>${esc(p.full_name||"Elite Member")}</h3><span class="pill">${esc(p.gender||"")}</span><div>${esc(p.city||"")}</div><div>${esc(p.education||"")}</div><div>${esc(p.occupation||"")}</div><div>${esc(p.community||"")}</div><p>${esc(p.about_me||"")}</p>${btn}${fav}${detail}${safety}<div class="profileDetail hidden" id="profileDetail-${esc(uid)}"><p>Birth Date: ${esc(p.birth_date||"Not provided")}</p><p>Marital Status: ${esc(p.marital_status||"")}</p><p>Occupation: ${esc(p.occupation||"")}</p></div></article>`;
+      return `<article class="card profile-card" data-profile-card="${esc(uid)}">${photoBlock}<h3>${esc(p.full_name||"Elite Member")}</h3><span class="pill">${esc(p.gender||"")}</span><div>${esc(p.city||"")}</div><div>${esc(p.height||"")}</div><div>${esc(p.education||"")}</div><div>${esc(p.occupation||"")}</div><div>${esc(p.community||"")}</div><p>${esc(p.about_me||"")}</p>${btn}${fav}${detail}<div class="profileDetail hidden" id="profileDetail-${esc(uid)}"><p>Birth Date: ${esc(p.birth_date||"Not provided")}</p><p>Height: ${esc(p.height||"Not provided")}</p><p>Marital Status: ${esc(p.marital_status||"")}</p><p>Occupation: ${esc(p.occupation||"")}</p></div></article>`;
     }).join("");
-    status("profilesStatus","કુલ પ્રોફાઇલ: "+data.length);
+    status("profilesStatus","કુલ પ્રોફાઇલ: "+filtered.length);
     host.querySelectorAll(".interestBtn:not([disabled])").forEach(btn=>btn.addEventListener("click",()=>sendInterest(btn.dataset.user,btn)));
     host.querySelectorAll(".shortlistBtn").forEach(btn=>btn.addEventListener("click",()=>toggleShortlist(btn.dataset.user,btn)));
     host.querySelectorAll(".viewProfileBtn").forEach(btn=>btn.addEventListener("click",()=>recordProfileVisit(btn.dataset.user,btn)));
-    host.querySelectorAll(".blockMemberBtn").forEach(btn=>btn.addEventListener("click",()=>blockMember(btn.dataset.user,btn)));
-    host.querySelectorAll(".reportMemberBtn").forEach(btn=>btn.addEventListener("click",()=>reportMember(btn.dataset.user,btn.dataset.name)));
   }catch(e){host.innerHTML="";status("profilesStatus","ભૂલ: "+(e.message||"Profiles લોડ થઈ શકી નથી."),"error");}
 }
-async function blockMember(targetUserId,button){
- if(!currentUser)return status("profilesStatus","Block કરવા Login કરો.","error");
- if(!confirm("આ સભ્યને Block કરવો છે? તે તમારી Profile સાથે સંપર્ક કરી શકશે નહીં."))return;
- button.disabled=true;
- const {error}=await sbClient.from("member_blocks").insert({blocker_user_id:currentUser.id,blocked_user_id:targetUserId});
- if(error){button.disabled=false;return status("profilesStatus","Block error: "+error.message,"error");}
- const card=button.closest("[data-profile-card]");if(card)card.remove();
- status("profilesStatus","સભ્ય Block થયો.","success");
-}
-async function reportMember(targetUserId,memberName){
- if(!currentUser)return status("profilesStatus","Report કરવા Login કરો.","error");
- const reason=prompt(memberName+" માટે ફરિયાદનું કારણ લખો:");
- if(!reason||!reason.trim())return;
- const {error}=await sbClient.from("member_reports").insert({reporter_user_id:currentUser.id,reported_user_id:targetUserId,reason:reason.trim()});
- if(error)return status("profilesStatus","Report error: "+error.message,"error");
- status("profilesStatus","Report Admin ને મોકલાઈ.","success");
-}
-async function loadPrivacySettings(){
- if(!currentUser)return status("privacyStatus","Login કર્યા પછી Privacy Settings મળશે.","error");
- const {data,error}=await sbClient.from("privacy_settings").select("profile_visible,photos_visible").eq("user_id",currentUser.id).maybeSingle();
- if(error)return status("privacyStatus","Settings load error: "+error.message,"error");
- $("privacyProfileVisible").checked=data?.profile_visible??true;
- $("privacyPhotoVisible").checked=data?.photos_visible??true;
-}
-$("savePrivacyBtn").addEventListener("click",async()=>{
- if(!currentUser)return status("privacyStatus","Login કરો.","error");
- const payload={user_id:currentUser.id,profile_visible:$("privacyProfileVisible").checked,photos_visible:$("privacyPhotoVisible").checked,updated_at:new Date().toISOString()};
- const {error}=await sbClient.from("privacy_settings").upsert(payload,{onConflict:"user_id"});
- if(error)return status("privacyStatus","Save error: "+error.message,"error");
- status("privacyStatus","Privacy Settings Save થઈ.","success");
-});
-$("loadBlocksBtn").addEventListener("click",async()=>{
- if(!currentUser)return status("blocksStatus","Login કરો.","error");
- const box=$("blocksList");box.innerHTML="Loading...";
- const {data:rows,error}=await sbClient.from("member_blocks").select("id,blocked_user_id,created_at").eq("blocker_user_id",currentUser.id).order("created_at",{ascending:false});
- if(error)return status("blocksStatus","Error: "+error.message,"error");
- if(!rows?.length){box.innerHTML="<p>Block List ખાલી છે.</p>";return;}
- const ids=rows.map(r=>r.blocked_user_id);const {data:ps,error:pe}=await sbClient.from("member_profiles").select("user_id,full_name,city").in("user_id",ids);
- if(pe)return status("blocksStatus","Profiles error: "+pe.message,"error");
- const mp=new Map((ps||[]).map(p=>[p.user_id,p]));
- box.innerHTML=rows.map(r=>`<div class="card"><strong>${esc(mp.get(r.blocked_user_id)?.full_name||"Member")}</strong><div>${esc(mp.get(r.blocked_user_id)?.city||"")}</div><button class="btn outline" data-unblock="${esc(r.blocked_user_id)}">Unblock</button></div>`).join("");
- box.querySelectorAll("[data-unblock]").forEach(b=>b.onclick=async()=>{const {error}=await sbClient.from("member_blocks").delete().eq("blocker_user_id",currentUser.id).eq("blocked_user_id",b.dataset.unblock);if(error)alert(error.message);else b.closest(".card").remove();});
-});
 async function toggleShortlist(profileUserId,button){
  if(!currentUser)return status("profilesStatus","Shortlist માટે Login કરો.","error");
  button.disabled=true;
@@ -758,7 +590,7 @@ $("chatForm").addEventListener("submit",async e=>{
  try{if(!(await acceptedMatchIds()).includes(activeChatUser))throw new Error("Accepted Interest જરૂરી છે.");const {error}=await sbClient.from("messages").insert({sender_id:currentUser.id,receiver_id:activeChatUser,message:msg});if(error)throw error;await sendMemberPushNotification(activeChatUser,"Elite Matrimony","તમને નવો Message મળ્યો છે.");$("chatInput").value="";broadcastTyping(false);await refreshChat();status("chatStatus","Message મોકલાયો.","success");}
  catch(err){status("chatStatus","Message Error: "+err.message,"error");}finally{$("chatSendBtn").disabled=false;}
 });
-const plans={month_1:{label:"1 Month",base:599,months:1},month_3:{label:"3 Months",base:1499,months:3},month_6:{label:"6 Months",base:2299,months:6},month_12:{label:"12 Months",base:3999,months:12}};
+const plans={month_1:{label:"1 Month",base:499,months:1},month_3:{label:"3 Months",base:1249,months:3},month_6:{label:"6 Months",base:1999,months:6},month_12:{label:"12 Months",base:2999,months:12}};
 document.querySelectorAll(".choosePlan").forEach(btn=>btn.addEventListener("click",()=>startPayment(btn.dataset.plan)));
 async function startPayment(planKey){
  if(!currentUser){status("paymentStatus","Premium લેવા પહેલાં Login કરો.","error");$("login").scrollIntoView({behavior:"smooth"});return;}
@@ -796,14 +628,5 @@ init();
 <script>
 (function(){const clear=document.getElementById("clearFiltersBtn");if(clear)clear.addEventListener("click",()=>{["searchCity","filterAgeMin","filterAgeMax","filterHeight","filterEducation","filterOccupation","filterCommunity"].forEach(id=>{const e=document.getElementById(id);if(e)e.value=""});["searchGender","filterMarital"].forEach(id=>{const e=document.getElementById(id);if(e)e.value=""});const b=document.getElementById("searchBtn");if(b)b.click();});})();
 </script>
-<script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/elite-matrimony/service-worker.js")
-      .catch(error => console.error(error));
-  });
-}
-</script>
-<script src="/elite-matrimony/navigation.js"></script>
 </body>
 </html>
