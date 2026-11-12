@@ -112,7 +112,33 @@ window.addEventListener("unhandledrejection",function(e){var b=document.getEleme
 <div><label for="occupation">વ્યવસાય</label><input id="occupation" maxlength="150"></div>
 <div><label for="community">સમાજ / Community</label><input id="community" maxlength="100"></div>
 <div><label for="maritalStatus">વૈવાહિક સ્થિતિ</label><select id="maritalStatus"><option value="">પસંદ કરો</option><option value="Never Married">અપરિણીત</option><option value="Divorced">છૂટાછેડા લીધેલા</option><option value="Widowed">વિધવા / વિધુર</option><option value="Other">અન્ય</option></select></div>
-</div><div><label for="aboutMe">તમારા વિશે</label><textarea id="aboutMe" maxlength="1000" placeholder="તમારા વિશે ટૂંકમાં લખો"></textarea></div>
+</div><div><label for="aboutMe">તમારા વિશે</label><textarea id="aboutMe" maxlength="1000" placeholder="તમારા વિશે ટૂંકમાં લખો"></textarea><h3>Profile Created By</h3>
+
+<select id="profileCreatedBy">
+  <option value="">Select</option>
+  <option>Self</option>
+  <option>Father</option>
+  <option>Mother</option>
+  <option>Brother</option>
+  <option>Sister</option>
+  <option>Relative</option>
+  <option>Friend</option>
+</select>
+
+<h3>Parents Details</h3>
+
+<input id="fatherName" placeholder="Father Name">
+<input id="motherName" placeholder="Mother Name">
+<input id="fatherOccupation" placeholder="Father Occupation">
+<input id="motherOccupation" placeholder="Mother Occupation">
+
+<h3>Siblings Details</h3>
+
+<input id="brothersCount" type="number" min="0" placeholder="Total Brothers">
+<input id="brothersMarried" type="number" min="0" placeholder="Married Brothers">
+
+<input id="sistersCount" type="number" min="0" placeholder="Total Sisters">
+<input id="sistersMarried" type="number" min="0" placeholder="Married Sisters"></div>
 <button class="btn" type="submit">Save Profile</button></form>
 <div class="card" style="margin-top:16px"><h3>📸 Profile Photo Gallery (Maximum 10)</h3><p class="muted">એક સાથે 10 સુધી ફોટા પસંદ કરી Upload કરો. પ્રથમ ફોટો Main Profile Photo રહેશે.</p><label for="galleryFiles">ફોટા પસંદ કરો</label><input id="galleryFiles" type="file" accept="image/*" multiple><button class="btn" id="uploadGalleryBtn" type="button">Upload Selected Photos</button><div id="galleryStatus" class="status" role="status"></div><div id="myPhotoGallery" class="grid" style="margin-top:12px"></div></div>
 <div id="profileStatus" class="status" role="status"></div></div>
