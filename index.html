@@ -93,6 +93,9 @@ window.addEventListener("unhandledrejection",function(e){var b=document.getEleme
 <div><label for="height">Height (ફૂટ/ઇંચ)</label><input id="height" maxlength="30" placeholder="ઉદાહરણ: 5 ft 4 in"></div>
 <div><label for="education">અભ્યાસ</label><input id="education" maxlength="150"></div>
 <div><label for="occupation">વ્યવસાય</label><input id="occupation" maxlength="150"></div>
+<div><label for="employmentType">Employment Type (નોકરીનો પ્રકાર)</label><select id="employmentType"><option value="">પસંદ કરો</option><option value="Job">Job / નોકરી</option><option value="Business">Business / ધંધો</option><option value="Self Employed">Self Employed / સ્વરોજગાર</option><option value="Other">Other / અન્ય</option></select></div>
+<div><label for="businessName">Company / Business Name</label><input id="businessName" maxlength="150" placeholder="કંપની અથવા ધંધાનું નામ"></div>
+<div><label for="annualIncome">Annual Income (વાર્ષિક આવક)</label><select id="annualIncome"><option value="">પસંદ કરો</option><option value="Below ₹2 lakh">₹2 લાખથી ઓછી</option><option value="₹2-5 lakh">₹2–5 લાખ</option><option value="₹5-10 lakh">₹5–10 લાખ</option><option value="₹10-20 lakh">₹10–20 લાખ</option><option value="₹20-50 lakh">₹20–50 લાખ</option><option value="Above ₹50 lakh">₹50 લાખથી વધુ</option><option value="Prefer not to say">જણાવવું નથી</option></select></div>
 <div><label for="community">સમાજ / Community</label><input id="community" maxlength="100"></div>
 <div><label for="maritalStatus">વૈવાહિક સ્થિતિ</label><select id="maritalStatus"><option value="">પસંદ કરો</option><option value="Never Married">અપરિણીત</option><option value="Divorced">છૂટાછેડા લીધેલા</option><option value="Widowed">વિધવા / વિધુર</option><option value="Other">અન્ય</option></select></div>
 </div><div><label for="aboutMe">તમારા વિશે</label><textarea id="aboutMe" maxlength="1000" placeholder="તમારા વિશે ટૂંકમાં લખો"></textarea></div>
@@ -110,6 +113,8 @@ window.addEventListener("unhandledrejection",function(e){var b=document.getEleme
 <div><label for="filterHeight">Height</label><input id="filterHeight" placeholder="5 ft 4 in"></div>
 <div><label for="filterEducation">Education</label><input id="filterEducation" placeholder="Graduate"></div>
 <div><label for="filterOccupation">Occupation</label><input id="filterOccupation" placeholder="Business / Job"></div>
+<div><label for="filterEmploymentType">Employment Type</label><select id="filterEmploymentType"><option value="">બધા</option><option value="Job">Job</option><option value="Business">Business</option><option value="Self Employed">Self Employed</option><option value="Other">Other</option></select></div>
+<div><label for="filterIncome">Annual Income</label><select id="filterIncome"><option value="">બધા</option><option value="Below ₹2 lakh">₹2 લાખથી ઓછી</option><option value="₹2-5 lakh">₹2–5 લાખ</option><option value="₹5-10 lakh">₹5–10 લાખ</option><option value="₹10-20 lakh">₹10–20 લાખ</option><option value="₹20-50 lakh">₹20–50 લાખ</option><option value="Above ₹50 lakh">₹50 લાખથી વધુ</option></select></div>
 <div><label for="filterCommunity">Community / Caste</label><input id="filterCommunity" placeholder="Community"></div>
 <div><label for="filterMarital">Marital Status</label><select id="filterMarital"><option value="">બધા</option><option value="Never Married">અપરિણીત</option><option value="Divorced">Divorced</option><option value="Widowed">Widowed</option></select></div>
 </div>
@@ -331,7 +336,7 @@ function viewerHasPremium(profile=currentProfile){
 async function loadMyProfile() {
   if (!currentUser) return;
   const {data,error} = await sbClient.from("member_profiles")
-    .select("id,user_id,full_name,gender,birth_date,height,city,education,occupation,community,marital_status,about_me,photo_url,premium_status,premium_plan,premium_expiry,updated_at")
+    .select("id,user_id,full_name,gender,birth_date,height,city,education,occupation,employment_type,business_name,annual_income,community,marital_status,about_me,photo_url,premium_status,premium_plan,premium_expiry,updated_at")
     .eq("user_id",currentUser.id).maybeSingle();
   if (error) { status("profileStatus","Profile લોડ કરવામાં ભૂલ: "+error.message,"error"); return; }
   currentProfile = data;
@@ -349,6 +354,9 @@ async function loadMyProfile() {
     $("height").value = data.height || "";
     $("education").value = data.education || "";
     $("occupation").value = data.occupation || "";
+    $("employmentType").value = data.employment_type || "";
+    $("businessName").value = data.business_name || "";
+    $("annualIncome").value = data.annual_income || "";
     $("community").value = data.community || "";
     $("maritalStatus").value = data.marital_status || "";
     $("aboutMe").value = data.about_me || "";
@@ -363,7 +371,7 @@ $("profileForm").addEventListener("submit", async e => {
     id: currentUser.id, user_id: currentUser.id, full_name:$("fullName").value.trim(),
     gender:$("gender").value, birth_date:$("birthDate").value || null, height:$("height").value.trim(),
     city:$("city").value.trim(), education:$("education").value.trim(),
-    occupation:$("occupation").value.trim(), community:$("community").value.trim(),
+    occupation:$("occupation").value.trim(), employment_type:$("employmentType").value, business_name:$("businessName").value.trim(), annual_income:$("annualIncome").value, community:$("community").value.trim(),
     marital_status:$("maritalStatus").value, about_me:$("aboutMe").value.trim(),
     updated_at:new Date().toISOString()
   };
@@ -410,17 +418,19 @@ async function loadProfiles() {
   host.innerHTML='<div class="card">Profiles લોડ થઈ રહી છે...</div>';
   try{
     let q=sbClient.from("member_profiles")
-      .select("id,user_id,full_name,gender,birth_date,height,city,education,occupation,community,marital_status,about_me,photo_url,premium_status,premium_expiry")
+      .select("id,user_id,full_name,gender,birth_date,height,city,education,occupation,employment_type,business_name,annual_income,community,marital_status,about_me,photo_url,premium_status,premium_expiry")
       .order("updated_at",{ascending:false}).limit(100);
     const city=$("searchCity").value.trim(),gender=$("searchGender").value;
     if(city)q=q.ilike("city","%"+city+"%");
     if(gender)q=q.eq("gender",gender);
-    const marital=$("filterMarital").value, education=$("filterEducation").value.trim(), occupation=$("filterOccupation").value.trim(), community=$("filterCommunity").value.trim(), height=$("filterHeight").value.trim();
+    const marital=$("filterMarital").value, education=$("filterEducation").value.trim(), occupation=$("filterOccupation").value.trim(), community=$("filterCommunity").value.trim(), height=$("filterHeight").value.trim(), employment=$("filterEmploymentType").value, income=$("filterIncome").value;
     if(marital)q=q.eq("marital_status",marital);
     if(education)q=q.ilike("education","%"+education+"%");
     if(occupation)q=q.ilike("occupation","%"+occupation+"%");
     if(community)q=q.ilike("community","%"+community+"%");
     if(height)q=q.ilike("height","%"+height+"%");
+    if(employment)q=q.eq("employment_type",employment);
+    if(income)q=q.eq("annual_income",income);
     const {data,error}=await q;
     if(error){host.innerHTML="";return status("profilesStatus","Profiles લોડ કરવામાં ભૂલ: "+error.message,"error");}
     const minAge=Number($("filterAgeMin").value||18),maxAge=Number($("filterAgeMax").value||100),today=new Date();
