@@ -62,6 +62,8 @@ window.addEventListener("unhandledrejection",function(e){var b=document.getEleme
 <p><strong>Mobile:</strong> <span id="accountPhone">—</span></p>
 <p><strong>અભ્યાસ:</strong> <span id="accountEducation">—</span></p>
 <p><strong>વ્યવસાય:</strong> <span id="accountOccupation">—</span></p>
+<p><strong>Annual Income:</strong> <span id="accountAnnualIncome">—</span></p>
+<p><strong>Family Annual Income:</strong> <span id="accountFamilyAnnualIncome">—</span></p>
 <p><strong>Community:</strong> <span id="accountCommunity">—</span></p>
 <p><strong>વૈવાહિક સ્થિતિ:</strong> <span id="accountMarital">—</span></p></div>
 <p><strong>About Me:</strong><br><span id="accountAbout">—</span></p>
@@ -92,6 +94,8 @@ window.addEventListener("unhandledrejection",function(e){var b=document.getEleme
 <div><label for="phoneNumber">Mobile Number *</label><input id="phoneNumber" type="tel" inputmode="numeric" maxlength="10" required></div>
 <div><label for="education">અભ્યાસ</label><input id="education" maxlength="150"></div>
 <div><label for="occupation">વ્યવસાય</label><input id="occupation" maxlength="150"></div>
+<div><label for="annualIncome">Annual Income (વાર્ષિક વ્યક્તિગત આવક)</label><select id="annualIncome"><option value="">પસંદ કરો</option><option value="Below ₹2 Lakh">₹2 લાખથી ઓછી</option><option value="₹2–5 Lakh">₹2–5 લાખ</option><option value="₹5–10 Lakh">₹5–10 લાખ</option><option value="₹10–20 Lakh">₹10–20 લાખ</option><option value="₹20–50 Lakh">₹20–50 લાખ</option><option value="₹50 Lakh–1 Crore">₹50 લાખ–1 કરોડ</option><option value="Above ₹1 Crore">₹1 કરોડથી વધુ</option><option value="Not Disclosed">જણાવવું નથી</option></select></div>
+<div><label for="familyAnnualIncome">Family Annual Income (કુટુંબની વાર્ષિક આવક)</label><select id="familyAnnualIncome"><option value="">પસંદ કરો</option><option value="Below ₹2 Lakh">₹2 લાખથી ઓછી</option><option value="₹2–5 Lakh">₹2–5 લાખ</option><option value="₹5–10 Lakh">₹5–10 લાખ</option><option value="₹10–20 Lakh">₹10–20 લાખ</option><option value="₹20–50 Lakh">₹20–50 લાખ</option><option value="₹50 Lakh–1 Crore">₹50 લાખ–1 કરોડ</option><option value="Above ₹1 Crore">₹1 કરોડથી વધુ</option><option value="Not Disclosed">જણાવવું નથી</option></select></div>
 <div><label for="community">સમાજ / Community</label><input id="community" maxlength="100"></div>
 <div><label for="maritalStatus">વૈવાહિક સ્થિતિ</label><select id="maritalStatus"><option value="">પસંદ કરો</option><option value="Never Married">અપરિણીત</option><option value="Divorced">છૂટાછેડા લીધેલા</option><option value="Widowed">વિધવા / વિધુર</option><option value="Other">અન્ય</option></select></div>
 </div><div><label for="aboutMe">તમારા વિશે</label><textarea id="aboutMe" maxlength="1000" placeholder="તમારા વિશે ટૂંકમાં લખો"></textarea></div>
@@ -142,7 +146,7 @@ window.addEventListener("unhandledrejection",function(e){var b=document.getEleme
 <div class="section-head"><h2>Privacy Policy</h2><p>Elite Gujarati Matrimony</p></div><div class="card">
 <p><strong>Last updated:</strong> 1 November 2026</p>
 <p>Elite Gujarati Matrimony તમારા વ્યક્તિગત ડેટાની ગોપનીયતાનું ધ્યાન રાખે છે.</p>
-<h3>1. માહિતી</h3><p>Account માટે નામ અને Email તથા Profile માટે જન્મ તારીખ, લિંગ, શહેર, મોબાઇલ, અભ્યાસ, વ્યવસાય, સમાજ, વૈવાહિક સ્થિતિ અને About માહિતી લેવામાં આવી શકે છે.</p>
+<h3>1. માહિતી</h3><p>Account માટે નામ અને Email તથા Profile માટે જન્મ તારીખ, લિંગ, શહેર, મોબાઇલ, અભ્યાસ, વ્યવસાય, વ્યક્તિગત અને કુટુંબની વાર્ષિક આવક, સમાજ, વૈવાહિક સ્થિતિ અને About માહિતી લેવામાં આવી શકે છે.</p>
 <h3>2. ઉપયોગ</h3><p>Account, Profile, Interest, Premium Membership અને Customer Support માટે માહિતીનો ઉપયોગ થાય છે.</p>
 <h3>3. માહિતીની ઍક્સેસ</h3><p>Login કરેલા સભ્યો ઉપલબ્ધ Profile જોઈ શકે છે. Contact details માટે server-side permission જરૂરી છે.</p>
 <h3>4. Payment</h3><p>Premium ચુકવણી Razorpay દ્વારા થાય છે. સંવેદનશીલ payment વિગતો અમારી સાઇટ પર સંગ્રહવાનો હેતુ નથી.</p>
@@ -266,6 +270,7 @@ function renderMyAccount(){
  put("accountBirthDate",p.birth_date?new Date(p.birth_date+"T00:00:00").toLocaleDateString("en-IN"):"—");
  put("accountCity",p.city);put("accountPhone",p._contact_phone);put("accountEducation",p.education);
  put("accountOccupation",p.occupation);put("accountCommunity",p.community);
+ put("accountAnnualIncome",p.annual_income);put("accountFamilyAnnualIncome",p.family_annual_income);
  put("accountMarital",({"Never Married":"અપરિણીત","Divorced":"છૂટાછેડા લીધેલા","Widowed":"વિધવા / વિધુર","Other":"અન્ય"})[p.marital_status]||p.marital_status);
  put("accountAbout",p.about_me);
 }
@@ -330,7 +335,7 @@ function viewerHasPremium(profile=currentProfile){
 async function loadMyProfile() {
   if (!currentUser) return;
   const {data,error} = await sbClient.from("member_profiles")
-    .select("id,user_id,full_name,gender,birth_date,city,education,occupation,community,marital_status,about_me,photo_url,premium_status,premium_plan,premium_expiry,updated_at")
+    .select("id,user_id,full_name,gender,birth_date,city,education,occupation,annual_income,family_annual_income,community,marital_status,about_me,photo_url,premium_status,premium_plan,premium_expiry,updated_at")
     .eq("user_id",currentUser.id).maybeSingle();
   if (error) { status("profileStatus","Profile લોડ કરવામાં ભૂલ: "+error.message,"error"); return; }
   currentProfile = data;
@@ -347,6 +352,8 @@ async function loadMyProfile() {
     $("city").value = data.city || "";
     $("education").value = data.education || "";
     $("occupation").value = data.occupation || "";
+    $("annualIncome").value = data.annual_income || "";
+    $("familyAnnualIncome").value = data.family_annual_income || "";
     $("community").value = data.community || "";
     $("maritalStatus").value = data.marital_status || "";
     $("aboutMe").value = data.about_me || "";
@@ -361,7 +368,8 @@ $("profileForm").addEventListener("submit", async e => {
     id: currentUser.id, user_id: currentUser.id, full_name:$("fullName").value.trim(),
     gender:$("gender").value, birth_date:$("birthDate").value || null,
     city:$("city").value.trim(), education:$("education").value.trim(),
-    occupation:$("occupation").value.trim(), community:$("community").value.trim(),
+    occupation:$("occupation").value.trim(), annual_income:$("annualIncome").value,
+    family_annual_income:$("familyAnnualIncome").value, community:$("community").value.trim(),
     marital_status:$("maritalStatus").value, about_me:$("aboutMe").value.trim(),
     updated_at:new Date().toISOString()
   };
